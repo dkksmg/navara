@@ -15,7 +15,7 @@ footer {
       <!-- Default to the left -->
       <strong>Copyright &copy; <script>
           document.write(new Date().getFullYear())
-          </script> <a href="#">DINAS KESEHATAN KOTA
+          </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
               SEMARANG</a>.</strong> All rights reserved.
   </footer>
   </div>

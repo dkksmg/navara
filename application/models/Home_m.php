@@ -210,7 +210,7 @@ class Home_m extends CI_Model
     public function tambahKendaraanDinas()
     {
 
-        $data['id_assets']          = $this->input->post('idassets');
+        $data['id_assets']          = id_aset();
         $data['no_polisi']          = $this->input->post('nopolawaal') . " " . $this->input->post('nopolangka') . " " . $this->input->post('nopolakhir');
         $data['merk']               = $this->input->post('merk');
         $data['tipe']               = $this->input->post('tipe');
@@ -232,7 +232,6 @@ class Home_m extends CI_Model
     public function edit_kendaraan($id = null)
     {
 
-        $data['id_assets']          = $this->input->post('idassets');
         $data['no_polisi']          = $this->input->post('nopol');
         $data['merk']               = $this->input->post('merk');
         $data['tipe']               = $this->input->post('tipe');

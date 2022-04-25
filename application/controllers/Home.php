@@ -7,9 +7,7 @@ class Home extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        if (!$this->session->userdata('logged_in') !== FALSE) {
-            redirect('auth');
-        }
+        check_session();
         if (!$this->session->userdata('logged_in_admin') !== FALSE) {
             redirect('pemakai');
         }
@@ -29,6 +27,7 @@ class Home extends CI_Controller
     {
 
         $data = [];
+        $data['title'] = 'Tambah Kendaraan Dinas';
         if ($this->input->post()) {
             if ($this->home_m->tambahKendaraanDinas()) {
                 $this->session->set_flashdata('success', 'Tambah Kendaraan Berhasil');
@@ -45,6 +44,7 @@ class Home extends CI_Controller
     {
 
         $data = [];
+        $data['title'] = 'Edit Kendaraan Dinas';
         $id = $this->input->get('id');
         $data['kend'] = $this->home_m->dataKendaraanByid($id);
         if ($this->input->post()) {
