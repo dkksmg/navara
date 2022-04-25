@@ -32,7 +32,7 @@
                              <thead>
                                  <tr>
                                      <th>No</th>
-                                     <th width="150px">Aksi</th>
+                                     <th width="150px" class="text-center">Aksi</th>
                                      <th>ID ASSETS</th>
                                      <th>Pemakai</th>
                                      <th>No. Polisi</th>
@@ -50,8 +50,8 @@
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($kendaraan != '') {
-                    foreach ($kendaraan as $kend) { ?>
+                                    if ($kendaraan != '') {
+                                        foreach ($kendaraan as $kend) { ?>
                                  <tr>
                                      <td><?= $no++; ?></td>
                                      <td>
@@ -95,7 +95,7 @@
                                      <td><?= $kend['besar_cc'] ?></td>
                                  </tr>
                                  <?php }
-                  } ?>
+                                    } ?>
                              </tbody>
                          </table>
                      </div>

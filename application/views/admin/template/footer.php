@@ -13,7 +13,7 @@ footer {
           CATDKK
       </div>
       <!-- Default to the left -->
-      <strong>Copyright &copy; <script>
+      <strong>Copyright &copy; 2021 - <script>
           document.write(new Date().getFullYear())
           </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
               SEMARANG</a>.</strong> All rights reserved.
@@ -89,8 +89,8 @@ $(function() {
     $('.example').DataTable({
         "scrollX": true,
         "paging": true,
-        "pageLength": 25,
-        "lengthMenu": [10, 25, 50, 100, 150, 200],
+        "pageLength": 50,
+        "lengthMenu": [10, 25, 50, 100, 150, 200, 300],
     });
     $('.example2').DataTable({});
 });

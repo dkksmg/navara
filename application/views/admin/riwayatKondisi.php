@@ -75,30 +75,36 @@
                                  </tr>
                              </thead>
                              <tbody>
-                                 <?php $no = 1;
-                  if ($rk != '') {
-                    foreach ($rk as $value) { ?>
+                                 <?php if ($rk != '') : ?>
+                                 <?php
+                                        $no = 1;
+                                        foreach ($rk as $value) : ?>
                                  <tr>
-                                     <td><?= $no++; ?></td>
+                                     <td><?= $no; ?></td>
                                      <td><a href="<?= site_url('home/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
                                              class="btn btn-sm btn-danger">Hapus</a></td>
                                      <td><?= $value['tgl_pencatatan'] ?></td>
                                      <td><?= $value['kondisi'] ?></td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_depan'] . '') ?>">
+                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_depan'] . '') ?>"
+                                             data-toggle="modal" data-target="#depanModal<?php echo $no ?>">
                                      </td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kanan'] . '') ?>">
+                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kanan'] . '') ?>"
+                                             data-toggle="modal" data-target="#kananModal<?php echo $no ?>">
                                      </td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kiri'] . '') ?>">
+                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kiri'] . '') ?>"
+                                             data-toggle="modal" data-target="#kiriModal<?php echo $no ?>">
                                      </td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_blakang'] . '') ?>">
+                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_belakang'] . '') ?>"
+                                             data-toggle="modal" data-target="#belakangModal<?php echo $no ?>">
                                      </td>
                                  </tr>
-                                 <?php }
-                  } ?>
+                                 <?php $no++;
+                                        endforeach; ?>
+                                 <?php endif ?>
                              </tbody>
                          </table>
                      </div>
@@ -109,6 +115,95 @@
      </div><!-- /.container-fluid -->
  </div>
  <!-- /.content -->
+
+ <!-- Modal Foto -->
+ <!-- Modal -->
+ <?php
+    $no = 1;
+    foreach ($rk as $value) : ?>
+ <center>
+     <div class="modal fade" id="depanModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_depan'] . '') ?>"
+                             alt="Foto Servis" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="modal fade" id="kiriModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kiri'] . '') ?>"
+                             alt="Foto Nota" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="modal fade" id="kananModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kanan'] . '') ?>"
+                             alt="Foto Nota" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="modal fade" id="belakangModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_belakang'] . '') ?>"
+                             alt="Foto Nota" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </center>
+ <?php $no++;
+    endforeach ?>
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">

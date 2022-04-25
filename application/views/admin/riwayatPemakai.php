@@ -75,8 +75,8 @@
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($rp != '') {
-                    foreach ($rp as $value) { ?>
+                                    if ($rp != '') {
+                                        foreach ($rp as $value) { ?>
                                  <tr>
                                      <td><?= $no++; ?></td>
                                      <td>
@@ -92,12 +92,17 @@
                                      <td><?= $value['nama_pemakai'] ?></td>
                                      <td><?= $value['nip_pemakai'] ?></td>
                                      <td><?= $value['lokasi_unit'] ?></td>
-                                     <td><?= $value['status'] ?></td>
-                                     <td><?= $value['tgl_awal'] ?></td>
-                                     <td><?= $value['tgl_akhir'] ?></td>
+                                     <td><?php if ($value['status'] == "tidak_aktif") : ?>
+                                         Tidak Aktif
+                                         <?php else : ?>
+                                         Aktif
+                                         <?php endif ?>
+                                     </td>
+                                     <td><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
+                                     <td><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
                                  </tr>
                                  <?php }
-                  } ?>
+                                    } ?>
                              </tbody>
                          </table>
                      </div>
@@ -131,7 +136,7 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>NIP / NIK</label>
-                                 <input type="text" class="form-control" name="nip" required>
+                                 <input type="number" class="form-control" name="nip" required>
                              </div>
                          </div>
                      </div>
@@ -142,10 +147,10 @@
                                  <select class="form-control" name="lokunit">
                                      <option readonly>-- Pilih Lokias Unit --</option>
                                      <?php if ($lu != '') {
-                      foreach ($lu as $value) { ?>
+                                            foreach ($lu as $value) { ?>
                                      <option><?= $value['lokasi_unit'] ?></option>
                                      <?php }
-                    } ?>
+                                        } ?>
                                  </select>
                              </div>
                          </div>
@@ -161,7 +166,7 @@
                              <div class="form-group">
                                  <label>Tanggal Akhir</label>
                                  <input type="text" class="form-control pilihtanggal" name="sampai">
-                                 <p>* kosongkan jika tanggal akhir belum ada</p>
+                                 <p style="color:red;">* kosongkan jika tanggal akhir belum ada</p>
                              </div>
                          </div>
                      </div>

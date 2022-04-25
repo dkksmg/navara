@@ -52,10 +52,11 @@
              <div class="col-lg-12">
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Riwayat Kondisi</h3>
+                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
                              Tambah Riwayat BBM
                          </button>
                      </div>
@@ -71,8 +72,8 @@
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($rbbm != '') {
-                    foreach ($rbbm as $value) { ?>
+                                    if ($rbbm != '') {
+                                        foreach ($rbbm as $value) { ?>
                                  <tr>
                                      <td><?= $no++; ?></td>
                                      <td><a href="<?= site_url('admin/hapusrbbm?id=' . $value['id_bbm'] . '&idkend=' . $value['id_kendaraan'] . '') ?>"
@@ -81,7 +82,7 @@
                                      <td>Rp <?= number_format($value['total_bbm'], 2, ',', '.'); ?></td>
                                  </tr>
                                  <?php }
-                  } ?>
+                                    } ?>
                              </tbody>
                          </table>
                      </div>

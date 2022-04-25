@@ -89,18 +89,16 @@
                                      <td class="text-center">
 
                                          <a href="<?php echo site_url('home/edit_servis?id=' . $value['id_rs'] . '') ?>"
-                                             class="btn btn-xs btn-warning"><i class="fas fa-pen"></i></a>
+                                             class="btn btn-sm btn-warning"><i class="fas fa-pen"></i></a>
 
                                      </td>
                                      <td class="text-center"> <a
                                              href="<?php echo site_url('home/delete_servis?id=' . $value['id_rs'] . '') ?>"
-                                             class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></a></td>
+                                             class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a></td>
                                      <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
                                      <td class="text-center"><?= $value['lokasi'] ?></td>
                                      <td><?= $value['keluhan'] ?></td>
                                      <td><?= $value['perbaikan'] ?></td>
-                                     <!-- <td class="text-left">Rp
-                                         <?= number_format($value['total_biaya'], 2, ',', '.'); ?></td> -->
                                      <td class="text-left">
                                          <?= $value['total_biaya']; ?></td>
                                      <td class="text-center">

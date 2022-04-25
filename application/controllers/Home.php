@@ -85,6 +85,7 @@ class Home extends CI_Controller
     {
         $data = [];
         $id = $this->input->get('id');
+        $data['title'] = 'Riwayat BBM';
         $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
         $data['kend'] = $this->home_m->kendaraanByid($id);
         $this->load->view('admin/template/header');
