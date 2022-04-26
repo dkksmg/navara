@@ -14,11 +14,7 @@ class Home_m extends CI_Model
         if ($this->session->userdata('rule') == 'admin') {
             $this->db->where('user_id', $this->session->userdata('id'));
         }
-        $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
-            ->group_start()
-            ->where('riwayat_pemakai.status', 'aktif')
-            ->or_where('riwayat_pemakai.status is null')
-            ->group_end()
+        $query = $this->db->order_by('idk', 'ASC')
             ->get('kendaraan');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -107,6 +103,35 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function nonaktifkanpemakai($id = null)
+    {
+
+        $data['status'] = "tidak_aktif";
+        $this->db->Where('id_rp', $id);
+        $q = $this->db->update('riwayat_pemakai', $data);
+        return $q;
+    }
+    public function aktifkanpemakai($id = null)
+    {
+
+        $data['status'] = "aktif";
+        $this->db->Where('id_rp', $id);
+        $q = $this->db->update('riwayat_pemakai', $data);
+        return $q;
+
+        $data = array(
+            array(
+                'title' => 'My title',
+                'name' => 'My Name 2',
+                'date' => 'My date 2'
+            ),
+            array(
+                'title' => 'Another title',
+                'name' => 'Another Name 2',
+                'date' => 'Another date 2'
+            )
+        );
+    }
     public function data_riwayatpemakaibyid($id = null)
     {
         $this->db->where('id_kendaraan', $id);
@@ -142,11 +167,11 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
-    public function data_riwayatpemakaibynopolandstatus($nopol = null)
+    public function data_riwayatpemakaibynopolandstatus($id_kend = null)
     {
         $this->db->join('kendaraan', 'riwayat_pemakai.id_kendaraan=kendaraan.idk');
         $this->db->where('riwayat_pemakai.status', 'aktif');
-        $this->db->where('kendaraan.no_polisi', $nopol);
+        $this->db->where('kendaraan.idk', $id_kend);
         $query = $this->db->get('riwayat_pemakai');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -336,23 +361,6 @@ class Home_m extends CI_Model
         $data['total_biaya']        = $this->input->post('biaya');
 
         $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
-        return $q;
-    }
-
-    public function nonaktifkanpemakai($id = null)
-    {
-
-        $data['status'] = "tidak_aktif";
-        $this->db->Where('id_rp', $id);
-        $q = $this->db->update('riwayat_pemakai', $data);
-        return $q;
-    }
-    public function aktifkanpemakai($id = null)
-    {
-
-        $data['status'] = "aktif";
-        $this->db->Where('id_rp', $id);
-        $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
     }
 

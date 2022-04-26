@@ -16,6 +16,7 @@ class Home extends CI_Controller
     public function index()
     {
         $data = [];
+        $data['title'] = 'Data Kendaraan Dinas';
         $data['kendaraan'] = $this->home_m->data_kendaraan();
         $this->load->view('admin/template/header');
         $this->load->view('admin/dataKendaraan', $data);
@@ -74,8 +75,10 @@ class Home extends CI_Controller
     {
         $id = $this->input->get('id');
         $data = [];
-        $data['kend'] = $this->home_m->kendaraanByid($id);
         $data['rp'] = $this->home_m->data_riwayatpemakai($id);
+        // print_r($data);
+        // die();
+        $data['kend'] = $this->home_m->kendaraanByid($id);
         $data['lu'] = $this->home_m->data_lokasiunit();
         $this->load->view('admin/template/header');
         $this->load->view('admin/riwayatPemakai', $data);
@@ -231,11 +234,11 @@ class Home extends CI_Controller
         $idk = $this->input->get('id');
         $kend = $this->home_m->kendaraanByid($idk);
         $nopol = $kend['no_polisi'];
+        $id_kend = $kend['idk'];
         $nip = $this->input->post('nip');
-        $cekpemakai = $this->home_m->data_riwayatpemakaibynopolandstatus($nopol);
-
+        $cekpemakai = $this->home_m->data_riwayatpemakaibynopolandstatus($id_kend);
         if ($cekpemakai != '') {
-            $this->session->set_flashdata('warning', 'Tambah Riwayat Pemakai gagal, Kendaraan sudah terpakai ');
+            $this->session->set_flashdata('danger', 'Tambah Riwayat Pemakai gagal, Kendaraan sudah terpakai ');
             redirect('home/riwayat_pemakai?id=' . $idk . '');
         } else {
             if ($this->home_m->prosestambahPemakai($idk)) {
@@ -252,13 +255,13 @@ class Home extends CI_Controller
     {
         $id = $this->input->get('id');
         $kend = $this->home_m->data_riwayatpemakaibyidrp($id);
-        $nopol = $kend['no_polisi'];
-        $cekpemakai = $this->home_m->data_riwayatpemakaibynopolandstatus($nopol);
+        $id_kend = $kend['id_kendaraan'];
+        $cekpemakai = $this->home_m->data_riwayatpemakaibynopolandstatus($id_kend);
         if ($cekpemakai != '') {
-            $this->session->set_flashdata('success', 'Aktifkan Pemakai gagal');
+            $this->session->set_flashdata('danger', 'Aktifkan Pemakai gagal, Kendaaraan sudah terpakai');
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
         } else {
-            if ($this->home_m->aktifkanpemakai($id)) {
+            if ($this->home_m->aktifkanpemakai($id, $id_kend)) {
                 $this->session->set_flashdata('success', 'Aktifkan Pemakai Berhasil');
                 redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
             } else {
@@ -272,7 +275,7 @@ class Home extends CI_Controller
         $id = $this->input->get('id');
         $kend = $this->home_m->data_riwayatpemakaibyidrp($id);
         if ($this->home_m->nonaktifkanpemakai($id)) {
-            $this->session->set_flashdata('success', 'Nonkatifkan Pemakai Berhasil');
+            $this->session->set_flashdata('success', 'Nonaktifkan Pemakai Berhasil');
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
         } else {
             $this->session->set_flashdata('warning', 'Nonkatifkan Pemakai gagal');
