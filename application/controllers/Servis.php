@@ -17,7 +17,15 @@ class Servis extends CI_Controller
         $data = [];
         $data['kendaraan'] = $this->home_m->data_kendaraan();
         $this->load->view('admin/template/header');
-        $this->load->view('admin/servis', $data);
+        $this->load->view('admin/servis/dataservis', $data);
+        $this->load->view('admin/template/footer');
+    }
+    public function detail_servis()
+    {
+        $data = [];
+        $data['kendaraan'] = $this->home_m->data_kendaraan();
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/servis/detailservis', $data);
         $this->load->view('admin/template/footer');
     }
 }

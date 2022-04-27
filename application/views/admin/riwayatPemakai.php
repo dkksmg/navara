@@ -87,10 +87,12 @@
                                      <td>
                                          <?php if ($value['status'] == 'aktif') : ?>
                                          <a href="<?= site_url('home/nonaktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
-                                             class="btn btn-sm btn-danger">Nonaktifkan</a>
+                                             class="btn btn-sm btn-secondary"><i class="fa-solid fa-octagon-xmark"
+                                                 title="Nonaktifkan <? $value['nama_pemakai'] ?>"></i></a>
                                          <?php else : ?>
                                          <a href="<?= site_url('home/aktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
-                                             class="btn btn-sm btn-success">Aktifkan</a>
+                                             class="btn btn-sm btn-success"><i class="fa-solid fa-badge-check"
+                                                 title="Aktifkan <? $value['nama_pemakai'] ?>"></i></a>
                                          <?php endif ?>
                                      </td>
                                      <td><a href="<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>"

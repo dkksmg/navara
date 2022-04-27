@@ -313,17 +313,17 @@ class Home extends CI_Controller
         $data['kend'] = $this->home_m->kendaraanByid($id);
         $data['rs'] = $this->home_m->data_riwayatservis($id);
         $this->load->view('admin/template/header');
-        $this->load->view('admin/riwayatservis', $data);
+        $this->load->view('admin/servis/riwayatservis', $data);
         $this->load->view('admin/template/footer');
     }
     public function edit_servis()
     {
         $id = $this->input->get('id');
         $data = [];
-        $data['title'] = "Edit Servis Kendaraan";
+        $data['title'] = "Edit Riwayat Servis Kendaraan";
         $data['servis'] = $this->home_m->data_servisById($id);
         $this->load->view('admin/template/header');
-        $this->load->view('admin/editservis', $data);
+        $this->load->view('admin/servis/editriwayatservis', $data);
         $this->load->view('admin/template/footer');
     }
     public function delete_servis()

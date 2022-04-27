@@ -38,8 +38,8 @@
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($kendaraan != '') {
-                    foreach ($kendaraan as $kend) { ?>
+                                    if ($kendaraan != '') {
+                                        foreach ($kendaraan as $kend) { ?>
                                  <tr>
                                      <td><?= $no++; ?></td>
                                      <td>
@@ -53,7 +53,7 @@
                                      <td><?= $kend['tipe'] ?></td>
                                  </tr>
                                  <?php }
-                  } ?>
+                                    } ?>
                              </tbody>
                          </table>
                      </div>

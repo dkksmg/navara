@@ -52,8 +52,8 @@
                                          <?php if ($usr['status'] != 'Aktif') : ?>
                                          <a href="<?= site_url('admin/aktifkanuser?id=' . $usr['id']) ?>"
                                              class="btn btn-sm btn-success jedatombol"
-                                             title="Aktifkan User <?= $usr['name'] ?>"><i
-                                                 class="fa-solid fa-badge-check"></i></a>
+                                             title="Aktifkan User <?= $usr['name'] ?>">
+                                             <i class="fa-solid fa-badge-check"></i></a>
                                          <?php else : ?>
                                          <a href="<?= site_url('admin/nonaktifkanuser?id=' . $usr['id']) ?>"
                                              class="btn btn-sm btn-secondary jedatombol"
