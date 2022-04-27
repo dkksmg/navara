@@ -32,7 +32,7 @@
                              <thead>
                                  <tr>
                                      <th>No</th>
-                                     <th width="150px" class="text-center">Aksi</th>
+                                     <th width="125px" class="text-center">Aksi</th>
                                      <th>ID ASSETS</th>
                                      <th>No. Polisi</th>
                                      <th>Jenis</th>
@@ -51,33 +51,53 @@
                                  <?php $no = 1;
                                     if ($kendaraan != '') {
                                         foreach ($kendaraan as $kend) { ?>
-                                         <tr>
-                                             <td><?= $no++; ?></td>
-                                             <td>
-                                                 <a href="<?= site_url('home/riwayat_kondisi?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-warning jedatombol" title="Riwayat Kondisi"><i class="fa fa-motorcycle"></i></a>
-                                                 <a href="<?= site_url('home/riwayat_pemakai?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-success jedatombol" title="Riwayat Pemakai"><i class="fa fa-users"></i></a>
-                                                 <a href="<?= site_url('home/riwayat_servis?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-primary jedatombol" title="Riwayat Service"><i class="fa fa-tools"></i></a>
-                                                 <a href="<?= site_url('home/riwayat_bbm?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-primary jedatombol" title="Riwayat BBM"><i class="fa fa-gas-pump"></i></a>
-                                                 <a href="<?= site_url('home/riwayat_pajak?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-primary jedatombol" title="Riwayat Pajak"><i class="fa fa-align-justify"></i></a>
-                                                 <?php if ($this->session->userdata('logged_in_admin') == TRUE) { ?>
-                                                     <a href="<?= site_url('admin/pagu?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-dark jedatombol" title="Pagu Tahunan"><i class="fa fa-wallet"></i></a>
-                                                     <a href="<?= site_url('home/edit_kendaraan?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-dark jedatombol" title="Edit Data Kendaraan"><i class="fa fa-pen"></i></a>
-                                                 <?php } ?>
+                                 <tr>
+                                     <td><?= $no++; ?></td>
+                                     <td>
+                                         <a href="<?= site_url('home/riwayat_kondisi?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-warning jedatombol" title="Riwayat Kondisi"><i
+                                                 class="fa fa-motorcycle"></i></a>
+                                         <a href="<?= site_url('home/riwayat_pemakai?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-success jedatombol" title="Riwayat Pemakai"><i
+                                                 class="fa fa-users"></i></a>
+                                         <a href="<?= site_url('home/riwayat_servis?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-primary jedatombol" title="Riwayat Service"><i
+                                                 class="fa fa-tools"></i></a>
+                                         <a href="<?= site_url('home/riwayat_bbm?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-primary jedatombol" title="Riwayat BBM"><i
+                                                 class="fa fa-gas-pump"></i></a>
+                                         <a href="<?= site_url('home/riwayat_pajak?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-primary jedatombol" title="Riwayat Pajak"><i
+                                                 class="fa fa-align-justify"></i></a>
+                                         <?php if ($this->session->userdata('logged_in_admin') == TRUE) : ?>
+                                         <a href="<?= site_url('admin/pagu?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-dark jedatombol" title="Pagu Tahunan"><i
+                                                 class="fa fa-wallet"></i></a>
+                                         <a href="<?= site_url('home/edit_kendaraan?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-dark jedatombol" title="Edit Data Kendaraan"><i
+                                                 class="fa fa-pen"></i></a>
+                                         <a href="<?= site_url('home/print_data_kendaraan?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-dark jedatombol" title="Print Data Kendaraan"><i
+                                                 class="fa fa-print"></i></a>
+                                         <a href="<?= site_url('home/hapus_data_kendaraan?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-danger jedatombol" title="Hapus Data Kendaraan"><i
+                                                 class="fa fa-trash"></i></a>
+                                         <?php endif ?>
 
-                                             </td>
-                                             <td><?= $kend['id_assets'] ?></td>
-                                             <td><?= $kend['no_polisi'] ?></td>
-                                             <td><?= $kend['jenis'] ?></td>
-                                             <td><?= $kend['merk'] ?></td>
-                                             <td><?= $kend['tipe'] ?></td>
-                                             <td><?= $kend['no_stnk'] ?></td>
-                                             <td><?= $kend['masa_berlaku_stnk'] ?></td>
-                                             <td><?= $kend['no_mesin'] ?></td>
-                                             <td><?= $kend['no_rangka'] ?></td>
-                                             <td><?= $kend['tahun_perolehan'] ?></td>
-                                             <td><?= $kend['jenis_bb'] ?></td>
-                                             <td><?= $kend['besar_cc'] ?></td>
-                                         </tr>
+                                     </td>
+                                     <td><?= $kend['id_assets'] ?></td>
+                                     <td><?= $kend['no_polisi'] ?></td>
+                                     <td><?= $kend['jenis'] ?></td>
+                                     <td><?= $kend['merk'] ?></td>
+                                     <td><?= $kend['tipe'] ?></td>
+                                     <td><?= $kend['no_stnk'] ?></td>
+                                     <td><?= $kend['masa_berlaku_stnk'] ?></td>
+                                     <td><?= $kend['no_mesin'] ?></td>
+                                     <td><?= $kend['no_rangka'] ?></td>
+                                     <td><?= $kend['tahun_perolehan'] ?></td>
+                                     <td><?= $kend['jenis_bb'] ?></td>
+                                     <td><?= $kend['besar_cc'] ?></td>
+                                 </tr>
                                  <?php }
                                     } ?>
                              </tbody>

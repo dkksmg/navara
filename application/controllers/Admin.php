@@ -25,9 +25,55 @@ class Admin extends CI_Controller
     public function user()
     {
         $data['user'] = $this->admin_m->user();
+        $data['lu'] = $this->admin_m->data_lokasiunit();
         $this->load->view('admin/template/header');
-        $this->load->view('admin/user', $data);
+        $this->load->view('admin/template/modal');
+        $this->load->view('admin/users/data', $data);
         $this->load->view('admin/template/footer');
+    }
+    public function edit_user()
+    {
+        $id = $this->input->get('id');
+        $data['title'] = 'Edit Data User';
+        $data['user'] = $this->admin_m->userbyid($id);
+        $data['lu'] = $this->admin_m->data_lokasiunit();
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/users/editUser', $data);
+        $this->load->view('admin/template/footer');
+    }
+    public function delete_user()
+    {
+        $id = $this->input->get('id');
+        $delete = $this->db->where('id', $id)->delete('users');
+        if ($delete) {
+            $this->session->set_flashdata('success', 'Hapus User Berhasil');
+            redirect('admin/user');
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus User Gagal');
+            redirect('admin/user');
+        }
+    }
+    public function aktifkanuser()
+    {
+        $id = $this->input->get('id');
+        if ($this->admin_m->aktifkanuser($id)) {
+            $this->session->set_flashdata('success', 'Berhasil Mengaktifkan User');
+            redirect('admin/user');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal Mengaktifkan User');
+            redirect('admin/user');
+        }
+    }
+    public function nonaktifkanuser()
+    {
+        $id = $this->input->get('id');
+        if ($this->admin_m->nonaktifkanuser($id)) {
+            $this->session->set_flashdata('success', 'Berhasil Mengnonaktifkan User');
+            redirect('admin/user');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal Mengnonaktifkan User');
+            redirect('admin/user');
+        }
     }
 
     public function prosestambahpagu()
@@ -58,6 +104,31 @@ class Admin extends CI_Controller
             } else {
                 $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal');
                 redirect('home/riwayat_bbm?id=' . $id_kend);
+            }
+        }
+    }
+    public function prosestambahuser()
+    {
+        if ($this->input->post()) {
+            if ($this->admin_m->tambahuser()) {
+                $this->session->set_flashdata('success', 'Tambah User Berhasil');
+                redirect('admin/user');
+            } else {
+                $this->session->set_flashdata('danger', 'Tambah User gagal');
+                redirect('admin/user');
+            }
+        }
+    }
+    public function prosesedituser()
+    {
+        $id_user = $this->input->get('id');
+        if ($this->input->post()) {
+            if ($this->admin_m->edituser($id_user)) {
+                $this->session->set_flashdata('success', 'Edit User Berhasil');
+                redirect('admin/user');
+            } else {
+                $this->session->set_flashdata('danger', 'Edit User gagal');
+                redirect('admin/user');
             }
         }
     }

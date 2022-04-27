@@ -76,14 +76,24 @@ class Home extends CI_Controller
         $id = $this->input->get('id');
         $data = [];
         $data['rp'] = $this->home_m->data_riwayatpemakai($id);
-        // print_r($data);
-        // die();
         $data['kend'] = $this->home_m->kendaraanByid($id);
         $data['lu'] = $this->home_m->data_lokasiunit();
         $this->load->view('admin/template/header');
         $this->load->view('admin/riwayatPemakai', $data);
         $this->load->view('admin/template/footer');
     }
+    public function edit_pemakai()
+    {
+        $id = $this->input->get('id');
+        $data = [];
+        $data['value'] = $this->home_m->data_pemakaibyid($id);
+        $data['lu'] = $this->home_m->data_lokasiunit();
+        $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/editPemakai', $data);
+        $this->load->view('admin/template/footer');
+    }
+
     public function riwayat_bbm()
     {
         $data = [];
@@ -250,6 +260,18 @@ class Home extends CI_Controller
             }
         }
     }
+    public function proseseditPemakai()
+    {
+        $idk = $this->input->get('id');
+        $id_kend = $this->input->post('id_kend');
+        if ($this->home_m->proseseditPemakai($idk)) {
+            $this->session->set_flashdata('success', 'Edit Riwayat Pemakai Berhasil');
+            redirect('home/riwayat_pemakai?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Edit Riwayat Pemakai gagal');
+            redirect('home/riwayat_pemakai?id=' . $id_kend . '');
+        }
+    }
 
     public function aktifkanpemakai()
     {
@@ -278,7 +300,7 @@ class Home extends CI_Controller
             $this->session->set_flashdata('success', 'Nonaktifkan Pemakai Berhasil');
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
         } else {
-            $this->session->set_flashdata('warning', 'Nonkatifkan Pemakai gagal');
+            $this->session->set_flashdata('warning', 'Nonaktifkan Pemakai gagal');
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
         }
     }

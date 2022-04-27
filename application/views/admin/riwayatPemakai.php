@@ -55,7 +55,8 @@
                          <h3 style="font-weight:bold;color:white;">Riwayat Pemakai</h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
                              Tambah Pemakai
                          </button>
                      </div>
@@ -63,42 +64,51 @@
                          <table class="table table-bordered table-striped example" width="100%">
                              <thead>
                                  <tr>
-                                     <th>No</th>
-                                     <th>Aksi</th>
-                                     <th>Nama Pemakai</th>
-                                     <th>NIP</th>
-                                     <th>Lokasi Unit</th>
-                                     <th>Status</th>
-                                     <th>Tanggal Awal</th>
-                                     <th>Tanggal Akhir</th>
+                                     <th rowspan="2">No</th>
+                                     <th colspan="2" class="text-center">Aksi</th>
+                                     <th rowspan="2">Nama Pemakai</th>
+                                     <th rowspan="2">NIP</th>
+                                     <th rowspan="2">Lokasi Unit</th>
+                                     <th rowspan="2">Status</th>
+                                     <th rowspan="2">Tanggal Awal</th>
+                                     <th rowspan="2">Tanggal Akhir</th>
+                                 </tr>
+                                 <tr>
+                                     <th></th>
+                                     <th></th>
+                                 </tr>
                              </thead>
                              <tbody>
                                  <?php if ($rp != '') : ?>
-                                     <?php $no = 1;
+                                 <?php $no = 1;
                                         foreach ($rp as $value) : ?>
-                                         <tr>
-                                             <td><?= $no ?></td>
-                                             <td>
-                                                 <?php if ($value['status'] == 'aktif') : ?>
-                                                     <a href="<?= site_url('home/nonaktifkanpemakai?id=' . $value['id_rp'] . '') ?>" class="btn btn-sm btn-warning">Nonaktifkan</a>
-                                                 <?php else : ?>
-                                                     <a href="<?= site_url('home/aktifkanpemakai?id=' . $value['id_rp'] . '') ?>" class="btn btn-sm btn-success">Aktifkan</a>
-                                                 <?php endif ?>
-
-                                             </td>
-                                             <td><?= $value['nama_pemakai'] ?></td>
-                                             <td><?= $value['nip_pemakai'] ?></td>
-                                             <td><?= $value['lokasi_unit'] ?></td>
-                                             <td><?php if ($value['status'] == "tidak_aktif") : ?>
-                                                     Tidak Aktif
-                                                 <?php else : ?>
-                                                     Aktif
-                                                 <?php endif ?>
-                                             </td>
-                                             <td><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
-                                             <td><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
-                                         </tr>
-                                     <?php $no++;
+                                 <tr>
+                                     <td><?= $no ?></td>
+                                     <td>
+                                         <?php if ($value['status'] == 'aktif') : ?>
+                                         <a href="<?= site_url('home/nonaktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
+                                             class="btn btn-sm btn-danger">Nonaktifkan</a>
+                                         <?php else : ?>
+                                         <a href="<?= site_url('home/aktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
+                                             class="btn btn-sm btn-success">Aktifkan</a>
+                                         <?php endif ?>
+                                     </td>
+                                     <td><a href="<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>"
+                                             class="btn btn-sm btn-warning"><i class="fas fa-pen"
+                                                 title="Edit Data Pemakai"></i></a></td>
+                                     <td><?= $value['nama_pemakai'] ?></td>
+                                     <td><?= $value['nip_pemakai'] ?></td>
+                                     <td><?= $value['lokasi_unit'] ?></td>
+                                     <td><?php if ($value['status'] == "tidak_aktif") : ?>
+                                         Tidak Aktif
+                                         <?php else : ?>
+                                         Aktif
+                                         <?php endif ?>
+                                     </td>
+                                     <td><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
+                                     <td><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
+                                 </tr>
+                                 <?php $no++;
                                         endforeach   ?>
                                  <?php endif ?>
                              </tbody>
@@ -114,7 +124,8 @@
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('home/prosestambahPemakai?id=' . $kend['idk'] . '') ?>" enctype="multipart/form-data">
+         <form method="post" action="<?= site_url('home/prosestambahPemakai?id=' . $kend['idk'] . '') ?>"
+             enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
                      <h4 class="modal-title">Form Riwayat Pemakai</h4>
@@ -145,7 +156,7 @@
                                      <option readonly>-- Pilih Lokasi Unit --</option>
                                      <?php if ($lu != '') {
                                             foreach ($lu as $value) { ?>
-                                             <option><?= $value['lokasi_unit'] ?></option>
+                                     <option><?= $value['lokasi_unit'] ?></option>
                                      <?php }
                                         } ?>
                                  </select>
@@ -172,6 +183,7 @@
                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                      <button type="sumbit" class="btn btn-primary">Simpan</button>
                  </div>
+             </div>
          </form>
      </div>
      <!-- /.modal-content -->

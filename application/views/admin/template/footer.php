@@ -52,6 +52,7 @@ footer {
   <!-- jquery-validation -->
   <script src="<?= base_url('assets/admin/') ?>plugins/jquery-validation/jquery.validate.min.js"></script>
   <script src="<?= base_url('assets/admin/') ?>plugins/jquery-validation/additional-methods.min.js"></script>
+  <script src="<?= base_url('assets/admin/') ?>plugins/function.js"></script>
 
   <!-- AdminLTE App -->
   <script src="<?= base_url('assets/admin/') ?>dist/js/adminlte.min.js"></script>

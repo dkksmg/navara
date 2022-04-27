@@ -3,7 +3,7 @@
      <div class="container">
          <div class="row mb-2">
              <div class="col-sm-6">
-                 <h1 class="m-0"> Data Kendaraan Dinas <small>NAVARA</small></h1>
+                 <!-- <h1 class="m-0"> Data Kendaraan Dinas <small>NAVARA</small></h1> -->
              </div><!-- /.col -->
              <div class="col-sm-6">
                  <ol class="breadcrumb float-sm-right">
@@ -64,10 +64,15 @@
                          <table class="table table-bordered table-striped example" width="100%;">
                              <thead>
                                  <tr>
-                                     <th>No</th>
-                                     <th>Aksi</th>
-                                     <th>Tanggal</th>
-                                     <th>Total Harga BBM</th>
+                                     <th rowspan="2" class="text-center">No</th>
+                                     <th colspan="2" class="text-center">Aksi</th>
+                                     <th rowspan="2" class="text-center">Tanggal</th>
+                                     <th rowspan="2" class="text-center">Total Harga BBM</th>
+                                     <th rowspan="2" class="text-center">Foto Struk BBM</th>
+                                 </tr>
+                                 <tr>
+                                     <th></th>
+                                     <th></th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -75,11 +80,17 @@
                                     if ($rbbm != '') {
                                         foreach ($rbbm as $value) { ?>
                                  <tr>
-                                     <td><?= $no++; ?></td>
-                                     <td><a href="<?= site_url('admin/hapusrbbm?id=' . $value['id_bbm'] . '&idkend=' . $value['id_kendaraan'] . '') ?>"
-                                             class="btn btn-sm btn-danger">Hapus</a></td>
-                                     <td><?= $value['tgl_pencatatan'] ?></td>
-                                     <td>Rp <?= number_format($value['total_bbm'], 2, ',', '.'); ?></td>
+                                     <td class="text-center"><?= $no++; ?></td>
+                                     <td class="text-center"><a
+                                             href="<?= site_url('admin/hapusrbbm?id=' . $value['id_bbm'] . '&idkend=' . $value['id_kendaraan'] . '') ?>"
+                                             class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a></td>
+                                     <td class="text-center"><a
+                                             href="<?= site_url('admin/editrbbm?id=' . $value['id_bbm'] . '&idkend=' . $value['id_kendaraan'] . '') ?>"
+                                             class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a></td>
+                                     <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
+                                     <td class="text-center">Rp <?= number_format($value['total_bbm'], 2, ',', '.'); ?>
+                                     </td>
+                                     <td><img src="" alt="Foto Struk BBM"></td>
                                  </tr>
                                  <?php }
                                     } ?>

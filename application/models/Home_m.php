@@ -38,7 +38,8 @@ class Home_m extends CI_Model
     {
 
         $this->db->select(" count(*) as jml, sum(if(riwayat_kondisi.kondisi = 'Baik',1,0)) as baik,sum(if(riwayat_kondisi.kondisi = 'Rusak Ringan',1,0)) as ringan,sum(if(riwayat_kondisi.kondisi = 'Rusak Sedang',1,0)) as sedang,sum(if(riwayat_kondisi.kondisi = 'Rusak Berat',1,0)) as berat ");
-        $this->db->join('(SELECT * from riwayat_kondisi group by id_kendaraan ) riwayat_kondisi', 'riwayat_kondisi.id_kendaraan=kendaraan.idk');
+        $this->db->join('(SELECT * from riwayat_kondisi group by id_kendaraan order BY created_rk DESC) riwayat_kondisi', 'riwayat_kondisi.id_kendaraan=kendaraan.idk');
+        $this->db->where("tgl_pencatatan BETWEEN '$dari' AND '$sampai'");
         $query = $this->db->get('kendaraan');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -103,6 +104,12 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function data_pemakaibyid($id = null)
+    {
+        $this->db->where('id_rp', $id);
+        $query = $this->db->get('riwayat_pemakai')->row_array();
+        return $query;
+    }
     public function nonaktifkanpemakai($id = null)
     {
 
@@ -118,19 +125,6 @@ class Home_m extends CI_Model
         $this->db->Where('id_rp', $id);
         $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
-
-        $data = array(
-            array(
-                'title' => 'My title',
-                'name' => 'My Name 2',
-                'date' => 'My date 2'
-            ),
-            array(
-                'title' => 'Another title',
-                'name' => 'Another Name 2',
-                'date' => 'Another date 2'
-            )
-        );
     }
     public function data_riwayatpemakaibyid($id = null)
     {
@@ -277,7 +271,7 @@ class Home_m extends CI_Model
     public function tambahriwayatkendaraan($dpn = null, $blkg = null, $kiri = null, $kanan = null, $idk = null)
     {
         $data['foto_tampak_depan']      = $dpn;
-        $data['foto_tampak_blakang']    = $blkg;
+        $data['foto_tampak_belakang']    = $blkg;
         $data['foto_tampak_kiri']       = $kiri;
         $data['foto_tampak_kanan']      = $kanan;
         $data['id_kendaraan']           = $idk;
@@ -332,6 +326,18 @@ class Home_m extends CI_Model
         $q = $this->db->insert('riwayat_pemakai', $data);
         return $q;
     }
+    public function proseseditPemakai($idk = null)
+    {
+        $data['nama_pemakai']   = $this->input->post('nama');
+        $data['lokasi_unit']    = $this->input->post('lokunit');
+        $data['nip_pemakai']    = $this->input->post('nip');
+        $data['tgl_awal']       = date('Y-m-d', strtotime($this->input->post('dari')));
+        $data['tgl_akhir']      = date('Y-m-d', strtotime($this->input->post('sampai')));
+
+        $q = $this->db->where('id_rp', $idk)->update('riwayat_pemakai', $data);
+        return $q;
+    }
+
 
     public function tambahriwayatserviskendaraan($fotoservis = null, $idk = null, $nota = null)
     {

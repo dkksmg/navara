@@ -16,6 +16,7 @@ class Rekap extends CI_Controller
 	public function index()
 	{
 		$data = [];
+		$data['title'] = "Rekap Laporan Kendaraan Dinas";
 		if ($this->input->get()) {
 			$dari = date('Y-m-d', strtotime($this->input->get('dari')));
 			$sampai = date('Y-m-d', strtotime($this->input->get('sampai')));
@@ -23,6 +24,8 @@ class Rekap extends CI_Controller
 			$data['sampai'] = $sampai;
 			$data['rekap'] = $this->home_m->data_rekap($dari, $sampai);
 		}
+		// print_r($this->db->last_query());
+		// die();
 		$this->load->view('admin/template/header');
 		$this->load->view('admin/datarekap', $data);
 		$this->load->view('admin/template/footer');

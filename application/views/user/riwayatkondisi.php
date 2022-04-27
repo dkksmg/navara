@@ -76,8 +76,8 @@
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($rk != '') {
-                    foreach ($rk as $value) { ?>
+                                    if ($rk != '') {
+                                        foreach ($rk as $value) { ?>
                                  <tr>
                                      <td><?= $no++; ?></td>
                                      <td><a href="<?= site_url('home/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
@@ -94,11 +94,11 @@
                                              src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kiri'] . '') ?>">
                                      </td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_blakang'] . '') ?>">
+                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_belakang'] . '') ?>">
                                      </td>
                                  </tr>
                                  <?php }
-                  } ?>
+                                    } ?>
                              </tbody>
                          </table>
                      </div>

@@ -95,7 +95,7 @@ class Auth extends CI_Controller
             $user = $this->db->get_where('users', ['username' => $username]);
             if ($user->num_rows() > 0) {
                 $hasil = $user->row();
-                if (password_verify($password, $hasil->password)) {
+                if (password_verify($password, $hasil->password) && $hasil->status == 'Aktif') {
                     $session_data = array(
                         'id'        => $hasil->id,
                         'name'      => $hasil->name,
@@ -109,6 +109,17 @@ class Auth extends CI_Controller
                     $this->session->set_userdata($session_data);
                     $this->session->set_flashdata('success', 'Login berhasil');
                     redirect('home');
+                } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
+                    $this->session->set_flashdata(
+                        'message',
+                        '<div class="alert alert-danger alert-dismissible fade show">
+						Akun Anda dinonaktifkan.<br>Silahkan hubungi Admin Sistem!
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>'
+                    );
+                    redirect('auth');
                 } else {
                     $this->session->set_flashdata(
                         'message',

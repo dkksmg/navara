@@ -33,7 +33,7 @@
                 <div class="input-group mb-3">
                     <input type="text"
                         class="form-control <?php if (form_error('username') == TRUE) : ?> is-invalid <?php endif ?>"
-                        placeholder="Username" name="username">
+                        placeholder="Username" name="username" value="<?= set_value('username') ?>">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -82,7 +82,7 @@
             $(".alert").fadeTo(500, 0).slideUp(500, function() {
                 $(this).remove();
             });
-        }, 3500);
+        }, 4500);
     });
     </script>
     <script type="text/javascript">

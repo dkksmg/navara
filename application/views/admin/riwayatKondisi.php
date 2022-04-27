@@ -3,7 +3,7 @@
      <div class="container">
          <div class="row mb-2">
              <div class="col-sm-6">
-                 <h1 class="m-0"> Data Kendaraan Dinas <small>NAVARA</small></h1>
+                 <!-- <h1 class="m-0"> Data Kendaraan Dinas <small>NAVARA</small></h1> -->
              </div><!-- /.col -->
              <div class="col-sm-6">
                  <ol class="breadcrumb float-sm-right">
@@ -64,14 +64,18 @@
                          <table class="table table-bordered table-striped example">
                              <thead>
                                  <tr>
-                                     <th>No</th>
-                                     <th>Aksi</th>
-                                     <th>Tgl Pencatatan</th>
-                                     <th>Kondisi</th>
-                                     <th>Foto Tampak Depan</th>
-                                     <th>Foto Tampak Kanan</th>
-                                     <th>Foto Tampak Kiri</th>
-                                     <th>Foto Tampak Belakang</th>
+                                     <th rowspan="2">No</th>
+                                     <th colspan="2" class="text-center">Aksi</th>
+                                     <th rowspan="2">Tgl Pencatatan</th>
+                                     <th rowspan="2">Kondisi</th>
+                                     <th rowspan="2">Foto Tampak Depan</th>
+                                     <th rowspan="2">Foto Tampak Kanan</th>
+                                     <th rowspan="2">Foto Tampak Kiri</th>
+                                     <th rowspan="2">Foto Tampak Belakang</th>
+                                 </tr>
+                                 <tr>
+                                     <th></th>
+                                     <th></th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -82,7 +86,9 @@
                                  <tr>
                                      <td><?= $no; ?></td>
                                      <td><a href="<?= site_url('home/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
-                                             class="btn btn-sm btn-danger">Hapus</a></td>
+                                             class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a></td>
+                                     <td><a href="<?= site_url('home/editriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
+                                             class="btn btn-sm btn-warning"><i class="fas fa-pen"></i></a></td>
                                      <td><?= $value['tgl_pencatatan'] ?></td>
                                      <td><?= $value['kondisi'] ?></td>
                                      <td><img width="70%"
