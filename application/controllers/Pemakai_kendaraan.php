@@ -33,6 +33,8 @@ class Pemakai_kendaraan extends CI_Controller
     $data = [];
     $data['title'] = "Data Pemakai Kendaraan Dinas";
     $data['kendaraan'] = $this->pemakai_kendaraan_model->dataPemakaiKendaraanByStatusPemakai();
+    // print_r($this->db->last_query());
+    // die();
     $this->load->view('admin/template/header');
     $this->load->view('admin/dataPemakaiKendaraan', $data);
     $this->load->view('admin/template/footer');

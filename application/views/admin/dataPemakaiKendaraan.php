@@ -34,6 +34,7 @@
                                      <th>No</th>
                                      <th>ID ASSETS</th>
                                      <th>Pemakai</th>
+                                     <th>Lokasi Unit</th>
                                      <th>No. Polisi</th>
                                      <th>Jenis</th>
                                      <th>Merk</th>
@@ -55,6 +56,7 @@
                                      <td><?= $no++; ?></td>
                                      <td><?= $kend['id_assets'] ?></td>
                                      <td><?= $kend['nama_pemakai'] ?></td>
+                                     <td><?= $kend['lokasi_unit'] ?></td>
                                      <td><?= $kend['no_polisi'] ?></td>
                                      <td><?= $kend['jenis'] ?></td>
                                      <td><?= $kend['merk'] ?></td>

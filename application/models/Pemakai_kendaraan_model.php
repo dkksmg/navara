@@ -32,16 +32,32 @@ class Pemakai_kendaraan_model extends CI_Model
   // ------------------------------------------------------------------------
   public function dataPemakaiKendaraanByStatusPemakai()
   {
-    if ($this->session->userdata('rule') == 'admin') {
-      $this->db->where('user_id', $this->session->userdata('id'));
-    }
-    $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
-      ->order_by('idk', 'asc')
-      ->group_start()
-      ->where('riwayat_pemakai.status', 'aktif')
-      // ->or_where('riwayat_pemakai.status is null')
-      ->group_end()
-      ->get('kendaraan');
+    if ($this->session->userdata('role') == 'Pemakai') :
+      $data['user'] = $this->db
+        ->get_where('users', [
+          'id' => $this->session->userdata('id'),
+        ])
+        ->row_array();
+      $lokasi = $data['user']['wilayah'];
+      $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+        ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
+        ->order_by('idk', 'asc')
+        ->group_start()
+        ->where(array('riwayat_pemakai.status' => 'aktif', 'riwayat_pemakai.lokasi_unit' => $lokasi))
+        // ->or_where('riwayat_pemakai.status is null')
+        ->group_end()
+        ->get('kendaraan');
+    else :
+      $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+        ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
+        ->order_by('idk', 'asc')
+        ->group_start()
+        ->where('riwayat_pemakai.status', 'aktif')
+        // ->or_where('riwayat_pemakai.status is null')
+        ->group_end()
+        ->get('kendaraan');
+    endif;
+
     if ($query->num_rows() > 0) {
       foreach ($query->result_array() as $row) {
         $hasil[] = $row;
@@ -49,6 +65,16 @@ class Pemakai_kendaraan_model extends CI_Model
       return $hasil;
     }
   }
+  // public function dataPemakaiKendaraanBy()
+  // {
+
+  //   if ($query->num_rows() > 0) {
+  //     foreach ($query->result_array() as $row) {
+  //       $hasil[] = $row;
+  //     }
+  //     return $hasil;
+  //   }
+  // }
 
   // ------------------------------------------------------------------------
 
