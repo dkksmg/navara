@@ -25,6 +25,14 @@ function check_session()
         redirect('auth');
     }
 }
+function check_level()
+{
+    $ci = &get_instance();
+    $level = $ci->session->userdata('role');
+    if ($level == 'Pemakai') {
+        show_404();
+    }
+}
 function id_aset()
 {
     $ci = &get_instance();

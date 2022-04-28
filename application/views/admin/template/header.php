@@ -62,26 +62,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="collapse navbar-collapse order-3" id="navbarCollapse">
                     <!-- Left navbar links -->
                     <ul class="navbar-nav">
-                        <li class="nav-item">
+                        <li class="nav-item <?= $this->uri->segment(1) == 'dashboard' ? 'active' : '' ?>">
                             <a href="<?= site_url('dashboard') ?>" class="nav-link">Home</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $this->uri->segment(1) == 'pemakai_kendaraan'  ? 'active' : '' ?>">
                             <a href="<?= site_url('pemakai_kendaraan') ?>" class="nav-link">Pemakai</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $this->uri->segment(1) == 'home' ? 'active' : '' ?>">
                             <a href="<?= site_url('home') ?>" class="nav-link">Kendaraan</a>
                         </li>
-                        <?php if ($this->session->userdata('rule') != 'pemakai') { ?>
-                        <li class="nav-item">
+                        <?php if ($this->session->userdata('role') != 'Pemakai') : ?>
+                        <li class="nav-item
+                            <?= $this->uri->segment(1) == 'rekap' || $this->uri->segment(1) == '' ? 'active' : '' ?>">
                             <a href="<?= site_url('rekap') ?>" class="nav-link">Rekap Laporan</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $this->uri->segment(2) == 'user' ? 'active' : '' ?>">
                             <a href="<?= site_url('admin/user') ?>" class="nav-link">User</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $this->uri->segment(1) == 'servis' ? 'active' : '' ?>">
                             <a href="<?= site_url('servis') ?>" class="nav-link">Detail Service</a>
                         </li>
-                        <?php } ?>
+                        <?php endif ?>
                     </ul>
                 </div>
 
@@ -93,11 +94,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <strong><?php echo $this->session->userdata('name'); ?></strong>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-header"
-                                style="font-weight:bold;"><?= $this->session->userdata('rule'); ?></span>
-                            <div class="dropdown-divider"></div>
-                            <a href="<?= site_url('home/profile') ?>" class="dropdown-item">
-                                <?= $this->session->userdata('name'); ?>
+                            <a href="<?php echo site_url(
+                                            'profile'
+                                        ); ?>" class="dropdown-item">
+                                <i class="fa-solid fa-user-tie mr-2"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="<?= site_url('auth/logout') ?>" class="dropdown-item dropdown-footer">KELUAR</a>

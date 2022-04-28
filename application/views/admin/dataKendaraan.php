@@ -69,7 +69,7 @@
                                          <a href="<?= site_url('home/riwayat_pajak?id=' . $kend['idk'] . '') ?>"
                                              class="btn btn-sm btn-primary jedatombol" title="Riwayat Pajak"><i
                                                  class="fa fa-align-justify"></i></a>
-                                         <?php if ($this->session->userdata('logged_in_admin') == TRUE) : ?>
+                                         <?php if ($this->session->userdata('role') != "Pemakai") : ?>
                                          <a href="<?= site_url('admin/pagu?id=' . $kend['idk'] . '') ?>"
                                              class="btn btn-sm btn-dark jedatombol" title="Pagu Tahunan"><i
                                                  class="fa fa-wallet"></i></a>

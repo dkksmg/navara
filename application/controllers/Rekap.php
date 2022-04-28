@@ -8,6 +8,7 @@ class Rekap extends CI_Controller
 	{
 		parent::__construct();
 		check_session();
+		check_level();
 		if (!$this->session->userdata('logged_in_admin') !== FALSE) {
 			redirect('pemakai');
 		}
@@ -24,8 +25,6 @@ class Rekap extends CI_Controller
 			$data['sampai'] = $sampai;
 			$data['rekap'] = $this->home_m->data_rekap($dari, $sampai);
 		}
-		// print_r($this->db->last_query());
-		// die();
 		$this->load->view('admin/template/header');
 		$this->load->view('admin/datarekap', $data);
 		$this->load->view('admin/template/footer');

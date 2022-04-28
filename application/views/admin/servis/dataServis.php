@@ -21,19 +21,19 @@
              <div class="col-lg-12">
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas</h3>
+                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-body">
                          <table class="table table-bordered table-striped example" width="100%">
                              <thead>
                                  <tr>
-                                     <th>No</th>
-                                     <th width="150px">Aksi</th>
-                                     <th>ID ASSETS</th>
-                                     <th>No. Polisi</th>
-                                     <th>Jenis</th>
-                                     <th>Merk</th>
-                                     <th>Tipe</th>
+                                     <th class="text-center">No</th>
+                                     <th width="150px" class="text-center">Aksi</th>
+                                     <th class="text-center">ID ASSETS</th>
+                                     <th class="text-center">No. Polisi</th>
+                                     <th class="text-center">Jenis</th>
+                                     <th class="text-center">Merk</th>
+                                     <th class="text-center">Tipe</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -42,15 +42,15 @@
                                         foreach ($kendaraan as $kend) { ?>
                                  <tr>
                                      <td><?= $no++; ?></td>
-                                     <td>
+                                     <td class="text-center">
                                          <a href="<?= site_url('servis/detail_servis?id=' . $kend['idk'] . '') ?>"
                                              class="btn btn-sm btn-warning jedatombol">Detail Servis</a>
                                      </td>
-                                     <td><?= $kend['id_assets'] ?></td>
-                                     <td><?= $kend['no_polisi'] ?></td>
-                                     <td><?= $kend['jenis'] ?></td>
-                                     <td><?= $kend['merk'] ?></td>
-                                     <td><?= $kend['tipe'] ?></td>
+                                     <td class="text-center"><?= $kend['id_assets'] ?></td>
+                                     <td class="text-center"><?= $kend['no_polisi'] ?></td>
+                                     <td class="text-center"><?= $kend['jenis'] ?></td>
+                                     <td class="text-center"><?= $kend['merk'] ?></td>
+                                     <td class="text-center"><?= $kend['tipe'] ?></td>
                                  </tr>
                                  <?php }
                                     } ?>

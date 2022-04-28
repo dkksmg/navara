@@ -185,6 +185,7 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+
     public function data_servisById($id)
     {
         $query = $this->db

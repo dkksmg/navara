@@ -307,7 +307,6 @@ class Home extends CI_Controller
 
     public function riwayat_servis()
     {
-
         $id = $this->input->get('id');
         $data = [];
         $data['kend'] = $this->home_m->kendaraanByid($id);

@@ -8,6 +8,7 @@ class Admin extends CI_Controller
     {
         parent::__construct();
         check_session();
+        check_level();
         $this->load->model('home_m');
         $this->load->model('admin_m');
     }
