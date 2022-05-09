@@ -333,6 +333,122 @@ class Pemakai extends CI_Controller
             $data['post'] = $this->input->post();
         }
     }
+    public function proseseditkondisi()
+    {
+        $id_rs = $this->input->get('id');
+        $idk = $this->input->post('id_kend');
+        $tgl = $this->input->post('tgl');
+        $tipe = $this->input->post('tipe');
+        $no_pol = $this->input->post('no_pol');
+
+
+        $data = [];
+        $idk = $this->input->get('id');
+        $config['upload_path'] = './assets/file_kendaraan/'; //path folder
+        $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+        $config['encrypt_name'] = TRUE; //Enkripsi nama yang terupload
+
+        $this->load->library('upload', $config);
+
+        if (!empty($_FILES['depan']['name'])) {
+            $this->load->library('upload', $config, 'depan');
+            $this->depan->initialize($config);
+            $this->depan->do_upload('depan');
+            $dpn = $this->depan->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/file_kendaraan/' . $dpn['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/file_kendaraan/' . $dpn['file_name'];
+            $this->load->library('image_lib', $config, 'resizedpn');
+            $res = $this->resizedpn->resize();
+            $nama_dpn = $dpn['file_name'];
+        }
+        if (!empty($_FILES['blkg']['name'])) {
+            $this->load->library('upload', $config, 'blkg');
+            $this->blkg->initialize($config);
+            $this->blkg->do_upload('blkg');
+            $blkg = $this->blkg->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/file_kendaraan/' . $blkg['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/file_kendaraan/' . $blkg['file_name'];
+            $this->load->library('image_lib', $config, 'resizeblkg');
+            $res = $this->resizeblkg->resize();
+            $nama_blkg = $blkg['file_name'];
+        }
+        if (!empty($_FILES['kiri']['name'])) {
+            $this->load->library('upload', $config, 'kiri');
+            $this->kiri->initialize($config);
+            $this->kiri->do_upload('kiri');
+            $kiri = $this->kiri->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/file_kendaraan/' . $kiri['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/file_kendaraan/' . $kiri['file_name'];
+            $this->load->library('image_lib', $config, 'resizekiri');
+            $res = $this->resizekiri->resize();
+            $nama_kiri = $kiri['file_name'];
+        }
+        if (!empty($_FILES['kanan']['name'])) {
+            $this->load->library('upload', $config, 'kanan');
+            $this->kanan->initialize($config);
+            $this->kanan->do_upload('kanan');
+            $kanan = $this->kanan->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/file_kendaraan/' . $kanan['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/file_kendaraan/' . $kanan['file_name'];
+            $this->load->library('image_lib', $config, 'resizekanan');
+            $res = $this->resizekanan->resize();
+            $nama_kanan = $kanan['file_name'];
+        }
+        if (!empty($_FILES['depan']['name']) && !empty($_FILES['blkg']['name']) && !empty($_FILES['kiri']['name']) && !empty($_FILES['kanan']['name'])) {
+            $simpan = $this->home_m->tambahriwayatkendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $idk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Tambah Riwayat Kondisi Kendaraan Berhasil');
+                redirect('pemakai/riwayatkondisi');
+            } else {
+                $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else {
+            if (isset($nama_dpn)) {
+                unlink('./assets/file_kendaraan/' . $nama_dpn);
+            }
+            if (isset($nama_blkg)) {
+                unlink('./assets/file_kendaraan/' . $nama_blkg);
+            }
+            if (isset($nama_kiri)) {
+                unlink('./assets/file_kendaraan/' . $nama_kiri);
+            }
+            if (isset($nama_kanan)) {
+                unlink('./assets/file_kendaraan/' . $nama_kanan);
+            }
+            $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
+            redirect('pemakai/riwayatkondisi');
+            $data['post'] = $this->input->post();
+        }
+    }
 
 
     public function prosestambahbbm()

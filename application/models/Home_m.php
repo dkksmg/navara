@@ -194,6 +194,14 @@ class Home_m extends CI_Model
             ->row_array();
         return $query;
     }
+    public function data_kondisiById($id)
+    {
+        $query = $this->db
+            ->join('kendaraan', 'riwayat_kondisi.id_kendaraan = kendaraan.idk')
+            ->get_where('riwayat_kondisi', ['id_rk' => $id])
+            ->row_array();
+        return $query;
+    }
     public function data_riwayatKondisibyid($id = null)
     {
         $this->db->where('id_rk', $id);

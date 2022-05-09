@@ -19,7 +19,7 @@ class Servis extends CI_Controller
         $data['title'] = 'Detail Servis Kendaraan Dinas';
         $data['kendaraan'] = $this->home_m->data_kendaraan();
         $this->load->view('admin/template/header');
-        $this->load->view('admin/servis/dataservis', $data);
+        $this->load->view('admin/servis_kendaraan/dataservis', $data);
         $this->load->view('admin/template/footer');
     }
     public function detail_servis()
@@ -32,10 +32,8 @@ class Servis extends CI_Controller
         $data['title'] = 'Riwayat Servis Kendaraan Dinas';
         $data['kend'] = $this->servis_m->kendaraanByid($id);
         $data['rs'] = $this->servis_m->data_riwayatservisbulantahun($idk, $bulan_pilihan, $tahun_pilihan);
-        // print_r($this->db->last_query());
-        // die();
         $this->load->view('admin/template/header');
-        $this->load->view('admin/servis/detailservis', $data);
+        $this->load->view('admin/servis_kendaraan/detailservis', $data);
         $this->load->view('admin/template/footer');
     }
 }

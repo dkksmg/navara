@@ -155,6 +155,17 @@ $(".popup").css({
     'z-index': '10000',
     'background': 'white'
 });
+$(".popup-kondisi").css({
+    'position': 'relative',
+    'top': '150px',
+    'left': '50px',
+    'bottom': '150px',
+    'width': '500px',
+    'margin': 'auto',
+    'border': '10px solid grey',
+    'z-index': '10000',
+    'background': 'white'
+});
 
 $("#close").css({
     'position': 'absolute',

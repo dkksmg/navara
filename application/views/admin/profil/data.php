@@ -18,7 +18,7 @@
  <div class="content">
      <div class="container">
          <div class="row">
-             <div class="col-lg-12">
+             <div class=" col-lg-12">
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
                          <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>

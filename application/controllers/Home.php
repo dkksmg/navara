@@ -68,7 +68,18 @@ class Home extends CI_Controller
         $data['kend'] = $this->home_m->kendaraanByid($id);
         $data['rk'] = $this->home_m->data_riwayatKondisi($id);
         $this->load->view('admin/template/header');
-        $this->load->view('admin/riwayatKondisi', $data);
+        $this->load->view('admin/kondisi_kendaraan/riwayatKondisi', $data);
+        $this->load->view('admin/template/footer');
+    }
+    public function editriwayatkondisi()
+    {
+        $id = $this->input->get('id');
+        $data = [];
+        $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
+        $data['kend'] = $this->home_m->kendaraanByid($id);
+        $data['value'] = $this->home_m->data_kondisiById($id);
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/kondisi_kendaraan/editriwayatkondisi', $data);
         $this->load->view('admin/template/footer');
     }
     public function riwayat_pemakai()
@@ -312,17 +323,17 @@ class Home extends CI_Controller
         $data['kend'] = $this->home_m->kendaraanByid($id);
         $data['rs'] = $this->home_m->data_riwayatservis($id);
         $this->load->view('admin/template/header');
-        $this->load->view('admin/servis/riwayatservis', $data);
+        $this->load->view('admin/servis_kendaraan/riwayatservis', $data);
         $this->load->view('admin/template/footer');
     }
-    public function edit_servis()
+    public function editriwayatservis()
     {
         $id = $this->input->get('id');
         $data = [];
         $data['title'] = "Edit Riwayat Servis Kendaraan";
         $data['servis'] = $this->home_m->data_servisById($id);
         $this->load->view('admin/template/header');
-        $this->load->view('admin/servis/editriwayatservis', $data);
+        $this->load->view('admin/servis_kendaraan/editriwayatservis', $data);
         $this->load->view('admin/template/footer');
     }
     public function delete_servis()
@@ -397,4 +408,11 @@ class Home extends CI_Controller
     //         $data['post'] = $this->input->post();
     //     }
     // }
+    public function print_data_kendaraan()
+    {
+        check_level();
+        $this->load->view('admin/template/header');
+        // $this->load->view('admin/servis/editriwayatservis', $data);
+        $this->load->view('admin/template/footer');
+    }
 }
