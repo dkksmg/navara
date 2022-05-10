@@ -76,7 +76,6 @@ class Home extends CI_Controller
         $id = $this->input->get('id');
         $data = [];
         $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
-        $data['kend'] = $this->home_m->kendaraanByid($id);
         $data['value'] = $this->home_m->data_kondisiById($id);
         $this->load->view('admin/template/header');
         $this->load->view('admin/kondisi_kendaraan/editriwayatkondisi', $data);
@@ -118,117 +117,188 @@ class Home extends CI_Controller
     }
     public function riwayat_pajak()
     {
-        $data = [];
         $id = $this->input->get('id');
+        $data = [];
         $data['rp'] = $this->home_m->data_riwayatpajak($id);
         $data['kend'] = $this->home_m->kendaraanByid($id);
+        $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
         $this->load->view('admin/template/header');
-        $this->load->view('admin/riwayatPajak', $data);
+        $this->load->view('admin/pajak/riwayatPajak', $data);
         $this->load->view('admin/template/footer');
     }
+    public function editriwayatpajak()
+    {
+        $id = $this->input->get('id');
+        $data = [];
+        $data['rp'] = $this->home_m->data_riwayatpajak($id);
+        $data['value'] = $this->home_m->datapajakById($id);
+        $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/pajak/editriwayatPajak', $data);
+        $this->load->view('admin/template/footer');
+    }
+    public function proseseditpajak()
+    {
+        $id_pjk = $this->input->get('id');
+        $id = $this->input->get('id');
+        $id_kend = $this->input->post('id_kend');
+        if ($this->input->post()) {
+            $cektahun = $this->home_m->cek_tahun_pajak($id, $this->input->post('tahun_pajak'));
+            if ($cektahun != '') {
+                $this->session->set_flashdata('danger', 'Anda sudah menginput pajak untuk tahun ' . $this->input->post('tahun_pajak'));
+                redirect('home/riwayat_pajak?id=' . $id_kend);
+            } else {
+                if ($this->home_m->updateriwayatpajak($id_pjk)) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat Pajak Kendaraan Berhasil');
+                    redirect('home/riwayat_pajak?id=' . $id_kend . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat Pajak Kendaraan gagal');
+                    redirect('home/riwayat_pajak?id=' . $id_kend . '');
+                }
+            }
+        }
+    }
+    public function hapusriwayatpajak()
+    {
+        $id_pjk = $this->input->get('id');
+        $simpan = $this->home_m->hapusriwayatpajak($id_pjk);
+        if ($simpan) {
+            $this->session->set_flashdata('success', 'Hapus Riwayat Pajak Kendaraan Dinas Berhasil');
+            redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Riwayat Pajak Kendaraan Dinas gagal');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+
     public function prosestambahkondisi()
     {
         $data = [];
         $idk = $this->input->get('id');
-        $config['upload_path'] = './assets/file_kendaraan/'; //path folder
-        $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
-        $config['encrypt_name'] = TRUE; //Enkripsi nama yang terupload
-
-        $this->load->library('upload', $config);
+        $tgl = date('Y-m-d');
+        $tipe = $this->input->post('tipe');
+        $no_pol = $this->input->post('no_pol');
 
         if (!empty($_FILES['depan']['name'])) {
+            $config['upload_path'] = './assets/file_kendaraan/depan/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE; //timpa file yang terupload
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_depan_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+
             $this->load->library('upload', $config, 'depan');
             $this->depan->initialize($config);
             $this->depan->do_upload('depan');
             $dpn = $this->depan->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/' . $dpn['file_name'];
+            $config['source_image'] = './assets/file_kendaraan/depan/' . $dpn['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/' . $dpn['file_name'];
+            $config['new_image'] = './assets/file_kendaraan/depan/' . $dpn['file_name'];
             $this->load->library('image_lib', $config, 'resizedpn');
             $res = $this->resizedpn->resize();
             $nama_dpn = $dpn['file_name'];
         }
         if (!empty($_FILES['blkg']['name'])) {
+
+            $config['upload_path'] = './assets/file_kendaraan/belakang/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE; //timpa file yang terupload
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_belakang_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+
             $this->load->library('upload', $config, 'blkg');
             $this->blkg->initialize($config);
             $this->blkg->do_upload('blkg');
             $blkg = $this->blkg->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/' . $blkg['file_name'];
+            $config['source_image'] = './assets/file_kendaraan/belakang/' . $blkg['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/' . $blkg['file_name'];
+            $config['new_image'] = './assets/file_kendaraan/belakang/' . $blkg['file_name'];
             $this->load->library('image_lib', $config, 'resizeblkg');
             $res = $this->resizeblkg->resize();
             $nama_blkg = $blkg['file_name'];
         }
         if (!empty($_FILES['kiri']['name'])) {
+            $config['upload_path'] = './assets/file_kendaraan/kiri/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE; //timpa file yang terupload
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_kiri_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+
             $this->load->library('upload', $config, 'kiri');
             $this->kiri->initialize($config);
             $this->kiri->do_upload('kiri');
             $kiri = $this->kiri->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/' . $kiri['file_name'];
+            $config['source_image'] = './assets/file_kendaraan/kiri/' . $kiri['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/' . $kiri['file_name'];
+            $config['new_image'] = './assets/file_kendaraan/kiri/' . $kiri['file_name'];
             $this->load->library('image_lib', $config, 'resizekiri');
             $res = $this->resizekiri->resize();
             $nama_kiri = $kiri['file_name'];
         }
         if (!empty($_FILES['kanan']['name'])) {
+            $config['upload_path'] = './assets/file_kendaraan/kanan/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE; //timpa file yang terupload
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_kanan_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+
             $this->load->library('upload', $config, 'kanan');
             $this->kanan->initialize($config);
             $this->kanan->do_upload('kanan');
             $kanan = $this->kanan->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/' . $kanan['file_name'];
+            $config['source_image'] = './assets/file_kendaraan/kanan/' . $kanan['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/' . $kanan['file_name'];
+            $config['new_image'] = './assets/file_kendaraan/kanan/' . $kanan['file_name'];
             $this->load->library('image_lib', $config, 'resizekanan');
             $res = $this->resizekanan->resize();
             $nama_kanan = $kanan['file_name'];
         }
+        // var_dump($nama_blkg, $nama_dpn, $nama_kanan, $nama_kiri);
+        // die();
         if (!empty($_FILES['depan']['name']) && !empty($_FILES['blkg']['name']) && !empty($_FILES['kiri']['name']) && !empty($_FILES['kanan']['name'])) {
             $simpan = $this->home_m->tambahriwayatkendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $idk);
             if ($simpan) {
                 $this->session->set_flashdata('success', 'Tambah Riwayat Kondisi Kendaraan Berhasil');
-                redirect('home/riwayat_kondisi?id=' . $simpan . '');
+                redirect('home/riwayat_kondisi?id=' . $idk);
             } else {
                 $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal');
                 $data['post'] = $this->input->post();
             }
         } else {
             if (isset($nama_dpn)) {
-                unlink('./assets/file_kendaraan/' . $nama_dpn);
+                unlink('./assets/file_kendaraan/depan/' . $nama_dpn);
             }
             if (isset($nama_blkg)) {
-                unlink('./assets/file_kendaraan/' . $nama_blkg);
+                unlink('./assets/file_kendaraan/belakang/' . $nama_blkg);
             }
             if (isset($nama_kiri)) {
-                unlink('./assets/file_kendaraan/' . $nama_kiri);
+                unlink('./assets/file_kendaraan/kiri/' . $nama_kiri);
             }
             if (isset($nama_kanan)) {
-                unlink('./assets/file_kendaraan/' . $nama_kanan);
+                unlink('./assets/file_kendaraan/kanan/' . $nama_kanan);
             }
             $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
             redirect('home/riwayat_kondisi?id=' . $idk . '');

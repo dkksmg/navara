@@ -72,6 +72,7 @@ class Home_m extends CI_Model
     }
     public function data_riwayatpajak($id = null)
     {
+        $this->db->order_by('tahun', 'DESC');
         $this->db->where('id_kendaraan', $id);
         $query = $this->db->get('riwayat_pajak');
         if ($query->num_rows() > 0) {
@@ -298,6 +299,25 @@ class Home_m extends CI_Model
         $q = $this->db->insert('riwayat_kondisi', $data);
         return $idk;
     }
+    public function updateriwayatkondisikendaraan($dpn = null, $blkg = null, $kiri = null, $kanan = null, $id_rk = null)
+    {
+        $data['foto_tampak_depan']      = $dpn;
+        $data['foto_tampak_belakang']    = $blkg;
+        $data['foto_tampak_kiri']       = $kiri;
+        $data['foto_tampak_kanan']      = $kanan;
+        $data['kondisi']          = $this->input->post('kondisi');
+        $data['input_pemakai']          = $this->session->userdata('name');
+        if ($this->session->userdata('rule') == 'admin' || $this->session->userdata('rule') == 'superadmin') {
+            $data['input_user']             = $this->session->userdata('id');
+        }
+        if ($this->session->userdata('rule') == 'pemakai') {
+            $data['id_pemakai']             = $this->session->userdata('id');
+        }
+        $data['input_user']             = $this->session->userdata('id');
+        $this->db->where('id_rk', $id_rk);
+        $q = $this->db->update('riwayat_kondisi', $data);
+        return $q;
+    }
 
     public function hapusriwayatkondisi($idrk = null)
     {
@@ -392,15 +412,37 @@ class Home_m extends CI_Model
     }
     public function tambahriwayatpajak($id = null)
     {
-
         $data['id_kendaraan'] = $id;
         $data['tgl_pencatatan'] = date('Y-m-d');
-        $data['total_harga'] = $this->input->post('total_pajak');
+        $data['total_pajak'] = $this->input->post('total_pajak');
         $data['user_id'] = $this->session->userdata('id');
-        $data['tahun'] = $this->input->post('tahun');
+        $data['tahun'] = $this->input->post('tahun_pajak');
 
         $q = $this->db->insert('riwayat_pajak', $data);
         return $q;
+    }
+    public function updateriwayatpajak($id_pjk = null)
+    {
+        $data['total_pajak'] = $this->input->post('total_pajak');
+        $data['user_id'] = $this->session->userdata('id');
+        // $data['tahun'] = $this->input->post('tahun_pajak');
+
+        $q = $this->db->where('id_pjk', $id_pjk)->update('riwayat_pajak', $data);
+        return $q;
+    }
+    public function hapusriwayatpajak($id_pjk = null)
+    {
+        $this->db->where('id_pjk', $id_pjk);
+        $q = $this->db->delete('riwayat_pajak');
+        return $q;
+    }
+    public function datapajakById($id)
+    {
+        $query = $this->db
+            ->join('kendaraan', 'riwayat_pajak.id_kendaraan = kendaraan.idk')
+            ->get_where('riwayat_pajak', ['id_pjk' => $id])
+            ->row_array();
+        return $query;
     }
 
     public function hapusbbm($id = null)

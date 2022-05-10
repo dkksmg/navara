@@ -52,10 +52,11 @@
              <div class="col-lg-12">
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Riwayat Kondisi</h3>
+                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
                              Tambah Riwayat Pajak
                          </button>
                      </div>
@@ -63,26 +64,33 @@
                          <table class="table table-bordered table-striped example" width="100%;">
                              <thead>
                                  <tr>
-                                     <th>No</th>
-                                     <th>Aksi</th>
-                                     <th>Tanggal Pencatatan</th>
-                                     <th>Tahun</th>
-                                     <th>Total Pajak</th>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center">Aksi</th>
+                                     <th class="text-center">Tanggal Pencatatan</th>
+                                     <th class="text-center">Tahun</th>
+                                     <th class="text-center">Total Pajak</th>
                                  </tr>
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($rp != '') {
-                    foreach ($rp as $value) { ?>
+                                    if ($rp != '') {
+                                        foreach ($rp as $value) { ?>
                                  <tr>
-                                     <td><?= $no++; ?></td>
-                                     <td></td>
-                                     <td><?= $value['tgl_pencatatan'] ?></td>
-                                     <td><?= $value['tahun'] ?></td>
-                                     <td>Rp <?= number_format($value['total_harga'], 2, ',', '.'); ?></td>
+                                     <td class="text-center"><?= $no++; ?></td>
+                                     <td class="text-center">
+                                         <a href="<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>"
+                                             class="btn btn-sm btn-warning jedatombol"><i class="fas fa-pencil"></i></a>
+                                         <a href="<?= site_url('home/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>"
+                                             class="btn btn-sm btn-danger jedatombol"><i class="fas fa-trash"></i></a>
+                                     </td>
+                                     <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
+                                     <td class="text-center"><?= $value['tahun'] ?></td>
+                                     <td class="text-center"><?= $value['total_pajak']; ?></td>
+                                     <!-- <td class="text-center">Rp
+                                         <?= number_format($value['total_pajak'], 2, ',', '.'); ?></td> -->
                                  </tr>
                                  <?php }
-                  } ?>
+                                    } ?>
                              </tbody>
                          </table>
                      </div>
@@ -96,7 +104,7 @@
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('admin/prosestambahpajak?id=' . $kend['idk'] . '') ?>"
+         <form method="post" action="<?= site_url('pemakai/prosestambahpajak?id=' . $kend['idk'] . '') ?>"
              enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
@@ -110,13 +118,25 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Tahun</label>
-                                 <input type="text" class="form-control" name="tahun" value="<?= date('Y') ?>">
+                                 <?php
+                                    $year_start  = 2000;
+                                    $year_end = date('Y');
+                                    $user_selected_year = date('Y');
+
+                                    echo '<select id="year" required class="form-control" name="tahun_pajak">' . "\n";
+                                    for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
+                                        $selected = ($user_selected_year == $i_year ? ' selected' : '');
+                                        echo '<option value="' . $i_year . '"' . $selected . '>' . $i_year . '</option>' . "\n";
+                                    }
+                                    echo '</select>' . "\n";
+                                    ?>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Total Pajak</label>
-                                 <input type="number" class="form-control" name="total_pajak">
+                                 <input type="text" id="rupiah" placeholder="Masukkan Total Pajak" class="form-control"
+                                     name="total_pajak">
                              </div>
                          </div>
                      </div>

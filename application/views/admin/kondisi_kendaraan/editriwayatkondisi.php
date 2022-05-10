@@ -22,22 +22,22 @@
                                 <tr>
                                     <th>ID ASSETS</th>
                                     <th>:</th>
-                                    <th><?= $kend['id_assets'] ?></th>
+                                    <th><?= $value['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
                                     <th>:</th>
-                                    <th><?= $kend['no_polisi'] ?></th>
+                                    <th><?= $value['no_polisi'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= $kend['jenis'] ?></th>
+                                    <th><?= $value['jenis'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= $kend['merk'] ?></th>
+                                    <th><?= $value['merk'] ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -54,6 +54,7 @@
                                 'class="form-horizontal"'
                             );
                             echo form_hidden('id_kend', $value['id_kendaraan']);
+                            echo form_hidden('tgl', $value['tgl_pencatatan']);
                             echo form_hidden('old_depan', $value['foto_tampak_depan']);
                             echo form_hidden('old_belakang', $value['foto_tampak_belakang']);
                             echo form_hidden('old_kiri', $value['foto_tampak_kiri']);
@@ -79,7 +80,7 @@
                                                     'Rusak Ringan' => 'Rusak Ringan',
                                                     'Rusak Sedang' => 'Rusak Sedang',
                                                     'Rusak Berat' => 'Rusat Berat',
-                                                    'Utama Gigi' => 'Utama Gigi',
+                                                    // 'Utama Gigi' => 'Utama Gigi',
                                                 ],
                                                 set_value('kondisi', $value['kondisi']),
                                                 "class='form-control' required"
@@ -93,15 +94,17 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Foto Tampak Depan</label>
-                                            <input type="file" class="form-control" name="depan" required
-                                                accept="image/*">
+                                            <input type="file" class="form-control" name="depan"
+                                                <?php if (empty($value['foto_tampak_depan'])) : ?>required
+                                                <?php endif; ?> accept="image/*">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Foto Tampak Belakang</label>
-                                            <input type="file" class="form-control" name="blkg" required
-                                                accept="image/*">
+                                            <input type="file" class="form-control" name="blkg"
+                                                <?php if (empty($value['foto_tampak_belakang'])) : ?>required
+                                                <?php endif; ?> accept="image/*">
                                         </div>
                                     </div>
                                 </div>
@@ -109,15 +112,17 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Foto Tampak Kiri</label>
-                                            <input type="file" class="form-control" name="kiri" required
-                                                accept="image/*">
+                                            <input type="file" class="form-control" name="kiri"
+                                                <?php if (empty($value['foto_tampak_kiri'])) : ?>required
+                                                <?php endif; ?> accept="image/*">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Foto Tampak Kanan</label>
-                                            <input type="file" class="form-control" name="kanan" required
-                                                accept="image/*">
+                                            <input type="file" class="form-control" name="kanan"
+                                                <?php if (empty($value['foto_tampak_kanan'])) : ?>required
+                                                <?php endif; ?> accept="image/*">
                                         </div>
                                     </div>
 
@@ -131,7 +136,7 @@
                                                 <h5 class="card-title text-center mt-3 mb-3">Foto Tampak Depan</h5>
                                                 <div class="gallery">
                                                     <img class="card-img-top"
-                                                        src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_depan']) ?>"
+                                                        src="<?= base_url('assets/file_kendaraan/depan/' . $value['foto_tampak_depan']) ?>"
                                                         alt="Foto Servis">
                                                 </div>
                                             </div>
@@ -141,7 +146,7 @@
                                                 <h5 class="card-title text-center mt-3 mb-3">Foto Tampak Belakang</h5>
                                                 <div class="gallery">
                                                     <img class="card-img-top"
-                                                        src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_belakang']) ?>"
+                                                        src="<?= base_url('assets/file_kendaraan/belakang/' . $value['foto_tampak_belakang']) ?>"
                                                         alt="Foto Servis">
                                                 </div>
                                             </div>
@@ -152,7 +157,7 @@
                                                 <h5 class="card-title text-center mt-3 mb-3">Foto Tampak Kiri</h5>
                                                 <div class="gallery">
                                                     <img class="card-img-top"
-                                                        src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kiri']) ?>"
+                                                        src="<?= base_url('assets/file_kendaraan/kiri/' . $value['foto_tampak_kiri']) ?>"
                                                         alt="Foto Servis">
                                                 </div>
                                             </div>
@@ -162,7 +167,7 @@
                                                 <h5 class="card-title text-center mt-3 mb-3">Foto Tampak Kanan</h5>
                                                 <div class="gallery">
                                                     <img class="card-img-top"
-                                                        src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kanan']) ?>"
+                                                        src="<?= base_url('assets/file_kendaraan/kanan/' . $value['foto_tampak_kanan']) ?>"
                                                         alt="Foto Servis">
                                                 </div>
                                             </div>
