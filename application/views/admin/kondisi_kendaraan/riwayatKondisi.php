@@ -89,22 +89,22 @@
                                              class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a></td>
                                      <td><a href="<?= site_url('home/editriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
                                              class="btn btn-sm btn-warning"><i class="fas fa-pen"></i></a></td>
-                                     <td><?= $value['tgl_pencatatan'] ?></td>
+                                     <td><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?></td>
                                      <td><?= $value['kondisi'] ?></td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/depan/' . $value['foto_tampak_depan'] . '') ?>"
+                                             src="<?= base_url('assets/upload/file_kendaraan/depan/' . $value['foto_tampak_depan'] . '') ?>"
                                              data-toggle="modal" data-target="#depanModal<?php echo $no ?>">
                                      </td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
+                                             src="<?= base_url('assets/upload/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
                                              data-toggle="modal" data-target="#kananModal<?php echo $no ?>">
                                      </td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
+                                             src="<?= base_url('assets/upload/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
                                              data-toggle="modal" data-target="#kiriModal<?php echo $no ?>">
                                      </td>
                                      <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
+                                             src="<?= base_url('assets/upload/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
                                              data-toggle="modal" data-target="#belakangModal<?php echo $no ?>">
                                      </td>
                                  </tr>
@@ -138,7 +138,7 @@
                  </div>
                  <div class="modal-body">
                      <center>
-                         <img src="<?= base_url('assets/file_kendaraan/depan/' . $value['foto_tampak_depan'] . '') ?>"
+                         <img src="<?= base_url('assets/upload/file_kendaraan/depan/' . $value['foto_tampak_depan'] . '') ?>"
                              alt="Foto Servis" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>
@@ -157,7 +157,7 @@
                  </div>
                  <div class="modal-body">
                      <center>
-                         <img src="<?= base_url('assets/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
+                         <img src="<?= base_url('assets/upload/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
                              alt="Foto Nota" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>
@@ -177,7 +177,7 @@
                  </div>
                  <div class="modal-body">
                      <center>
-                         <img src="<?= base_url('assets/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
+                         <img src="<?= base_url('assets/upload/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
                              alt="Foto Nota" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>
@@ -197,7 +197,7 @@
                  </div>
                  <div class="modal-body">
                      <center>
-                         <img src="<?= base_url('assets/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
+                         <img src="<?= base_url('assets/upload/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
                              alt="Foto Nota" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>

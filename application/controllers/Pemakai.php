@@ -70,11 +70,11 @@ class Pemakai extends CI_Controller
         $no_pol = $this->input->post('no_pol');
 
         if (!empty($_FILES['depan']['name'])) {
-            $config['upload_path'] = './assets/file_kendaraan/depan/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/depan/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             // $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_depan_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_depan_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'depan');
             $this->depan->initialize($config);
@@ -82,24 +82,24 @@ class Pemakai extends CI_Controller
             $dpn = $this->depan->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/depan/' . $dpn['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/depan/' . $dpn['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/depan/' . $dpn['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/depan/' . $dpn['file_name'];
             $this->load->library('image_lib', $config, 'resizedpn');
             $res = $this->resizedpn->resize();
             $nama_dpn = $dpn['file_name'];
         }
         if (!empty($_FILES['blkg']['name'])) {
 
-            $config['upload_path'] = './assets/file_kendaraan/belakang/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/belakang/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             // $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_belakang_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_belakang_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'blkg');
             $this->blkg->initialize($config);
@@ -107,23 +107,23 @@ class Pemakai extends CI_Controller
             $blkg = $this->blkg->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/belakang/' . $blkg['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/belakang/' . $blkg['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/belakang/' . $blkg['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/belakang/' . $blkg['file_name'];
             $this->load->library('image_lib', $config, 'resizeblkg');
             $res = $this->resizeblkg->resize();
             $nama_blkg = $blkg['file_name'];
         }
         if (!empty($_FILES['kiri']['name'])) {
-            $config['upload_path'] = './assets/file_kendaraan/kiri/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/kiri/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             // $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_kiri_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_kiri_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'kiri');
             $this->kiri->initialize($config);
@@ -131,23 +131,23 @@ class Pemakai extends CI_Controller
             $kiri = $this->kiri->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/kiri/' . $kiri['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/kiri/' . $kiri['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/kiri/' . $kiri['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/kiri/' . $kiri['file_name'];
             $this->load->library('image_lib', $config, 'resizekiri');
             $res = $this->resizekiri->resize();
             $nama_kiri = $kiri['file_name'];
         }
         if (!empty($_FILES['kanan']['name'])) {
-            $config['upload_path'] = './assets/file_kendaraan/kanan/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/kanan/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             // $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_kanan_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_kanan_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'kanan');
             $this->kanan->initialize($config);
@@ -155,13 +155,13 @@ class Pemakai extends CI_Controller
             $kanan = $this->kanan->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/kanan/' . $kanan['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/kanan/' . $kanan['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/kanan/' . $kanan['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/kanan/' . $kanan['file_name'];
             $this->load->library('image_lib', $config, 'resizekanan');
             $res = $this->resizekanan->resize();
             $nama_kanan = $kanan['file_name'];
@@ -179,16 +179,16 @@ class Pemakai extends CI_Controller
             }
         } else {
             if (isset($nama_dpn)) {
-                unlink('./assets/file_kendaraan/depan/' . $nama_dpn);
+                unlink('./assets/upload/file_kendaraan/depan/' . $nama_dpn);
             }
             if (isset($nama_blkg)) {
-                unlink('./assets/file_kendaraan/belakang/' . $nama_blkg);
+                unlink('./assets/upload/file_kendaraan/belakang/' . $nama_blkg);
             }
             if (isset($nama_kiri)) {
-                unlink('./assets/file_kendaraan/kiri/' . $nama_kiri);
+                unlink('./assets/upload/file_kendaraan/kiri/' . $nama_kiri);
             }
             if (isset($nama_kanan)) {
-                unlink('./assets/file_kendaraan/kanan/' . $nama_kanan);
+                unlink('./assets/upload/file_kendaraan/kanan/' . $nama_kanan);
             }
             $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
             redirect('pemakai/riwayatkondisi');
@@ -367,11 +367,11 @@ class Pemakai extends CI_Controller
         $no_pol = $this->input->post('no_pol');
         $id_rk = $this->input->get('id');
         if (!empty($_FILES['depan']['name'])) {
-            $config['upload_path'] = './assets/file_kendaraan/depan/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/depan/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             // $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_depan_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_depan_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'depan');
             $this->depan->initialize($config);
@@ -379,23 +379,23 @@ class Pemakai extends CI_Controller
             $dpn = $this->depan->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/depan/' . $dpn['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/depan/' . $dpn['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/depan/' . $dpn['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/depan/' . $dpn['file_name'];
             $this->load->library('image_lib', $config, 'resizedpn');
             $res = $this->resizedpn->resize();
             $nama_dpn = $dpn['file_name'];
         }
         if (!empty($_FILES['blkg']['name'])) {
-            $config['upload_path'] = './assets/file_kendaraan/belakang/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/belakang/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_belakang_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_belakang_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'blkg');
             $this->blkg->initialize($config);
@@ -403,23 +403,23 @@ class Pemakai extends CI_Controller
             $blkg = $this->blkg->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/belakang/' . $blkg['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/belakang/' . $blkg['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/belakang/' . $blkg['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/belakang/' . $blkg['file_name'];
             $this->load->library('image_lib', $config, 'resizeblkg');
             $res = $this->resizeblkg->resize();
             $nama_blkg = $blkg['file_name'];
         }
         if (!empty($_FILES['kiri']['name'])) {
-            $config['upload_path'] = './assets/file_kendaraan/kiri/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/kiri/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_kiri_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_kiri_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'kiri');
             $this->kiri->initialize($config);
@@ -427,23 +427,23 @@ class Pemakai extends CI_Controller
             $kiri = $this->kiri->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/kiri/' . $kiri['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/kiri/' . $kiri['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/kiri/' . $kiri['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/kiri/' . $kiri['file_name'];
             $this->load->library('image_lib', $config, 'resizekiri');
             $res = $this->resizekiri->resize();
             $nama_kiri = $kiri['file_name'];
         }
         if (!empty($_FILES['kanan']['name'])) {
-            $config['upload_path'] = './assets/file_kendaraan/kanan/'; //path folder
+            $config['upload_path'] = './assets/upload/file_kendaraan/kanan/'; //path folder
             $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
             $config['overwrite'] = TRUE; //timpa file yang terupload
             $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_kanan_' . $tipe . '_' . $no_pol . '_' . $tgl . uniqid();
+            $config['file_name'] = 'foto_kanan_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
 
             $this->load->library('upload', $config, 'kanan');
             $this->kanan->initialize($config);
@@ -451,13 +451,13 @@ class Pemakai extends CI_Controller
             $kanan = $this->kanan->data();
             //compress file
             $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/file_kendaraan/kanan/' . $kanan['file_name'];
+            $config['source_image'] = './assets/upload/file_kendaraan/kanan/' . $kanan['file_name'];
             $config['create_thumb'] = FALSE;
             $config['maintain_ratio'] = TRUE;
             $config['quality'] = '50%';
             $config['width'] = 600;
             $config['height'] = 400;
-            $config['new_image'] = './assets/file_kendaraan/kanan/' . $kanan['file_name'];
+            $config['new_image'] = './assets/upload/file_kendaraan/kanan/' . $kanan['file_name'];
             $this->load->library('image_lib', $config, 'resizekanan');
             $res = $this->resizekanan->resize();
             $nama_kanan = $kanan['file_name'];
@@ -488,16 +488,16 @@ class Pemakai extends CI_Controller
             }
         } else {
             if (isset($nama_dpn)) {
-                unlink('./assets/file_kendaraan/depan/' . $nama_dpn);
+                unlink('./assets/upload/file_kendaraan/depan/' . $nama_dpn);
             }
             if (isset($nama_blkg)) {
-                unlink('./assets/file_kendaraan/belakang/' . $nama_blkg);
+                unlink('./assets/upload/file_kendaraan/belakang/' . $nama_blkg);
             }
             if (isset($nama_kiri)) {
-                unlink('./assets/file_kendaraan/kiri/' . $nama_kiri);
+                unlink('./assets/upload/file_kendaraan/kiri/' . $nama_kiri);
             }
             if (isset($nama_kanan)) {
-                unlink('./assets/file_kendaraan/kanan/' . $nama_kanan);
+                unlink('./assets/upload/file_kendaraan/kanan/' . $nama_kanan);
             }
             $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
             redirect('pemakai/riwayatkondisi?=' . $idk . '');

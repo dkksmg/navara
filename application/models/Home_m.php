@@ -11,11 +11,26 @@ class Home_m extends CI_Model
 
     public function data_kendaraan()
     {
-        if ($this->session->userdata('rule') == 'admin') {
-            $this->db->where('user_id', $this->session->userdata('id'));
-        }
-        $query = $this->db->order_by('idk', 'ASC')
-            ->get('kendaraan');
+        if ($this->session->userdata('role') == 'Pemakai') :
+            $data['user'] = $this->db
+                ->get_where('users', [
+                    'id' => $this->session->userdata('id'),
+                ])
+                ->row_array();
+            $lokasi = $data['user']['wilayah'];
+            $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+                ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
+                ->order_by('idk', 'asc')
+                ->group_start()
+                ->where(array('riwayat_pemakai.status' => 'aktif', 'riwayat_pemakai.lokasi_unit' => $lokasi))
+                // ->or_where('riwayat_pemakai.status is null')
+                ->group_end()
+                ->get('kendaraan');
+        else :
+            $query = $this->db->order_by('idk', 'ASC')
+                ->get('kendaraan');
+        endif;
+
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -69,6 +84,12 @@ class Home_m extends CI_Model
             }
             return $hasil;
         }
+    }
+    public function data_riwayatbbm_byid($id_bbm = null)
+    {
+        $this->db->where('id_bbm', $id_bbm);
+        $query = $this->db->get('riwayat_bbm')->row_array();
+        return $query;
     }
     public function data_riwayatpajak($id = null)
     {
@@ -399,15 +420,26 @@ class Home_m extends CI_Model
         return $q;
     }
 
-    public function tambahriwayatbbm($id = null)
+    public function tambahriwayatbbm($id = null, $nama_struk_bbm = null)
     {
 
         $data['id_kendaraan'] = $id;
         $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
         $data['total_bbm'] = $this->input->post('harga_bbm');
+        $data['struk_bbm'] = $nama_struk_bbm;
         $data['user_id'] = $this->session->userdata('id');
 
         $q = $this->db->insert('riwayat_bbm', $data);
+        return $q;
+    }
+    public function updateriwayatbbm($id_bbm = null, $nama_struk_bbm = null)
+    {
+
+        $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
+        $data['total_bbm'] = $this->input->post('harga_bbm');
+        $data['struk_bbm'] = $nama_struk_bbm;
+        $data['user_id'] = $this->session->userdata('id');
+        $q = $this->db->where('id_bbm', $id_bbm)->update('riwayat_bbm', $data);
         return $q;
     }
     public function tambahriwayatpajak($id = null)

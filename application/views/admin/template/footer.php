@@ -107,14 +107,6 @@ $(document).ready(function() {
         yearRange: '1970:+20'
     });
 });
-$(document).ready(function() {
-    $('.tahun_pajak').datepicker({
-        dateFormat: 'yy',
-        changeYear: true,
-        changeMonth: true,
-        yearRange: '1970:+20'
-    });
-});
   </script>
   <script type="text/javascript">
 var rupiah = document.getElementById('rupiah');
