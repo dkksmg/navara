@@ -60,9 +60,6 @@
                                  <div class="col-md-6">
                                      <div class="form-group">
                                          <label>Periode Bulan :</label>
-                                         <!-- <input type="text" class="form-control pilihtanggal" name="dari"
-                                             value="<?= isset($dari) ? date('d-m-Y', strtotime($dari)) : date('d-m-Y'); ?>"
-                                             required> -->
                                          <?php
                                             $options = array(
                                                 '' => '- Pilih -',
@@ -82,7 +79,7 @@
                                             echo form_dropdown(
                                                 'bulan_pilihan',
                                                 $options,
-                                                set_value('bulan_pilihan'),
+                                                set_value($this->input->get('bulan_pilihan')),
                                                 "class='form-control' required"
                                             ); ?>
                                      </div>
@@ -90,12 +87,9 @@
                                  <div class="col-md-6">
                                      <div class="form-group">
                                          <label>Tahun : </label>
-                                         <!-- <input type="text" class="form-control pilihtanggal" name="sampai"
-                                             value="<?= isset($sampai) ? date('d-m-Y', strtotime($sampai)) : date('d-m-Y'); ?>"
-                                             required> -->
                                          <?php
                                             $year_start  = 2000;
-                                            $year_end = date('Y');
+                                            $year_end = date('Y') + 20;
                                             $user_selected_year = date('Y');
 
                                             echo '<select id="year" required class="form-control" name="tahun_pilihan">' . "\n";
@@ -107,7 +101,7 @@
                                             ?>
                                      </div>
                                  </div>
-                                 <?php echo form_hidden('id_kend', $kend['idk']) ?>
+                                 <?php echo form_hidden('id', $kend['idk']) ?>
                              </div>
                              <div class="row">
                                  <div class="col-md-3">
@@ -132,8 +126,9 @@
                              </thead>
                              <tbody>
 
-                                 <?php if (isset($rs) && $rs != '') : ?>
-                                 <?php $no = 1;
+                                 <?php
+                                    if (isset($rs) && $rs != '') :
+                                        $no = 1;
                                         foreach ($rs as $value) : ?>
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
@@ -155,7 +150,8 @@
                                  </tr>
                                  <?php $no++;
                                         endforeach;
-                                        ?>
+                                    endif
+                                    ?>
                              </tbody>
                          </table>
                      </div>
@@ -169,10 +165,29 @@
 
  <!-- Modal Foto Servis & Nota -->
  <?php
-                                        $no = 1;
-                                        foreach ($rs as $value) : ?>
+    if (isset($rs) && $rs != '') :
+        $no = 1;
+        foreach ($rs as $value) : ?>
  <center>
-     <!-- Modal -->
+     <div class="modal fade" id="notaModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
+                             alt="Foto Servis" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
      <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel">
          <div class="modal-dialog" role="document">
@@ -184,25 +199,6 @@
                  <div class="modal-body">
                      <center>
                          <img src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
-                             alt="Foto Servis" class="img-responsive" width="70%" height="auto">
-                     </center>
-                 </div>
-                 <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                 </div>
-             </div>
-         </div>
-     </div>
-     <div class="modal fade" id="notaModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-         <div class="modal-dialog" role="document">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                             aria-hidden="true">&times;</span></button>
-                 </div>
-                 <div class="modal-body">
-                     <center>
-                         <img src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
                              alt="Foto Nota" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>
@@ -213,7 +209,6 @@
          </div>
      </div>
  </center>
- </div>
  <?php $no++;
-                                        endforeach;
-                                    endif ?>
+        endforeach;
+    endif ?>

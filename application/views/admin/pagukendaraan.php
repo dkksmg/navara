@@ -48,10 +48,11 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header" style="background-color:#4a2f3a;">
-                            <h3 style="font-weight:bold;color:white;">Pagu Anggaran Pemeliharaan</h3>
+                            <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                         </div>
                         <div class="card-header">
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-xl">
+                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                                data-target="#modal-xl">
                                 Tambah Pagu Anggaran Pemeliharaan
                             </button>
                         </div>
@@ -59,39 +60,48 @@
                             <table class="table table-bordered table-striped example" width="100%">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Aksi</th>
-                                        <th>Jenis Pagu</th>
-                                        <th>Tahun</th>
-                                        <th>Pagu</th>
-                                        <th>Terpakai</th>
-                                        <th>Sisa</th>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center">Jenis Pagu</th>
+                                        <th class="text-center">Tahun</th>
+                                        <th class="text-center">Pagu</th>
+                                        <th class="text-center">Terpakai</th>
+                                        <th class="text-center">Sisa</th>
                                 </thead>
                                 <tbody>
                                     <?php $no = 1;
-                    if ($pagu != '') {
-                      foreach ($pagu as $pg) {
-                        if ($pg['jenis_pagu'] == 'BBM') {
-                          $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
-                          $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
-                        } elseif ($pg['jenis_pagu'] == 'Pemeliharaan') {
-                          $sisabbm = "";
-                          $terpakai = "";
-                        } else {
-                          $sisabbm = "";
-                          $terpakai = "";
-                        } ?>
+                                    if ($pagu != '') {
+                                        foreach ($pagu as $pg) {
+                                            if ($pg['jenis_pagu'] == 'BBM') {
+                                                $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
+                                                $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
+                                            } elseif ($pg['jenis_pagu'] == 'Pemeliharaan') {
+                                                $sisabbm = "";
+                                                $terpakai = "";
+                                            } else {
+                                                $sisabbm = "";
+                                                $terpakai = "";
+                                            } ?>
                                     <tr>
-                                        <td><?= $no++; ?></td>
-                                        <td></td>
-                                        <td><?= $pg['jenis_pagu'] ?></td>
-                                        <td><?= $pg['tahun'] ?></td>
-                                        <td>Rp <?= number_format($pg['pagu_awal'], 2, ',', '.'); ?></td>
-                                        <td><?= $terpakai ?></td>
-                                        <td><?= $sisabbm ?></td>
+                                        <td class="text-center"><?= $no++; ?></td>
+                                        <td class="text-center"><a
+                                                onclick="editConfirm('<?= site_url('home/editpagu?id=' . $pg['id_ps'] . '') ?>')"
+                                                href="#" class="btn btn-sm btn-warning jedatombol"
+                                                title="Edit Pagu <?= $kend['no_polisi'] ?>"><i
+                                                    class="fas fa-pencil"></i></a>
+                                            <a onclick="deleteConfirm('<?= site_url('home/hapuspagu?id=' . $pg['id_ps'] . '') ?>')"
+                                                href="#" class="btn btn-sm btn-danger jedatombol"><i
+                                                    class="fas fa-trash"></i></a>
+                                        </td>
+                                        <td class="text-center"><?= $pg['jenis_pagu'] ?></td>
+                                        <td class="text-center"><?= $pg['tahun'] ?></td>
+                                        <td class="text-center">Rp <?= number_format($pg['pagu_awal'], 2, ',', '.'); ?>
+                                        </td>
+                                        <td class="text-center"><?= $terpakai ?></td>
+                                        <td class="text-center"><?= $sisabbm ?></td>
                                     </tr>
                                     <?php }
-                    } ?>
+                                    } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -106,7 +116,7 @@
                 enctype="multipart/form-data">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Form Riwayat Pemakai</h4>
+                        <h4 class="modal-title">Form Pagu Kendaraan Dinas</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -116,15 +126,18 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tahun</label>
-                                    <select class="form-control" name="tahun">
-                                        <?php
-                      $tahun = date('Y');
-                      $before = $tahun - 5;
-                      $after = $tahun + 5;
-                      for ($i = $before; $i < $after; $i++) {
-                        echo "<option>" . $i . "</option>";
-                      } ?>
-                                    </select>
+                                    <?php
+                                    $year_start  = 2000;
+                                    $year_end = date('Y') + 50;
+                                    $user_selected_year = date('Y');
+
+                                    echo '<select id="year" required class="form-control" name="tahun">' . "\n";
+                                    for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
+                                        $selected = ($user_selected_year == $i_year ? ' selected' : '');
+                                        echo '<option value="' . $i_year . '"' . $selected . '>' . $i_year . '</option>' . "\n";
+                                    }
+                                    echo '</select>' . "\n";
+                                    ?>
                                 </div>
                             </div>
 
@@ -133,7 +146,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Jenis Pagu</label>
-                                    <input type="text" class="form-control" value="Pemeliharaan" readonly>
+                                    <input type="text" class="form-control" value="Pemeliharaan" disabled readonly>
                                     <input type="hidden" name="jenis[]" value="Pemeliharaan">
                                 </div>
                             </div>
@@ -148,7 +161,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Jenis Pagu</label>
-                                    <input type="text" class="form-control" value="BBM" readonly>
+                                    <input type="text" class="form-control" value="BBM" disabled readonly>
                                     <input type="hidden" name="jenis[]" value="BBM">
 
                                 </div>
@@ -164,7 +177,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Jenis Pagu</label>
-                                    <input type="text" class="form-control" value="Pajak Kendaraan" readonly>
+                                    <input type="text" class="form-control" value="Pajak Kendaraan" disabled readonly>
                                     <input type="hidden" name="jenis[]" value="Pajak Kendaraan">
                                 </div>
                             </div>

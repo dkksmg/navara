@@ -25,13 +25,14 @@ class Servis extends CI_Controller
     public function detail_servis()
     {
         $id = $this->input->get('id');
-        $idk = $this->input->post('id_kend');
-        $bulan_pilihan = $this->input->post('bulan_pilihan');
-        $tahun_pilihan = $this->input->post('tahun_pilihan');
+        $bulan_pilihan = $this->input->get('bulan_pilihan');
+        $tahun_pilihan = $this->input->get('tahun_pilihan');
         $data = [];
         $data['title'] = 'Riwayat Servis Kendaraan Dinas';
         $data['kend'] = $this->servis_m->kendaraanByid($id);
-        $data['rs'] = $this->servis_m->data_riwayatservisbulantahun($idk, $bulan_pilihan, $tahun_pilihan);
+        $data['rs'] = $this->servis_m->data_riwayatservisbulantahun($id, $bulan_pilihan, $tahun_pilihan);
+        // print_r($this->db->last_query());
+        // die();
         $this->load->view('admin/template/header');
         $this->load->view('admin/servis_kendaraan/detailservis', $data);
         $this->load->view('admin/template/footer');

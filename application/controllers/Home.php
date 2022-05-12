@@ -20,6 +20,7 @@ class Home extends CI_Controller
         $data['kendaraan'] = $this->home_m->data_kendaraan();
         $this->load->view('admin/template/header');
         $this->load->view('admin/dataKendaraan', $data);
+        $this->load->view('admin/template/modal');
         $this->load->view('admin/template/footer');
     }
 
@@ -94,6 +95,7 @@ class Home extends CI_Controller
     }
     public function edit_pemakai()
     {
+
         $id = $this->input->get('id');
         $data = [];
         $data['value'] = $this->home_m->data_pemakaibyid($id);
@@ -107,8 +109,9 @@ class Home extends CI_Controller
     public function riwayat_bbm()
     {
         $data = [];
-        $id = $this->input->get('id');
-        $data['title'] = 'Riwayat BBM';
+        $id_enc = decrypt_url($this->input->get('id'));
+        $id = $id_enc;
+        $data['title'] = 'Riwayat BBM Kendaraan Dinas';
         $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
         $data['kend'] = $this->home_m->kendaraanByid($id);
         $this->load->view('admin/template/header');
@@ -119,12 +122,8 @@ class Home extends CI_Controller
     public function editrbbm()
     {
         $data = [];
-
-        $id_kend_enc = $this->input->get('idkend');
-        $id_kend = decrypt_url($id_kend_enc);
-        $id_bbm_enc = $this->input->get('id');
-        $id_bbm = decrypt_url($id_bbm_enc);
-
+        $id_kend = decrypt_url($this->input->get('idkend'));
+        $id_bbm = decrypt_url($this->input->get('id'));
         $data['title'] = 'Edit Riwayat BBM';
         $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
         $data['kend'] = $this->home_m->kendaraanByid($id_kend);
@@ -135,14 +134,14 @@ class Home extends CI_Controller
     }
     public function prosestambahbbm()
     {
-        $idkend_enc = decrypt_url($this->input->get('id'));
-        $id_kend_enc = decrypt_url($this->input->post('id_kend'));
-        $id_kend = $id_kend_enc;
-        $idkend = $idkend_enc;
+        $id_bbm = decrypt_url($this->input->get('id'));
+        $id_kend = decrypt_url($this->input->post('id_kend'));
+        $id_bbm_enc = encrypt_url($id_bbm);
+
         $data = [];
         $tgl = $this->input->post('tgl_bbm');
-        $tipe = $this->input->post('tipe');
-        $no_pol = $this->input->post('no_pol');
+        $tipe = decrypt_url($this->input->post('tipe'));
+        $no_pol = decrypt_url($this->input->post('no_pol'));
 
         if (!empty($_FILES['struk_bbm']['name'])) {
             $config['upload_path'] = './assets/upload/struk_bbm/'; //path folder
@@ -172,7 +171,7 @@ class Home extends CI_Controller
             $simpan = $this->home_m->tambahriwayatbbm($id_kend, $nama_struk_bbm);
             if ($simpan) {
                 $this->session->set_flashdata('success', 'Tambah Riwayat BBM Kendaraan Berhasil');
-                redirect('home/riwayat_bbm?id=' . $id_kend);
+                redirect('home/riwayat_bbm?id=' . $id_bbm_enc);
             } else {
                 $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal');
                 $data['post'] = $this->input->post();
@@ -182,21 +181,20 @@ class Home extends CI_Controller
                 unlink('./assets/upload/struk_bbm/' . $nama_struk_bbm);
             }
             $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
-            redirect('home/riwayat_bbm?id=' . $id_kend);
+            redirect('home/riwayat_bbm?id=' . $id_bbm_enc);
             $data['post'] = $this->input->post();
         }
     }
     public function proseseditbbm()
     {
-        $id_kend_enc = decrypt_url($this->input->get('id'));
-        $id_bbm_enc = decrypt_url($this->input->post('id_bbm'));
-        $id_kend = $id_kend_enc;
-        $id_bbm = $id_bbm_enc;
+        $id_bbm = decrypt_url($this->input->get('id'));
+        $id_kend = decrypt_url($this->input->get('idkend'));
+        $id_kend_enc = encrypt_url($id_kend);
 
         $data = [];
         $tgl = $this->input->post('tgl_bbm');
-        $tipe = $this->input->post('tipe');
-        $no_pol = $this->input->post('no_pol');
+        $tipe = decrypt_url($this->input->post('tipe'));
+        $no_pol = decrypt_url($this->input->post('no_pol'));
 
         if (!empty($_FILES['struk_bbm']['name'])) {
             $config['upload_path'] = './assets/upload/struk_bbm/'; //path folder
@@ -226,17 +224,17 @@ class Home extends CI_Controller
             $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
             if ($simpan) {
                 $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
-                redirect('home/riwayat_bbm?id=' . $id_kend);
+                redirect('home/riwayat_bbm?id=' . $id_kend_enc);
             } else {
                 $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
                 $data['post'] = $this->input->post();
             }
         } else if (empty($_FILES['struk_bbm']['name'])) {
-            $nama_struk_bbm = $this->input->post('old_struk');
+            $nama_struk_bbm = decrypt_url($this->input->post('old_struk'));
             $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
             if ($simpan) {
                 $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
-                redirect('home/riwayat_bbm?id=' . $id_kend);
+                redirect('home/riwayat_bbm?id=' . $id_kend_enc);
             } else {
                 $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
                 $data['post'] = $this->input->post();
@@ -246,10 +244,24 @@ class Home extends CI_Controller
                 unlink('./assets/upload/struk_bbm/' . $nama_struk_bbm);
             }
             $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
-            redirect('home/riwayat_bbm?id=' . $id_kend);
+            redirect('home/riwayat_bbm?id=' . $id_kend_enc);
             $data['post'] = $this->input->post();
         }
     }
+    public function hapusrbbm()
+    {
+        $id_bbm = decrypt_url($this->input->get('id'));
+        $id_kend = decrypt_url($this->input->get('idkend'));
+        $id_kend_enc = encrypt_url($id_kend);
+        if ($this->home_m->hapusbbm($id_bbm)) {
+            $this->session->set_flashdata('success', 'Hapus Riwayat BBM Kendaraan Berhasil');
+            redirect('home/riwayat_bbm?id=' . $id_kend_enc);
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Riwayat BBM Kendaraan gagal');
+            redirect('home/riwayat_bbm?id=' . $id_kend_enc);
+        }
+    }
+
     public function riwayat_pajak()
     {
         $id = $this->input->get('id');
@@ -259,6 +271,7 @@ class Home extends CI_Controller
         $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
         $this->load->view('admin/template/header');
         $this->load->view('admin/pajak/riwayatPajak', $data);
+        $this->load->view('admin/template/modal');
         $this->load->view('admin/template/footer');
     }
     public function editriwayatpajak()

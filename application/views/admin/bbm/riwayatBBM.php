@@ -78,7 +78,7 @@
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
                                      <td class="text-center">
-                                         <a onclick="deleteConfirm('<?= site_url('admin/hapusrbbm?id=' . $value['id_bbm'] . '&idkend=' . $value['id_kendaraan']) ?>')"
+                                         <a onclick="deleteConfirm('<?= site_url('home/hapusrbbm?id=' . encrypt_url($value['id_bbm']) . '&idkend=' . encrypt_url($value['id_kendaraan'])) ?>')"
                                              href="#" class="btn btn-danger btn-sm jedatombol"
                                              title="Hapus Riwayat BBM <?= $kend['no_polisi'] ?>"><i
                                                  class="fas fa-trash"></i></a>
@@ -114,7 +114,8 @@
 
  <?php
     $no = 1;
-    foreach ($rbbm as $value) : ?>
+    if ($rbbm != '') :
+        foreach ($rbbm as $value) : ?>
  <center>
      <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel">
@@ -136,20 +137,20 @@
              </div>
          </div>
      </div>
-
  </center>
  <?php $no++;
-    endforeach ?>
+        endforeach;
+    endif ?>
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
          <?php echo form_open_multipart(
-                'home/prosestambahbbm?id=' . $kend['idk'] . '',
+                'home/prosestambahbbm?id=' . encrypt_url($kend['idk']) . '',
                 'class="form-horizontal"'
             ) ?>
-         <?php echo form_hidden('id_kend', $kend['idk']);
-            echo form_hidden('tipe', $kend['tipe']);
-            echo form_hidden('no_pol', $kend['no_polisi']) ?>
+         <?php echo form_hidden('id_kend', encrypt_url($kend['idk']));
+            echo form_hidden('tipe', encrypt_url($kend['tipe']));
+            echo form_hidden('no_pol', encrypt_url($kend['no_polisi'])) ?>
          <div class="modal-content">
              <div class="modal-header">
                  <h4 class="modal-title">Form Riwayat BBM</h4>

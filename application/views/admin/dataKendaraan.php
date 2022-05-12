@@ -55,32 +55,41 @@
                                      <td><?= $no++; ?></td>
                                      <td>
                                          <a href="<?= site_url('home/riwayat_kondisi?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-warning jedatombol" title="Riwayat Kondisi"><i
+                                             class="btn btn-sm btn-warning jedatombol"
+                                             title="Riwayat Kondisi <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-motorcycle"></i></a>
                                          <a href="<?= site_url('home/riwayat_pemakai?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-success jedatombol" title="Riwayat Pemakai"><i
+                                             class="btn btn-sm btn-success jedatombol"
+                                             title="Riwayat Pemakai <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-users"></i></a>
                                          <a href="<?= site_url('home/riwayat_servis?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-primary jedatombol" title="Riwayat Service"><i
+                                             class="btn btn-sm btn-primary jedatombol"
+                                             title="Riwayat Service <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-tools"></i></a>
-                                         <a href="<?= site_url('home/riwayat_bbm?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-primary jedatombol" title="Riwayat BBM"><i
+                                         <a href="<?= site_url('home/riwayat_bbm?id=' . encrypt_url($kend['idk']) . '') ?>"
+                                             class="btn btn-sm btn-primary jedatombol"
+                                             title="Riwayat BBM <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-gas-pump"></i></a>
                                          <a href="<?= site_url('home/riwayat_pajak?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-primary jedatombol" title="Riwayat Pajak"><i
+                                             class="btn btn-sm btn-primary jedatombol"
+                                             title="Riwayat Pajak Kendaraan <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-align-justify"></i></a>
                                          <?php if ($this->session->userdata('role') != "Pemakai") : ?>
                                          <a href="<?= site_url('admin/pagu?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-dark jedatombol" title="Pagu Tahunan"><i
+                                             class="btn btn-sm btn-dark jedatombol"
+                                             title="Pagu Tahunan Kendaraan <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-wallet"></i></a>
-                                         <a href="<?= site_url('home/edit_kendaraan?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-dark jedatombol" title="Edit Data Kendaraan"><i
-                                                 class="fa fa-pen"></i></a>
                                          <a href="<?= site_url('home/print_data_kendaraan?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-dark jedatombol" title="Print Data Kendaraan"><i
+                                             class="btn btn-sm btn-dark jedatombol"
+                                             title="Print Data Kendaraan <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-print"></i></a>
-                                         <a href="<?= site_url('home/hapus_data_kendaraan?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-danger jedatombol" title="Hapus Data Kendaraan"><i
+                                         <a onclick="editConfirm('<?= site_url('home/edit_kendaraan?id=' . $kend['idk'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"
+                                             title="Edit Data Kendaraan <?= $kend['no_polisi'] ?>"><i
+                                                 class="fa fa-pen"></i></a>
+                                         <a onclick="deleteConfirm('<?= site_url('home/hapus_data_kendaraan?id=' . $kend['idk'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-danger jedatombol"
+                                             title="Hapus Data Kendaraan <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-trash"></i></a>
                                          <?php endif ?>
 

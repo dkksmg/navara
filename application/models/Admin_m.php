@@ -49,6 +49,18 @@ class Admin_m extends CI_Model
         $q = $this->db->insert('pagu_service', $data);
         return $q;
     }
+    public function cek_tahun_pagu($id = null, $tahun = null)
+    {
+        $this->db->where('id_kend', $id);
+        $this->db->where('tahun', $tahun);
+        $query = $this->db->get('pagu_service');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
     public function tambahuser()
     {
 

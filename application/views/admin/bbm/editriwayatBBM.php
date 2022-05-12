@@ -56,10 +56,10 @@
                      </div>
                      <div class="card-body">
                          <?php echo form_open_multipart(
-                                'home/proseseditbbm?id=' . encrypt_url($kend['idk']) . '',
+                                'home/proseseditbbm?id=' . encrypt_url($rbbm['id_bbm']) . '&idkend=' . encrypt_url($kend['idk']),
                                 'class="form-horizontal"'
                             ) ?>
-                         <?php echo form_hidden('id_bbm', encrypt_url($rbbm['id_bbm']));
+                         <?php
                             echo form_hidden('tipe', encrypt_url($kend['tipe']));
                             echo form_hidden('no_pol', encrypt_url($kend['no_polisi']));
                             echo form_hidden('old_struk', encrypt_url($rbbm['struk_bbm'])) ?>
@@ -92,7 +92,8 @@
                                          <div class="gallery">
                                              <img class="card-img-top"
                                                  src="<?= base_url('assets/upload/struk_bbm/' . $rbbm['struk_bbm']) ?>"
-                                                 alt="Foto Servis">
+                                                 alt="Foto Struk BBM" data-toggle="modal" width="30%"
+                                                 data-target="#strukModal">
                                          </div>
                                      </div>
 
@@ -112,3 +113,25 @@
      </div><!-- /.container-fluid -->
  </div>
  <!-- /.content -->
+
+ <center>
+     <div class="modal fade" id="strukModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/struk_bbm/' . $rbbm['struk_bbm'] . '') ?>"
+                             alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </center>
