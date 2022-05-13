@@ -64,46 +64,47 @@
                          <table class="table table-bordered table-striped example">
                              <thead>
                                  <tr>
-                                     <th rowspan="2">No</th>
-                                     <th colspan="2" class="text-center">Aksi</th>
-                                     <th rowspan="2">Tgl Pencatatan</th>
-                                     <th rowspan="2">Kondisi</th>
-                                     <th rowspan="2">Foto Tampak Depan</th>
-                                     <th rowspan="2">Foto Tampak Kanan</th>
-                                     <th rowspan="2">Foto Tampak Kiri</th>
-                                     <th rowspan="2">Foto Tampak Belakang</th>
-                                 </tr>
-                                 <tr>
-                                     <th></th>
-                                     <th></th>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center" width="10%">Aksi</th>
+                                     <th class="text-center">Tgl Pencatatan</th>
+                                     <th class="text-center">Kondisi</th>
+                                     <th class="text-center">Foto Tampak Depan</th>
+                                     <th class="text-center">Foto Tampak Kanan</th>
+                                     <th class="text-center">Foto Tampak Kiri</th>
+                                     <th class="text-center">Foto Tampak Belakang</th>
                                  </tr>
                              </thead>
                              <tbody>
-                                 <?php if ($rk != '') : ?>
                                  <?php
+                                    if ($rk != '') :
                                         $no = 1;
                                         foreach ($rk as $value) : ?>
                                  <tr>
-                                     <td><?= $no; ?></td>
-                                     <td><a href="<?= site_url('home/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
-                                             class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a></td>
-                                     <td><a href="<?= site_url('home/editriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
-                                             class="btn btn-sm btn-warning"><i class="fas fa-pen"></i></a></td>
-                                     <td><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?></td>
-                                     <td><?= $value['kondisi'] ?></td>
-                                     <td><img width="70%"
+                                     <td class="text-center"><?= $no; ?></td>
+                                     <td class="text-center"><a
+                                             onclick="deleteConfirm('<?= site_url('home/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-danger jedatombol"><i
+                                                 class="fas fa-trash"></i></a>
+                                         <a onclick="editConfirm('<?= site_url('home/editriwayatkondisi?id=' . $value['id_rk'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"><i
+                                                 class="fas fa-pen"></i></a>
+                                     </td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
+                                     </td>
+                                     <td class="text-center"><?= $value['kondisi'] ?></td>
+                                     <td class="text-center"><img width="70%"
                                              src="<?= base_url('assets/upload/file_kendaraan/depan/' . $value['foto_tampak_depan'] . '') ?>"
                                              data-toggle="modal" data-target="#depanModal<?php echo $no ?>">
                                      </td>
-                                     <td><img width="70%"
+                                     <td class="text-center"><img width="70%"
                                              src="<?= base_url('assets/upload/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
                                              data-toggle="modal" data-target="#kananModal<?php echo $no ?>">
                                      </td>
-                                     <td><img width="70%"
+                                     <td class="text-center"><img width="70%"
                                              src="<?= base_url('assets/upload/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
                                              data-toggle="modal" data-target="#kiriModal<?php echo $no ?>">
                                      </td>
-                                     <td><img width="70%"
+                                     <td class="text-center"><img width="70%"
                                              src="<?= base_url('assets/upload/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
                                              data-toggle="modal" data-target="#belakangModal<?php echo $no ?>">
                                      </td>
@@ -126,7 +127,8 @@
  <!-- Modal -->
  <?php
     $no = 1;
-    foreach ($rk as $value) : ?>
+    if ($rk != '') :
+        foreach ($rk as $value) : ?>
  <center>
      <div class="modal fade" id="depanModal<?php echo $no ?>" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel">
@@ -209,7 +211,8 @@
      </div>
  </center>
  <?php $no++;
-    endforeach ?>
+        endforeach;
+    endif ?>
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">

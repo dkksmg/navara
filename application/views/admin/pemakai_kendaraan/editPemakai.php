@@ -3,26 +3,60 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1><?= $title ?></h1>
+                    <!-- <h1><?= $title ?></h1> -->
                 </div>
             </div>
         </div>
     </div>
-
     <section class="content">
-        <div class="container-fluid">
-            <div class="col-md-10">
-                <div class="card-info">
-                    <div class="card-body">
-                        <?php echo form_open_multipart(
-                            'home/proseseditpemakai?id=' . $value['id_rp'] . '',
-                            'class="form-horizontal"'
-                        );
-                        echo form_hidden('id_kend', $value['id_kendaraan']);
-                        ?>
-                        <div class="modal-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header" style="background-color:#4a2f3a;">
+                            <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>ID ASSETS</th>
+                                    <th>:</th>
+                                    <th><?= $value['id_assets'] ?></th>
+                                </tr>
+                                <tr>
+                                    <th>No. Polisi</th>
+                                    <th>:</th>
+                                    <th><?= $value['no_polisi'] ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Jenis</th>
+                                    <th>:</th>
+                                    <th><?= $value['jenis'] ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Merk</th>
+                                    <th>:</th>
+                                    <th><?= strtoupper($value['merk']) ?></th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header" style="background-color:#4a2f3a;">
+                            <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
+                        </div>
+                        <div class="card-body">
+                            <?php echo form_open_multipart(
+                                'home/proseseditpemakai?id=' . $value['id_rp'] . '',
+                                'class="form-horizontal"'
+                            );
+                            echo form_hidden('id_kend', $value['id_kendaraan']);
+                            ?>
+                            <!-- <div class="modal-content"> -->
                             <div class="modal-header">
-                                <h4 class="modal-title">Form Edit Riwayat Pemakai</h4>
+                                <!-- <h4 class="modal-title">Form Edit Riwayat Servis</h4> -->
                             </div>
                             <div class="modal-body">
                                 <div class="row">
@@ -79,13 +113,12 @@
                             <div class="modal-footer justify-content-between">
                                 <button type="sumbit" class="btn btn-primary">Simpan</button>
                             </div>
-                            <!-- </form> -->
-                            <?php form_close() ?>
+                            <?= form_close() ?>
                         </div>
                     </div>
-
                 </div>
             </div>
 
     </section>
+
 </div>

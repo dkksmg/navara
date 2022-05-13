@@ -20,6 +20,14 @@ class Admin_m extends CI_Model
             return $hasil;
         }
     }
+    public function datapagu_kendaraanbyid($id)
+    {
+        $query = $this->db
+            ->join('kendaraan', 'pagu_service.id_kend = kendaraan.idk')
+            ->get_where('pagu_service', ['id_ps' => $id])
+            ->row_array();
+        return $query;
+    }
     public function user()
     {
         $this->db->where('role !=', 'superadmin');
@@ -47,6 +55,13 @@ class Admin_m extends CI_Model
         $data['pagu_awal']  = $pagu;
         $data['jenis_pagu']  = $jenis;
         $q = $this->db->insert('pagu_service', $data);
+        return $q;
+    }
+    public function updatepagu($id = null)
+    {
+        $data['pagu_awal']  = $this->input->post('pagu');
+        $data['jenis_pagu']  = $this->input->post('jenis');
+        $q = $this->db->where('id_ps', $id)->update('pagu_service', $data);
         return $q;
     }
     public function cek_tahun_pagu($id = null, $tahun = null)

@@ -64,37 +64,32 @@
                          <table class="table table-bordered table-striped example" width="100%" height="auto">
                              <thead>
                                  <tr>
-                                     <th rowspan="2">No</th>
-                                     <th colspan="2" class="text-center">Aksi</th>
-                                     <th rowspan="2">Tgl Service</th>
-                                     <th rowspan="2">Bengkel Service</th>
-                                     <th rowspan="2">Keluhan</th>
-                                     <th rowspan="2">Perbaikan</th>
-                                     <th rowspan="2" width="80px">Total Biaya</th>
-                                     <th rowspan="2">Foto Service</th>
-                                     <th rowspan="2">Foto Nota</th>
-                                 </tr>
-                                 <tr>
-                                     <th></th>
-                                     <th></th>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center" width="10%">Aksi</th>
+                                     <th class="text-center">Tgl Service</th>
+                                     <th class="text-center">Bengkel Service</th>
+                                     <th class="text-center">Keluhan</th>
+                                     <th class="text-center">Perbaikan</th>
+                                     <th class="text-center" width="80px">Total Biaya</th>
+                                     <th class="text-center">Foto Service</th>
+                                     <th class="text-center">Foto Nota</th>
                                  </tr>
                              </thead>
                              <tbody>
-
-                                 <?php if ($rs != '') : ?>
-                                 <?php $no = 1;
+                                 <?php
+                                    if ($rs != '') :
+                                        $no = 1;
                                         foreach ($rs as $value) : ?>
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
                                      <td class="text-center">
-
-                                         <a href="<?php echo site_url('home/editriwayatservis?id=' . $value['id_rs'] . '') ?>"
-                                             class="btn btn-sm btn-warning"><i class="fas fa-pen"></i></a>
-
+                                         <a onclick="deleteConfirm('<?php echo site_url('home/delete_servis?id=' . $value['id_rs'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-danger jedatombol"><i
+                                                 class="fas fa-trash"></i></a>
+                                         <a onclick="editConfirm('<?php echo site_url('home/editriwayatservis?id=' . $value['id_rs'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"><i
+                                                 class="fas fa-pen"></i></a>
                                      </td>
-                                     <td class="text-center"> <a
-                                             href="<?php echo site_url('home/delete_servis?id=' . $value['id_rs'] . '') ?>"
-                                             class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a></td>
                                      <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
                                      <td class="text-center"><?= $value['lokasi'] ?></td>
                                      <td><?= $value['keluhan'] ?></td>
@@ -127,8 +122,9 @@
 
  <!-- Modal Foto Servis & Nota -->
  <?php
-    $no = 1;
-    foreach ($rs as $value) : ?>
+    if ($rs != '') :
+        $no = 1;
+        foreach ($rs as $value) : ?>
  <center>
      <!-- Modal -->
      <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog"
@@ -172,7 +168,8 @@
      </div>
  </center>
  <?php $no++;
-    endforeach ?>
+        endforeach;
+    endif ?>
 
  <!-- Modal Input -->
  <div class="modal fade" id="modalTambah" role="dialog">

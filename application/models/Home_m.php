@@ -115,6 +115,145 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function cek_id_riwayat_kondisi($id = null)
+    {
+        $this->db->join('riwayat_kondisi', 'riwayat_kondisi.id_kendaraan = kendaraan.idk', 'left');
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_edit_riwayat_kondisi($id = null)
+    {
+        $this->db->where('id_rk', $id);
+        $query = $this->db->get('riwayat_kondisi');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_riwayat_pemakai($id = null)
+    {
+        $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left');
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_edit_riwayat_pemakai($id = null)
+    {
+        $this->db->where('id_rp', $id);
+        $query = $this->db->get('riwayat_pemakai');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_riwayat_servis($id = null)
+    {
+        $this->db->join('riwayat_servis', 'riwayat_servis.id_kendaraan = kendaraan.idk', 'left');
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_edit_riwayat_servis($id = null)
+    {
+        $this->db->where('id_rs', $id);
+        $query = $this->db->get('riwayat_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_riwayat_bbm($id = null)
+    {
+        $this->db->join('riwayat_bbm', 'riwayat_bbm.id_kendaraan = kendaraan.idk', 'left');
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_edit_riwayat_bbm($id_bbm = null, $id_kend = null)
+    {
+        $this->db->where('id_bbm', $id_bbm);
+        $this->db->where('id_kendaraan', $id_kend);
+        $query = $this->db->get('riwayat_bbm');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_riwayat_pajak($id = null)
+    {
+        $this->db->join('riwayat_pajak', 'riwayat_pajak.id_kendaraan = kendaraan.idk', 'left');
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_edit_riwayat_pajak($id = null)
+    {
+        $this->db->where('id_pjk', $id);
+        $query = $this->db->get('riwayat_pajak');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_riwayat_pagu($id = null)
+    {
+        $this->db->join('pagu_service', 'pagu_service.id_kend = kendaraan.idk', 'left');
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_edit_riwayat_pagu($id = null)
+    {
+        $this->db->where('id_ps', $id);
+        $query = $this->db->get('pagu_service');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
     public function data_riwayatpemakai($id = null)
     {
         $this->db->where('id_kendaraan', $id);
@@ -128,6 +267,7 @@ class Home_m extends CI_Model
     }
     public function data_pemakaibyid($id = null)
     {
+        $this->db->join('kendaraan', 'riwayat_pemakai.id_kendaraan = kendaraan.idk');
         $this->db->where('id_rp', $id);
         $query = $this->db->get('riwayat_pemakai')->row_array();
         return $query;

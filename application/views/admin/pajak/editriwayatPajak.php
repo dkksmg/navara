@@ -37,7 +37,7 @@
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= $value['merk'] ?></th>
+                                    <th><?= strtoupper($value['merk']) ?></th>
                                 </tr>
                             </table>
                         </div>

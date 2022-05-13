@@ -14,15 +14,75 @@ class Admin extends CI_Controller
     }
     public function pagu()
     {
-        $data = [];
         $id = $this->input->get('id');
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $data['pagu'] = $this->admin_m->pagu_kendaraan($id);
-        $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/pagukendaraan', $data);
-        $this->load->view('admin/template/modal');
-        $this->load->view('admin/template/footer');
+        $cek_id = $this->home_m->cek_id_riwayat_pagu($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pagu'] = $this->admin_m->pagu_kendaraan($id);
+            $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pagu/pagukendaraan', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function prosestambahpagu()
+    {
+
+        $id = $this->input->get('id');
+        $jenispagu = $this->input->post('jenis');
+        foreach ($jenispagu as $key => $value) {
+            $cektahun = $this->admin_m->cek_tahun_pagu($id, $this->input->post('tahun'));
+            if ($cektahun != '') {
+                $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
+                redirect('admin/pagu?id=' . $id);
+            } else {
+
+                $simpan = $this->admin_m->tambahpagu($id, $value, $this->input->post('pagu')[$key]);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Pagu Anggaran Pemeliharaan Berhasil');
+                    redirect('admin/pagu?id=' . $id);
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Pagu Anggaran Pemeliharaan Gagal');
+                    redirect('admin/pagu?id=' . $id);
+                }
+            }
+        }
+    }
+    public function editpagu()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_pagu($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['pagu'] = $this->admin_m->datapagu_kendaraanbyid($id);
+            $data['title'] = 'Edit Pagu Anggaran Kendaraan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pagu/editpagukendaraan', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function proseseditpagu()
+    {
+        $id = $this->input->get('id');
+        if ($this->input->post()) :
+            if ($this->admin_m->updatepagu($id)) :
+                $this->session->set_flashdata('success', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Berhasil');
+                redirect('admin/pagu?id=' . $id);
+            else :
+                $this->session->set_flashdata('danger', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Gagal');
+                redirect('admin/pagu?id=' . $id);
+            endif;
+        endif;
+    }
+    public function hapuspagu()
+    {
     }
 
     public function user()
@@ -78,31 +138,6 @@ class Admin extends CI_Controller
             redirect('admin/user');
         }
     }
-
-    public function prosestambahpagu()
-    {
-
-        $id = $this->input->get('id');
-        $jenispagu = $this->input->post('jenis');
-        foreach ($jenispagu as $key => $value) {
-            $cektahun = $this->admin_m->cek_tahun_pagu($id, $this->input->post('tahun'));
-            if ($cektahun != '') {
-                $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
-                redirect('admin/pagu?id=' . $id);
-            } else {
-
-                $simpan = $this->admin_m->tambahpagu($id, $value, $this->input->post('pagu')[$key]);
-                if ($simpan) {
-                    $this->session->set_flashdata('success', 'Tambah Pagu Anggaran Pemeliharaan Berhasil');
-                    redirect('admin/pagu?id=' . $id);
-                } else {
-                    $this->session->set_flashdata('danger', 'Tambah Pagu Anggaran Pemeliharaan Gagal');
-                    redirect('admin/pagu?id=' . $id);
-                }
-            }
-        }
-    }
-
     public function prosestambahbbm()
     {
         $idkend = $this->input->get('id');

@@ -65,72 +65,140 @@ class Home extends CI_Controller
     public function riwayat_kondisi()
     {
         $id = $this->input->get('id');
-        $data = [];
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $data['rk'] = $this->home_m->data_riwayatKondisi($id);
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/kondisi_kendaraan/riwayatKondisi', $data);
-        $this->load->view('admin/template/footer');
+        $cek_id_kondisi = $this->home_m->cek_id_riwayat_kondisi($id);
+        if ($cek_id_kondisi != '') {
+            $data = [];
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['rk'] = $this->home_m->data_riwayatKondisi($id);
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/kondisi_kendaraan/riwayatKondisi', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
     }
     public function editriwayatkondisi()
     {
         $id = $this->input->get('id');
-        $data = [];
-        $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
-        $data['value'] = $this->home_m->data_kondisiById($id);
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/kondisi_kendaraan/editriwayatkondisi', $data);
-        $this->load->view('admin/template/footer');
+        $cek_id  = $this->home_m->cek_id_edit_riwayat_kondisi($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
+            $data['value'] = $this->home_m->data_kondisiById($id);
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/kondisi_kendaraan/editriwayatkondisi', $data);
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
     }
     public function riwayat_pemakai()
     {
         $id = $this->input->get('id');
-        $data = [];
-        $data['rp'] = $this->home_m->data_riwayatpemakai($id);
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $data['lu'] = $this->home_m->data_lokasiunit();
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/riwayatPemakai', $data);
-        $this->load->view('admin/template/footer');
+        $cek_id_pemakai = $this->home_m->cek_id_riwayat_pemakai($id);
+        if ($cek_id_pemakai != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpemakai($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['lu'] = $this->home_m->data_lokasiunit();
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pemakai_kendaraan/riwayatPemakai', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
     }
     public function edit_pemakai()
     {
-
         $id = $this->input->get('id');
-        $data = [];
-        $data['value'] = $this->home_m->data_pemakaibyid($id);
-        $data['lu'] = $this->home_m->data_lokasiunit();
-        $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/editPemakai', $data);
-        $this->load->view('admin/template/footer');
+        $cek_id  = $this->home_m->cek_id_edit_riwayat_pemakai($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['value'] = $this->home_m->data_pemakaibyid($id);
+            $data['lu'] = $this->home_m->data_lokasiunit();
+            $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pemakai_kendaraan/editPemakai', $data);
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function riwayat_servis()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_riwayat_servis($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['rs'] = $this->home_m->data_riwayatservis($id);
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/servis_kendaraan/riwayatservis', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function editriwayatservis()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_servis($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = "Edit Riwayat Servis Kendaraan";
+            $data['servis'] = $this->home_m->data_servisById($id);
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/servis_kendaraan/editriwayatservis', $data);
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function delete_servis()
+    {
+        $id = $this->input->get('id');
+        $this->db->where('id_rs', $id);
+        $this->db->delete('riwayat_servis');
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function riwayat_bbm()
     {
-        $data = [];
-        $id_enc = decrypt_url($this->input->get('id'));
-        $id = $id_enc;
-        $data['title'] = 'Riwayat BBM Kendaraan Dinas';
-        $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/bbm/riwayatBBM', $data);
-        $this->load->view('admin/template/modal');
-        $this->load->view('admin/template/footer');
+        $id = decrypt_url($this->input->get('id'));
+        $cek_id = $this->home_m->cek_id_riwayat_bbm($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = 'Riwayat BBM Kendaraan Dinas';
+            $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/bbm/riwayatBBM', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
     }
     public function editrbbm()
     {
-        $data = [];
         $id_kend = decrypt_url($this->input->get('idkend'));
         $id_bbm = decrypt_url($this->input->get('id'));
-        $data['title'] = 'Edit Riwayat BBM';
-        $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
-        $data['kend'] = $this->home_m->kendaraanByid($id_kend);
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/bbm/editriwayatBBM', $data);
-        $this->load->view('admin/template/modal');
-        $this->load->view('admin/template/footer');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_bbm($id_bbm, $id_kend);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = 'Edit Riwayat BBM';
+            $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/bbm/editriwayatBBM', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
     }
     public function prosestambahbbm()
     {
@@ -265,25 +333,35 @@ class Home extends CI_Controller
     public function riwayat_pajak()
     {
         $id = $this->input->get('id');
-        $data = [];
-        $data['rp'] = $this->home_m->data_riwayatpajak($id);
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/pajak/riwayatPajak', $data);
-        $this->load->view('admin/template/modal');
-        $this->load->view('admin/template/footer');
+        $cek_id = $this->home_m->cek_id_riwayat_pajak($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpajak($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pajak/riwayatPajak', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
     }
     public function editriwayatpajak()
     {
         $id = $this->input->get('id');
-        $data = [];
-        $data['rp'] = $this->home_m->data_riwayatpajak($id);
-        $data['value'] = $this->home_m->datapajakById($id);
-        $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/pajak/editriwayatPajak', $data);
-        $this->load->view('admin/template/footer');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_pajak($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpajak($id);
+            $data['value'] = $this->home_m->datapajakById($id);
+            $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pajak/editriwayatPajak', $data);
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
     }
     public function proseseditpajak()
     {
@@ -531,99 +609,6 @@ class Home extends CI_Controller
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
         }
     }
-
-    public function riwayat_servis()
-    {
-        $id = $this->input->get('id');
-        $data = [];
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $data['rs'] = $this->home_m->data_riwayatservis($id);
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/servis_kendaraan/riwayatservis', $data);
-        $this->load->view('admin/template/footer');
-    }
-    public function editriwayatservis()
-    {
-        $id = $this->input->get('id');
-        $data = [];
-        $data['title'] = "Edit Riwayat Servis Kendaraan";
-        $data['servis'] = $this->home_m->data_servisById($id);
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/servis_kendaraan/editriwayatservis', $data);
-        $this->load->view('admin/template/footer');
-    }
-    public function delete_servis()
-    {
-        $id = $this->input->get('id');
-        $this->db->where('id_rs', $id);
-        $this->db->delete('riwayat_servis');
-        redirect($_SERVER['HTTP_REFERER']);
-    }
-
-    // public function prosestambahservis()
-    // {
-
-    //     $idk = $this->input->get('id');
-    //     $config['upload_path'] = './assets/foto_servis/'; //path folder
-    //     $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
-    //     $config['encrypt_name'] = TRUE; //Enkripsi nama yang terupload
-
-    //     $this->load->library('upload', $config);
-    //     if (!empty($_FILES['foto']['name'])) {
-    //         $this->load->library('upload', $config);
-    //         $this->upload->initialize($config);
-    //         $this->upload->do_upload('foto');
-    //         $foto = $this->upload->data();
-    //         //compress file
-    //         $config['image_library'] = 'gd2';
-    //         $config['source_image'] = './assets/foto_servis/' . $foto['file_name'];
-    //         $config['create_thumb'] = FALSE;
-    //         $config['maintain_ratio'] = TRUE;
-    //         $config['quality'] = '50%';
-    //         $config['width'] = 600;
-    //         $config['height'] = 400;
-    //         $config['new_image'] = './assets/foto_servis/' . $foto['file_name'];
-    //         $this->load->library('image_lib', $config);
-    //         $res = $this->image_lib->resize();
-    //         $namafoto = $foto['file_name'];
-    //     }
-    //     if (!empty($_FILES['nota']['name'])) {
-    //         $this->load->library('upload', $config, 'nota');
-    //         $this->nota->initialize($config);
-    //         $this->nota->do_upload('nota');
-    //         $nota = $this->nota->data();
-    //         //compress file
-    //         $config['image_library'] = 'gd2';
-    //         $config['source_image'] = './assets/foto_servis/' . $nota['file_name'];
-    //         $config['create_thumb'] = FALSE;
-    //         $config['maintain_ratio'] = TRUE;
-    //         $config['quality'] = '50%';
-    //         $config['width'] = 600;
-    //         $config['height'] = 400;
-    //         $config['new_image'] = './assets/foto_servis/' . $nota['file_name'];
-    //         $this->load->library('image_lib', $config, 'resizenota');
-    //         $res = $this->resizenota->resize();
-    //         $namanota = $nota['file_name'];
-    //     }
-
-    //     if (!empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
-    //         $simpan = $this->home_m->tambahriwayatserviskendaraan($namafoto, $idk, $namanota);
-    //         if ($simpan) {
-    //             $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil');
-    //             redirect('home/riwayat_servis?id=' . $idk . '');
-    //         } else {
-    //             $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
-    //             $data['post'] = $this->input->post();
-    //         }
-    //     } else {
-    //         if (isset($nama_dpn)) {
-    //             unlink('./assets/foto_servis/' . $namafoto);
-    //         }
-    //         $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
-    //         redirect('home/riwayat_servis?id=' . $idk . '');
-    //         $data['post'] = $this->input->post();
-    //     }
-    // }
     public function print_data_kendaraan()
     {
         check_level();

@@ -76,22 +76,25 @@
                                                 $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
                                                 $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
                                             } elseif ($pg['jenis_pagu'] == 'Pemeliharaan') {
-                                                $sisabbm = "";
-                                                $terpakai = "";
+                                                $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
+                                                $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
+                                            } elseif ($pg['jenis_pagu'] == 'Pajak Kendaraan') {
+                                                $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
+                                                $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
                                             } else {
                                                 $sisabbm = "";
                                                 $terpakai = "";
                                             } ?>
                                     <tr>
                                         <td class="text-center"><?= $no++; ?></td>
-                                        <td class="text-center"><a
-                                                onclick="editConfirm('<?= site_url('home/editpagu?id=' . $pg['id_ps'] . '') ?>')"
+                                        <td class="text-center">
+                                            <!-- <a onclick="deleteConfirm('<?= site_url('admin/hapuspagu?id=' . $pg['id_ps'] . '') ?>')"
+                                                href="#" class="btn btn-sm btn-danger jedatombol"><i
+                                                    class="fas fa-trash"></i></a> -->
+                                            <a onclick="editConfirm('<?= site_url('admin/editpagu?id=' . $pg['id_ps'] . '') ?>')"
                                                 href="#" class="btn btn-sm btn-warning jedatombol"
                                                 title="Edit Pagu <?= $kend['no_polisi'] ?>"><i
                                                     class="fas fa-pencil"></i></a>
-                                            <a onclick="deleteConfirm('<?= site_url('home/hapuspagu?id=' . $pg['id_ps'] . '') ?>')"
-                                                href="#" class="btn btn-sm btn-danger jedatombol"><i
-                                                    class="fas fa-trash"></i></a>
                                         </td>
                                         <td class="text-center"><?= $pg['jenis_pagu'] ?></td>
                                         <td class="text-center"><?= $pg['tahun'] ?></td>

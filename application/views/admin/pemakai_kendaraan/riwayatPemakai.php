@@ -64,18 +64,14 @@
                          <table class="table table-bordered table-striped example" width="100%">
                              <thead>
                                  <tr>
-                                     <th rowspan="2">No</th>
-                                     <th colspan="2" class="text-center">Aksi</th>
-                                     <th rowspan="2">Nama Pemakai</th>
-                                     <th rowspan="2">NIP</th>
-                                     <th rowspan="2">Lokasi Unit</th>
-                                     <th rowspan="2">Status</th>
-                                     <th rowspan="2">Tanggal Awal</th>
-                                     <th rowspan="2">Tanggal Akhir</th>
-                                 </tr>
-                                 <tr>
-                                     <th></th>
-                                     <th></th>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center" width="10%">Aksi</th>
+                                     <th class="text-center">Nama Pemakai</th>
+                                     <th class="text-center">NIP</th>
+                                     <th class="text-center">Lokasi Unit</th>
+                                     <th class="text-center">Status</th>
+                                     <th class="text-center">Tanggal Awal</th>
+                                     <th class="text-center">Tanggal Akhir</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -83,32 +79,34 @@
                                  <?php $no = 1;
                                         foreach ($rp as $value) : ?>
                                  <tr>
-                                     <td><?= $no ?></td>
-                                     <td>
+                                     <td class="text-center"><?= $no ?></td>
+                                     <td class="text-center">
                                          <?php if ($value['status'] == 'aktif') : ?>
                                          <a href="<?= site_url('home/nonaktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
-                                             class="btn btn-sm btn-secondary"><i class="fa-solid fa-octagon-xmark"
+                                             class="btn btn-sm btn-secondary jedatombol"><i
+                                                 class="fa-solid fa-octagon-xmark"
                                                  title="Nonaktifkan Pemakai <?= $value['nama_pemakai'] ?>"></i></a>
                                          <?php else : ?>
                                          <a href="<?= site_url('home/aktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
-                                             class="btn btn-sm btn-success"><i class="fa-solid fa-badge-check"
+                                             class="btn btn-sm btn-success jedatombol"><i
+                                                 class="fa-solid fa-badge-check"
                                                  title="Aktifkan Pemakai <?= $value['nama_pemakai'] ?>"></i></a>
                                          <?php endif ?>
+                                         <a onclick="editConfirm('<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"><i class="fas fa-pen"
+                                                 title="Edit Data Pemakai <?= $value['nama_pemakai'] ?>"></i></a>
                                      </td>
-                                     <td><a href="<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>"
-                                             class="btn btn-sm btn-warning"><i class="fas fa-pen"
-                                                 title="Edit Data Pemakai <?= $value['nama_pemakai'] ?>"></i></a></td>
-                                     <td><?= $value['nama_pemakai'] ?></td>
-                                     <td><?= $value['nip_pemakai'] ?></td>
-                                     <td><?= $value['lokasi_unit'] ?></td>
-                                     <td><?php if ($value['status'] == "tidak_aktif") : ?>
+                                     <td class="text-center"><?= $value['nama_pemakai'] ?></td>
+                                     <td class="text-center"><?= $value['nip_pemakai'] ?></td>
+                                     <td class="text-center"><?= $value['lokasi_unit'] ?></td>
+                                     <td class="text-center"><?php if ($value['status'] == "tidak_aktif") : ?>
                                          Tidak Aktif
                                          <?php else : ?>
                                          Aktif
                                          <?php endif ?>
                                      </td>
-                                     <td><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
-                                     <td><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
                                  </tr>
                                  <?php $no++;
                                         endforeach   ?>
