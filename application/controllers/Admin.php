@@ -23,8 +23,8 @@ class Admin extends CI_Controller
             $data['servis'] = $this->admin_m->pagu_service_kendaraan($id);
             $data['bbm'] = $this->admin_m->pagu_bbm_kendaraan($id);
             $data['pajak'] = $this->admin_m->pagu_pajak_kendaraan($id);
-            print_r($data);
-            die();
+            // print_r($data);
+            // die();
             $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
             $this->load->view('admin/template/header');
             $this->load->view('admin/pagu/pagukendaraan', $data);

@@ -17,30 +17,30 @@
                              <tr>
                                  <th width="20%">No. Polisi</th>
                                  <th>:</th>
-                                 <th><?= $kend['no_polisi'] ?></th>
+                                 <th><?= strtoupper($kend['no_polisi']) ?></th>
                              </tr>
                              <tr>
                                  <th width="20%">Jenis</th>
                                  <th>:</th>
-                                 <th><?= $kend['jenis'] ?></th>
+                                 <th><?= strtoupper($kend['jenis']) ?></th>
                              </tr>
                              <tr>
                                  <th width="20%">Merk</th>
                                  <th>:</th>
-                                 <th><?= $kend['merk'] ?></th>
+                                 <th><?= strtoupper($kend['merk']) ?></th>
                              </tr>
                              <tr>
                                  <th width="20%">No STNK</th>
                                  <th>:</th>
                                  <th>
                                      <?php if (empty($kend['no_stnk'])) : ?>
-                                     <?= $kend['no_stnk'] ?>
+                                     <?= strtoupper($kend['no_stnk']) ?>
                                      <span
                                          style="font-size:12px;font-style:italic;color:red; font-family:Arial;align-items:right">
                                          Data masih kosong. Harap segera di perbarui
                                      </span>
                                      <?php else : ?>
-                                     <?= $kend['no_stnk'] ?>
+                                     <?= strtoupper($kend['no_stnk']) ?>
                                      <?php endif; ?>
                                  </th>
                              </tr>
@@ -49,13 +49,13 @@
                                  <th>:</th>
                                  <th>
                                      <?php if (empty($kend['no_mesin'])) : ?>
-                                     <?= $kend['no_mesin'] ?>
+                                     <?= strtoupper($kend['no_mesin']) ?>
                                      <span
                                          style="font-size:12px;font-style:italic;color:red; font-family:Arial;align-items:right">
                                          Data masih kosong. Harap segera di perbarui
                                      </span>
                                      <?php else : ?>
-                                     <?= $kend['no_mesin'] ?>
+                                     <?= strtoupper($kend['no_mesin']) ?>
                                      <?php endif; ?>
                                  </th>
                              </tr>
@@ -64,13 +64,13 @@
                                  <th>:</th>
                                  <th>
                                      <?php if (empty($kend['no_rangka'])) : ?>
-                                     <?= $kend['no_rangka'] ?>
+                                     <?= strtoupper($kend['no_rangka']) ?>
                                      <span
                                          style="font-size:12px;font-style:italic;color:red; font-family:Arial;align-items:right">
                                          Data masih kosong. Harap segera di perbarui
                                      </span>
                                      <?php else : ?>
-                                     <?= $kend['no_rangka'] ?>
+                                     <?= strtoupper($kend['no_rangka']) ?>
                                      <?php endif; ?>
                                  </th>
                              </tr>
@@ -94,13 +94,13 @@
                                  <th>:</th>
                                  <th>
                                      <?php if (empty($kend['jenis_bb'])) : ?>
-                                     <?= $kend['jenis_bb'] ?>
+                                     <?= strtoupper($kend['jenis_bb']) ?>
                                      <span
                                          style="font-size:12px;font-style:italic;color:red; font-family:Arial;align-items:right">
                                          Data masih kosong. Harap segera di perbarui
                                      </span>
                                      <?php else : ?>
-                                     <?= $kend['jenis_bb'] ?>
+                                     <?= strtoupper($kend['jenis_bb']) ?>
                                      <?php endif; ?>
                                  </th>
                              </tr>
@@ -139,13 +139,13 @@
                                  <th>:</th>
                                  <th>
                                      <?php if (empty($kend['nama_pemakai'])) : ?>
-                                     <?= $kend['nama_pemakai'] ?>
+                                     <?= strtoupper($kend['nama_pemakai']) ?>
                                      <span
                                          style="font-size:12px;font-style:italic;color:red; font-family:Arial;align-items:right">
                                          Data masih kosong. Harap segera di perbarui
                                      </span>
                                      <?php else : ?>
-                                     <?= $kend['nama_pemakai'] ?>
+                                     <?= strtoupper($kend['nama_pemakai']) ?>
                                      <?php if (!empty($kend['nip_pemakai'])) : ?>
                                      (<?= $kend['nip_pemakai'] ?>)
                                      <?php endif; ?>
@@ -157,13 +157,13 @@
                                  <th>:</th>
                                  <th>
                                      <?php if (empty($kend['lokasi_unit'])) : ?>
-                                     <?= $kend['lokasi_unit'] ?>
+                                     <?= strtoupper($kend['lokasi_unit']) ?>
                                      <span
                                          style="font-size:12px;font-style:italic;color:red; font-family:Arial;align-items:right">
                                          Data masih kosong. Harap segera di perbarui
                                      </span>
                                      <?php else : ?>
-                                     <?= $kend['lokasi_unit'] ?>
+                                     <?= strtoupper($kend['lokasi_unit']) ?>
                                      <?php endif; ?>
                                  </th>
                              </tr>
@@ -197,6 +197,40 @@
                      </div>
                  </div>
              </div>
+             <!-- <div class="col-lg-12">
+                 <div class="card" style="width: 100%;">
+                     <div class="card-header" style="background-color:#4a2f3a;">
+                         <h3 style="font-weight:bold;color:white;">Pagu Tahunan Kendaraan Dinas</h3>
+                     </div>
+                     <div class="card-body">
+                         <table class="table table-bordered table-striped">
+                             <thead>
+                                 <tr>
+                                     <th class="text-center">Tahun</th>
+                                     <th class="text-center">Jenis Pagu</th>
+                                     <th class="text-center">Total Awal</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <?php
+                                    if ($pajak != '') :
+                                        foreach ($pajak as $value) : ?>
+                                 <tr>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
+                                     </td>
+                                     <td class="text-center"><?= $value['tahun'] ?></td>
+                                     <td class="text-center">Rp.
+                                         <?= number_format($value['total_pajak'], 2, ',', '.'); ?>
+                                     </td>
+                                 </tr>
+                                 <?php
+                                        endforeach;
+                                    endif ?>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div> -->
              <div class="col-lg-12">
                  <div class="card" style="width: 100%;">
                      <div class="card-header" style="background-color:#4a2f3a;">

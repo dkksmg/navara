@@ -47,11 +47,8 @@ $(function() {
     });
     $('.example2').DataTable({});
 });
+window.print();
 </script>
-<script>
-// window.print();
-</script>
-
 </body>
 
 </html>
