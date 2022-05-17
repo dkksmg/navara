@@ -33,7 +33,7 @@
                                  <tr>
                                      <th>No</th>
                                      <th>Aksi</th>
-                                     <th>ID ASSETS</th>
+                                     <th>ID Aset</th>
                                      <th>No. Polisi</th>
                                      <th>Merk</th>
                                      <th>Jenis</th>

@@ -19,7 +19,7 @@
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>ID ASSETS</th>
+                                    <th>ID Aset</th>
                                     <th>:</th>
                                     <th><?= $value['id_assets'] ?></th>
                                 </tr>
@@ -63,15 +63,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nama Pemakai</label>
-                                            <input type="text" class="form-control" name="nama" required
-                                                value="<?= $value['nama_pemakai'] ?>">
+                                            <input type="text" class="form-control" name="nama" required value="<?= $value['nama_pemakai'] ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>NIP / NIK</label>
-                                            <input type="number" class="form-control" name="nip" required
-                                                value="<?= $value['nip_pemakai'] ?>">
+                                            <input type="number" class="form-control" name="nip" required value="<?= $value['nip_pemakai'] ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -82,11 +80,10 @@
                                             <select class="form-control" name="lokunit">
                                                 <option readonly>-- Pilih Lokasi Unit --</option>
                                                 <?php if ($lu != '') : ?>
-                                                <?php foreach ($lu as $lokasi) : ?>
-                                                <option <?php if ($value['lokasi_unit'] == $lokasi['lokasi_unit']) : ?>
-                                                    selected="selected" <?php endif ?>><?= $lokasi['lokasi_unit'] ?>
-                                                </option>
-                                                <?php endforeach; ?>
+                                                    <?php foreach ($lu as $lokasi) : ?>
+                                                        <option <?php if ($value['lokasi_unit'] == $lokasi['lokasi_unit']) : ?> selected="selected" <?php endif ?>><?= $lokasi['lokasi_unit'] ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 <?php endif ?>
                                             </select>
                                         </div>
@@ -96,15 +93,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Tanggal Awal</label>
-                                            <input type="text" class="form-control pilihtanggal" name="dari" required
-                                                value="<?= date('d-m-Y', strtotime($value['tgl_awal'])) ?>">
+                                            <input type="text" class="form-control pilihtanggal" name="dari" required value="<?= date('d-m-Y', strtotime($value['tgl_awal'])) ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Tanggal Akhir</label>
-                                            <input type="text" class="form-control pilihtanggal" name="sampai"
-                                                value="<?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?>">
+                                            <input type="text" class="form-control pilihtanggal" name="sampai" value="<?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?>">
                                             <p style="color:red;">* kosongkan jika tanggal akhir belum ada</p>
                                         </div>
                                     </div>

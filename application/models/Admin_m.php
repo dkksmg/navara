@@ -9,16 +9,30 @@ class Admin_m extends CI_Model
         parent::__construct();
     }
 
-    public function pagu_kendaraan()
+    public function pagu_kendaraan($id = null)
     {
-        $this->db->join(' ( SELECT id_kendaraan, sum(total_biaya) as tb FROM riwayat_servis group by id_kendaraan ) rs ', 'rs.id_kendaraan=pagu_service.id_kend');
-        $query = $this->db->get('pagu_service');
+        $query = $this->db->where('id_kend', $id)->get('pagu_service');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
             }
             return $hasil;
         }
+    }
+    public function pagu_service_kendaraan($id = null)
+    {
+        $query = $this->db->query('SELECT SUM(total_biaya) as jumlah_total_servis FROM `riwayat_servis` WHERE id_kendaraan = ' . $id . '')->row_array();
+        return $query;
+    }
+    public function pagu_bbm_kendaraan($id = null)
+    {
+        $query = $this->db->query('SELECT SUM(total_bbm) as jumlah_total_bbm FROM `riwayat_bbm` WHERE id_kendaraan = ' . $id . '')->row_array();
+        return $query;
+    }
+    public function pagu_pajak_kendaraan($id = null)
+    {
+        $query = $this->db->query('SELECT SUM(total_pajak) as jumlah_total_pajak FROM `riwayat_pajak` WHERE id_kendaraan = ' . $id . '')->row_array();
+        return $query;
     }
     public function datapagu_kendaraanbyid($id)
     {

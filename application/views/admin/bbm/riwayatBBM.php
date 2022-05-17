@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID ASSETS</th>
+                                 <th>ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -55,8 +55,7 @@
                          <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                             data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
                              Tambah Riwayat BBM
                          </button>
                      </div>
@@ -75,29 +74,21 @@
                                  <?php $no = 1;
                                     if ($rbbm != '') :
                                         foreach ($rbbm as $value) : ?>
-                                 <tr>
-                                     <td class="text-center"><?= $no; ?></td>
-                                     <td class="text-center">
-                                         <a onclick="deleteConfirm('<?= site_url('home/hapusrbbm?id=' . encrypt_url($value['id_bbm']) . '&idkend=' . encrypt_url($value['id_kendaraan'])) ?>')"
-                                             href="#" class="btn btn-danger btn-sm jedatombol"
-                                             title="Hapus Riwayat BBM <?= $kend['no_polisi'] ?>"><i
-                                                 class="fas fa-trash"></i></a>
-                                         <a onclick="editConfirm('<?= site_url('home/editrbbm?id=' . encrypt_url($value['id_bbm']) . '&idkend=' . encrypt_url($value['id_kendaraan'])) ?>')"
-                                             href="#" class="btn btn-warning btn-sm jedatombol"
-                                             title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"><i
-                                                 class="fas fa-pen"></i></a>
-                                     </td>
-                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
-                                     </td>
-                                     <td class="text-center"><?= $value['total_bbm']; ?>
-                                     </td>
-                                     <td class="text-center"><img
-                                             src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
-                                             alt="Foto Struk BBM" data-toggle="modal" width="30%"
-                                             data-target="#strukModal<?php echo $no ?>">
-                                     </td>
+                                         <tr>
+                                             <td class="text-center"><?= $no; ?></td>
+                                             <td class="text-center">
+                                                 <a onclick="deleteConfirm('<?= site_url('home/hapusrbbm?id=' . encrypt_url($value['id_bbm']) . '&idkend=' . encrypt_url($value['id_kendaraan'])) ?>')" href="#" class="btn btn-danger btn-sm jedatombol" title="Hapus Riwayat BBM <?= $kend['no_polisi'] ?>"><i class="fas fa-trash"></i></a>
+                                                 <a onclick="editConfirm('<?= site_url('home/editrbbm?id=' . encrypt_url($value['id_bbm']) . '&idkend=' . encrypt_url($value['id_kendaraan'])) ?>')" href="#" class="btn btn-warning btn-sm jedatombol" title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"><i class="fas fa-pen"></i></a>
+                                             </td>
+                                             <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
+                                             </td>
+                                             <td class="text-center">
+                                                 <?= "Rp. " . number_format($value['total_bbm'], 2, ',', '.'); ?>
+                                             </td>
+                                             <td class="text-center"><img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>" alt="Foto Struk BBM" data-toggle="modal" width="30%" data-target="#strukModal<?php echo $no ?>">
+                                             </td>
 
-                                 </tr>
+                                         </tr>
                                  <?php $no++;
                                         endforeach;
                                     endif ?>
@@ -116,28 +107,25 @@
     $no = 1;
     if ($rbbm != '') :
         foreach ($rbbm as $value) : ?>
- <center>
-     <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog"
-         aria-labelledby="myModalLabel">
-         <div class="modal-dialog" role="document">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                             aria-hidden="true">&times;</span></button>
-                 </div>
-                 <div class="modal-body">
-                     <center>
-                         <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
-                             alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
-                     </center>
-                 </div>
-                 <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         <center>
+             <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                 <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                         </div>
+                         <div class="modal-body">
+                             <center>
+                                 <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>" alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
+                             </center>
+                         </div>
+                         <div class="modal-footer">
+                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                         </div>
+                     </div>
                  </div>
              </div>
-         </div>
-     </div>
- </center>
+         </center>
  <?php $no++;
         endforeach;
     endif ?>
@@ -163,15 +151,13 @@
                      <div class="col-md-6">
                          <div class="form-group">
                              <label>Tanggal</label>
-                             <input type="text" class="form-control pilihtanggal" name="tgl_bbm"
-                                 value="<?= date('d-m-Y') ?>" required>
+                             <input type="text" class="form-control pilihtanggal" name="tgl_bbm" value="<?= date('d-m-Y') ?>" required>
                          </div>
                      </div>
                      <div class="col-md-6">
                          <div class="form-group">
                              <label>Total Biaya BBM</label>
-                             <input type="text" class="form-control" id="rupiah" name="harga_bbm" required
-                                 placeholder="Masukkan Total Biaya BBM">
+                             <input type="number" class="form-control" name="harga_bbm" required placeholder="Masukkan Total Biaya BBM">
                          </div>
                      </div>
                      <div class="col-md-6">

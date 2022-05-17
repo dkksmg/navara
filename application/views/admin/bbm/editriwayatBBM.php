@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID ASSETS</th>
+                                 <th>ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -67,22 +67,19 @@
                              <div class="col-md-6">
                                  <div class="form-group">
                                      <label>Tanggal</label>
-                                     <input type="text" class="form-control pilihtanggal" name="tgl_bbm"
-                                         value="<?= date('d-m-Y', strtotime($rbbm['tgl_pencatatan'])) ?>" required>
+                                     <input type="text" class="form-control pilihtanggal" name="tgl_bbm" value="<?= date('d-m-Y', strtotime($rbbm['tgl_pencatatan'])) ?>" required>
                                  </div>
                              </div>
                              <div class="col-md-6">
                                  <div class="form-group">
                                      <label>Total Biaya BBM</label>
-                                     <input type="text" class="form-control" id="rupiah" name="harga_bbm" required
-                                         placeholder="Masukkan Total Biaya BBM" value="<?= $rbbm['total_bbm'] ?>">
+                                     <input type="number" class="form-control" name="harga_bbm" required placeholder="Masukkan Total Biaya BBM" value="<?= $rbbm['total_bbm'] ?>">
                                  </div>
                              </div>
                              <div class="col-md-6">
                                  <div class="form-group">
                                      <label>Struk BBM</label>
-                                     <input type="file" class="form-control" name="struk_bbm" accept="image/*"
-                                         <?php if ($rbbm['struk_bbm'] == null) : ?> required <?php endif ?>>
+                                     <input type="file" class="form-control" name="struk_bbm" accept="image/*" <?php if ($rbbm['struk_bbm'] == null) : ?> required <?php endif ?>>
                                  </div>
                              </div>
                              <div class="col-md-6">
@@ -90,10 +87,7 @@
                                      <label>Foto Struk BBM</label>
                                      <div class="card" style="width: 18rem;">
                                          <div class="gallery">
-                                             <img class="card-img-top"
-                                                 src="<?= base_url('assets/upload/struk_bbm/' . $rbbm['struk_bbm']) ?>"
-                                                 alt="Foto Struk BBM" data-toggle="modal" width="30%"
-                                                 data-target="#strukModal">
+                                             <img class="card-img-top" src="<?= base_url('assets/upload/struk_bbm/' . $rbbm['struk_bbm']) ?>" alt="Foto Struk BBM" data-toggle="modal" width="30%" data-target="#strukModal">
                                          </div>
                                      </div>
 
@@ -119,13 +113,11 @@
          <div class="modal-dialog" role="document">
              <div class="modal-content">
                  <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                             aria-hidden="true">&times;</span></button>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                  </div>
                  <div class="modal-body">
                      <center>
-                         <img src="<?= base_url('assets/upload/struk_bbm/' . $rbbm['struk_bbm'] . '') ?>"
-                             alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
+                         <img src="<?= base_url('assets/upload/struk_bbm/' . $rbbm['struk_bbm'] . '') ?>" alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>
                  <div class="modal-footer">

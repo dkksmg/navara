@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID ASSETS</th>
+                                 <th>ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -55,8 +55,7 @@
                          <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                             data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
                              Tambah Riwayat Pajak
                          </button>
                      </div>
@@ -75,21 +74,17 @@
                                  <?php $no = 1;
                                     if ($rp != '') {
                                         foreach ($rp as $value) { ?>
-                                 <tr>
-                                     <td class="text-center"><?= $no++; ?></td>
-                                     <td class="text-center">
-                                         <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-warning jedatombol"
-                                             title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i
-                                                 class="fas fa-pencil"></i></a>
-                                         <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-danger jedatombol"><i
-                                                 class="fas fa-trash"></i></a>
-                                     </td>
-                                     <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
-                                     <td class="text-center"><?= $value['tahun'] ?></td>
-                                     <td class="text-center"><?= $value['total_pajak']; ?></td>
-                                 </tr>
+                                         <tr>
+                                             <td class="text-center"><?= $no++; ?></td>
+                                             <td class="text-center">
+                                                 <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')" href="#" class="btn btn-sm btn-warning jedatombol" title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i class="fas fa-pencil"></i></a>
+                                                 <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')" href="#" class="btn btn-sm btn-danger jedatombol"><i class="fas fa-trash"></i></a>
+                                             </td>
+                                             <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
+                                             <td class="text-center"><?= $value['tahun'] ?></td>
+                                             <td class="text-center">
+                                                 <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?></td>
+                                         </tr>
                                  <?php }
                                     } ?>
                              </tbody>
@@ -105,8 +100,7 @@
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('pemakai/prosestambahpajak?id=' . $kend['idk'] . '') ?>"
-             enctype="multipart/form-data">
+         <form method="post" action="<?= site_url('pemakai/prosestambahpajak?id=' . $kend['idk'] . '') ?>" enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
                      <h4 class="modal-title">Form Riwayat Pajak</h4>
@@ -136,8 +130,7 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Total Pajak</label>
-                                 <input type="text" id="rupiah" placeholder="Masukkan Total Pajak" class="form-control"
-                                     name="total_pajak">
+                                 <input type="number" placeholder="Masukkan Total Pajak" class="form-control" name="total_pajak">
                              </div>
                          </div>
                      </div>

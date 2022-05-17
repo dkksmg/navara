@@ -22,7 +22,7 @@
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>ID ASSETS</th>
+                                    <th>ID Aset</th>
                                     <th>:</th>
                                     <th><?= $kend['id_assets'] ?></th>
                                 </tr>
@@ -51,8 +51,7 @@
                             <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                         </div>
                         <div class="card-header">
-                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                                data-target="#modal-xl">
+                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
                                 Tambah Pagu Anggaran Pemeliharaan
                             </button>
                         </div>
@@ -72,37 +71,40 @@
                                     <?php $no = 1;
                                     if ($pagu != '') {
                                         foreach ($pagu as $pg) {
-                                            if ($pg['jenis_pagu'] == 'BBM') {
-                                                $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
-                                                $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
-                                            } elseif ($pg['jenis_pagu'] == 'Pemeliharaan') {
-                                                $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
-                                                $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
-                                            } elseif ($pg['jenis_pagu'] == 'Pajak Kendaraan') {
-                                                $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
-                                                $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
-                                            } else {
-                                                $sisabbm = "";
-                                                $terpakai = "";
-                                            } ?>
-                                    <tr>
-                                        <td class="text-center"><?= $no++; ?></td>
-                                        <td class="text-center">
-                                            <!-- <a onclick="deleteConfirm('<?= site_url('admin/hapuspagu?id=' . $pg['id_ps'] . '') ?>')"
+                                            // if ($pg['jenis_pagu'] == 'BBM') {
+                                            //     $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
+                                            //     $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
+                                            // } elseif ($pg['jenis_pagu'] == 'Pemeliharaan') {
+                                            //     $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
+                                            //     $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
+                                            // } elseif ($pg['jenis_pagu'] == 'Pajak Kendaraan') {
+                                            //     $sisabbm = "Rp " . number_format($pg['pagu_awal'] - $pg['tb'], 2, ',', '.');
+                                            //     $terpakai = "Rp " . number_format($pg['tb'], 2, ',', '.');
+                                            // } else {
+                                            //     $sisabbm = "";
+                                            //     $terpakai = "";
+                                            // } 
+
+                                            $terpakai = "";
+                                            $sisa   = "";
+                                    ?>
+                                            <tr>
+                                                <td class="text-center"><?= $no++; ?></td>
+                                                <td class="text-center">
+                                                    <!-- <a onclick="deleteConfirm('<?= site_url('admin/hapuspagu?id=' . $pg['id_ps'] . '') ?>')"
                                                 href="#" class="btn btn-sm btn-danger jedatombol"><i
                                                     class="fas fa-trash"></i></a> -->
-                                            <a onclick="editConfirm('<?= site_url('admin/editpagu?id=' . $pg['id_ps'] . '') ?>')"
-                                                href="#" class="btn btn-sm btn-warning jedatombol"
-                                                title="Edit Pagu <?= $kend['no_polisi'] ?>"><i
-                                                    class="fas fa-pencil"></i></a>
-                                        </td>
-                                        <td class="text-center"><?= $pg['jenis_pagu'] ?></td>
-                                        <td class="text-center"><?= $pg['tahun'] ?></td>
-                                        <td class="text-center">Rp <?= number_format($pg['pagu_awal'], 2, ',', '.'); ?>
-                                        </td>
-                                        <td class="text-center"><?= $terpakai ?></td>
-                                        <td class="text-center"><?= $sisabbm ?></td>
-                                    </tr>
+                                                    <a onclick="editConfirm('<?= site_url('admin/editpagu?id=' . $pg['id_ps'] . '') ?>')" href="#" class="btn btn-sm btn-warning jedatombol" title="Edit Pagu <?= $kend['no_polisi'] ?>"><i class="fas fa-pencil"></i></a>
+                                                </td>
+                                                <td class="text-center"><?= $pg['jenis_pagu'] ?></td>
+                                                <td class="text-center"><?= $pg['tahun'] ?></td>
+                                                <td class="text-center">Rp <?= number_format($pg['pagu_awal'], 2, ',', '.'); ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?= $servis['jumlah_total_servis']; ?> <?= $bbm['jumlah_total_bbm']; ?>
+                                                </td>
+                                                <td class="text-center"><?= $sisa ?></td>
+                                            </tr>
                                     <?php }
                                     } ?>
                                 </tbody>
@@ -115,8 +117,7 @@
     </div>
     <div class="modal fade" id="modal-xl">
         <div class="modal-dialog modal-xl">
-            <form method="post" action="<?= site_url('admin/prosestambahpagu?id=' . $kend['idk'] . '') ?>"
-                enctype="multipart/form-data">
+            <form method="post" action="<?= site_url('admin/prosestambahpagu?id=' . $kend['idk'] . '') ?>" enctype="multipart/form-data">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Form Pagu Kendaraan Dinas</h4>

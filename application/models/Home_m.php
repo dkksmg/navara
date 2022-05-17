@@ -623,4 +623,61 @@ class Home_m extends CI_Model
         $q = $this->db->delete('riwayat_bbm');
         return $q;
     }
+    public function datasummary_kendaraanbyid($id = null)
+    {
+        $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_kendaraan = kend.idk', 'left')
+            ->where('idk', $id);
+        $query = $this->db->get('kendaraan as kend');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function datasummary_riwayatkondisibyid($id = null)
+    {
+        $this->db->where('id_kendaraan', $id);
+        $query = $this->db->order_by('tgl_pencatatan', 'DESC')->get('riwayat_kondisi');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function datasummary_riwayatbbmbyid($id = null)
+    {
+        $this->db->where('id_kendaraan', $id);
+        $query = $this->db->order_by('tgl_pencatatan', 'DESC')->get('riwayat_bbm');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function datasummary_riwayatpajakbyid($id = null)
+    {
+        $this->db->where('id_kendaraan', $id);
+        $query = $this->db->order_by('tgl_pencatatan', 'DESC')->get('riwayat_pajak');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function datasummary_riwayatservisbyid($id = null)
+    {
+        $this->db->where('id_kendaraan', $id);
+        $query = $this->db->order_by('tgl_servis', 'DESC')->get('riwayat_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
 }

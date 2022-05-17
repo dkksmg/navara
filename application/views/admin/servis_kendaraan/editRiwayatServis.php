@@ -20,7 +20,7 @@
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>ID ASSETS</th>
+                                    <th>ID Aset</th>
                                     <th>:</th>
                                     <th><?= $servis['id_assets'] ?></th>
                                 </tr>
@@ -71,16 +71,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Tanggal Service</label>
-                                            <input type="text" class="form-control pilihtanggal" name="tgl" required
-                                                value="<?php echo date('d-m-Y', strtotime($servis['tgl_servis'])) ?>"
-                                                placeholder="Tanggal Service">
+                                            <input type="text" class="form-control pilihtanggal" name="tgl" required value="<?php echo date('d-m-Y', strtotime($servis['tgl_servis'])) ?>" placeholder="Tanggal Service">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nama Bengkel Service</label>
-                                            <input type="text" class="form-control" name="bengkel" required
-                                                value="<?php echo $servis['lokasi'] ?>" placeholder="Nama Bengkel">
+                                            <input type="text" class="form-control" name="bengkel" required value="<?php echo $servis['lokasi'] ?>" placeholder="Nama Bengkel">
                                         </div>
                                     </div>
                                 </div>
@@ -88,17 +85,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Keluhan</label>
-                                            <input type="text" class="form-control" name="keluhan" required
-                                                value="<?php echo $servis['keluhan'] ?>"
-                                                placeholder="Keluhan Kendaraan">
+                                            <input type="text" class="form-control" name="keluhan" required value="<?php echo $servis['keluhan'] ?>" placeholder="Keluhan Kendaraan">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Perbaikan</label>
-                                            <input type="text" class="form-control" name="perbaikan" required
-                                                value="<?php echo $servis['perbaikan'] ?>"
-                                                placeholder="Perbaikan Kendaraan">
+                                            <input type="text" class="form-control" name="perbaikan" required value="<?php echo $servis['perbaikan'] ?>" placeholder="Perbaikan Kendaraan">
                                         </div>
                                     </div>
                                 </div>
@@ -106,8 +99,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Total Biaya</label>
-                                            <input type="text" class="form-control" name="biaya" id="rupiah" required
-                                                value="<?php echo $servis['total_biaya'] ?>" placeholder="Total Biaya">
+                                            <input type="number" class="form-control" name="biaya" required value="<?php echo $servis['total_biaya'] ?>" placeholder="Total Biaya">
                                         </div>
                                     </div>
                                 </div>
@@ -115,15 +107,12 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Foto Nota</label>
-                                            <input type="file" class="form-control" name="nota" accept="image/*"
-                                                <?php if ($servis['foto_nota'] == null) : ?> required <?php endif ?>>
+                                            <input type="file" class="form-control" name="nota" accept="image/*" <?php if ($servis['foto_nota'] == null) : ?> required <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
                                             <div class="gallery">
 
-                                                <img class="card-img-top"
-                                                    src="<?= base_url('assets//upload/foto_nota/' . $servis['foto_nota']) ?>"
-                                                    alt="Foto Servis">
+                                                <img class="card-img-top" src="<?= base_url('assets//upload/foto_nota/' . $servis['foto_nota']) ?>" alt="Foto Servis">
                                             </div>
                                         </div>
                                         <div class="container-foto">
@@ -137,14 +126,11 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Foto Service</label>
-                                            <input type="file" class="form-control" name="foto" accept="image/*"
-                                                <?php if ($servis['foto_servis'] == null) : ?> required <?php endif ?>>
+                                            <input type="file" class="form-control" name="foto" accept="image/*" <?php if ($servis['foto_servis'] == null) : ?> required <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
                                             <div class="gallery">
-                                                <img class="card-img-top"
-                                                    src="<?= base_url('assets/upload/foto_servis/' . $servis['foto_servis']) ?>"
-                                                    alt="Foto Servis">
+                                                <img class="card-img-top" src="<?= base_url('assets/upload/foto_servis/' . $servis['foto_servis']) ?>" alt="Foto Servis">
                                             </div>
                                         </div>
                                     </div>

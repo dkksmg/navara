@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <table class="table table-striped">
                             <tr>
-                                <th>ID ASSETS</th>
+                                <th>ID Aset</th>
                                 <th>:</th>
                                 <th><?= $pagu['id_assets'] ?></th>
                             </tr>
@@ -63,9 +63,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Total Pagu <?= $pagu['jenis_pagu'] ?></label>
-                                    <input type="number" class="form-control" name="pagu" required
-                                        placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>"
-                                        value="<?= $pagu['pagu_awal'] ?>">
+                                    <input type="number" class="form-control" name="pagu" required placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>" value="<?= $pagu['pagu_awal'] ?>">
                                 </div>
                             </div>
                         </div>

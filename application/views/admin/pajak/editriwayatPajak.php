@@ -20,7 +20,7 @@
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>ID ASSETS</th>
+                                    <th>ID Aset</th>
                                     <th>:</th>
                                     <th><?= $value['id_assets'] ?></th>
                                 </tr>
@@ -85,9 +85,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Total Pajak</label>
-                                            <input type="text" id="rupiah" class="form-control"
-                                                placeholder="Masukkan Total Pajak" value="<?= $value['total_pajak'] ?>"
-                                                name="total_pajak">
+                                            <input type="number" class="form-control" placeholder="Masukkan Total Pajak" value="<?= $value['total_pajak'] ?>" name="total_pajak">
                                         </div>
                                     </div>
                                 </div>

@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID ASSETS</th>
+                                 <th>ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -55,8 +55,7 @@
                          <h3 style="font-weight:bold;color:white;">Riwayat Kondisi</h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                             data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
                              Tambah Riwayat Kondisi
                          </button>
                      </div>
@@ -78,25 +77,20 @@
                                  <?php $no = 1;
                                     if ($rk != '') {
                                         foreach ($rk as $value) { ?>
-                                 <tr>
-                                     <td><?= $no++; ?></td>
-                                     <td><a href="<?= site_url('home/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>"
-                                             class="btn btn-sm btn-danger">Hapus</a></td>
-                                     <td><?= $value['tgl_pencatatan'] ?></td>
-                                     <td><?= $value['kondisi'] ?></td>
-                                     <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_depan'] . '') ?>">
-                                     </td>
-                                     <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kanan'] . '') ?>">
-                                     </td>
-                                     <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kiri'] . '') ?>">
-                                     </td>
-                                     <td><img width="70%"
-                                             src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_belakang'] . '') ?>">
-                                     </td>
-                                 </tr>
+                                         <tr>
+                                             <td><?= $no++; ?></td>
+                                             <td><a href="<?= site_url('home/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>" class="btn btn-sm btn-danger">Hapus</a></td>
+                                             <td><?= $value['tgl_pencatatan'] ?></td>
+                                             <td><?= $value['kondisi'] ?></td>
+                                             <td><img width="70%" src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_depan'] . '') ?>">
+                                             </td>
+                                             <td><img width="70%" src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kanan'] . '') ?>">
+                                             </td>
+                                             <td><img width="70%" src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_kiri'] . '') ?>">
+                                             </td>
+                                             <td><img width="70%" src="<?= base_url('assets/file_kendaraan/' . $value['foto_tampak_belakang'] . '') ?>">
+                                             </td>
+                                         </tr>
                                  <?php }
                                     } ?>
                              </tbody>
@@ -112,8 +106,7 @@
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('home/prosestambahkondisi?id=' . $kend['idk'] . '') ?>"
-             enctype="multipart/form-data">
+         <form method="post" action="<?= site_url('home/prosestambahkondisi?id=' . $kend['idk'] . '') ?>" enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
                      <h4 class="modal-title">Form Riwayat Kondisi</h4>

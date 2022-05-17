@@ -29,7 +29,7 @@
                              <div class="row">
                                  <div class="col-md-6">
                                      <div class="form-group">
-                                         <label>ID ASSETS</label>
+                                         <label>ID Aset</label>
                                          <input type="text" class="form-control" name="id_aset" value="<?= isset($kend) ? $kend['id_assets'] : id_aset() ?>" disabled readonly>
                                      </div>
                                  </div>

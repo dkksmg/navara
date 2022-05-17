@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID ASSETS</th>
+                                 <th>ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -130,24 +130,20 @@
                                     if (isset($rs) && $rs != '') :
                                         $no = 1;
                                         foreach ($rs as $value) : ?>
-                                 <tr>
-                                     <td class="text-center"><?= $no; ?></td>
-                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
-                                     <td class="text-center"><?= $value['lokasi'] ?></td>
-                                     <td><?= $value['keluhan'] ?></td>
-                                     <td><?= $value['perbaikan'] ?></td>
-                                     <td class="text-left">
-                                         <?= $value['total_biaya']; ?></td>
-                                     <td class="text-center">
-                                         <img width="40%"
-                                             src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
-                                             data-toggle="modal" data-target="#servisModal<?php echo $no ?>">
-                                     </td>
-                                     <td class="text-center"><img width="40%"
-                                             src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
-                                             data-toggle="modal" data-target="#notaModal<?php echo $no ?>">
-                                     </td>
-                                 </tr>
+                                         <tr>
+                                             <td class="text-center"><?= $no; ?></td>
+                                             <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
+                                             <td class="text-center"><?= $value['lokasi'] ?></td>
+                                             <td><?= $value['keluhan'] ?></td>
+                                             <td><?= $value['perbaikan'] ?></td>
+                                             <td class="text-left">
+                                                 <?= $value['total_biaya']; ?></td>
+                                             <td class="text-center">
+                                                 <img width="40%" src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>" data-toggle="modal" data-target="#servisModal<?php echo $no ?>">
+                                             </td>
+                                             <td class="text-center"><img width="40%" src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>" data-toggle="modal" data-target="#notaModal<?php echo $no ?>">
+                                             </td>
+                                         </tr>
                                  <?php $no++;
                                         endforeach;
                                     endif
@@ -168,47 +164,42 @@
     if (isset($rs) && $rs != '') :
         $no = 1;
         foreach ($rs as $value) : ?>
- <center>
-     <div class="modal fade" id="notaModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-         <div class="modal-dialog" role="document">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                             aria-hidden="true">&times;</span></button>
-                 </div>
-                 <div class="modal-body">
-                     <center>
-                         <img src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
-                             alt="Foto Servis" class="img-responsive" width="70%" height="auto">
-                     </center>
-                 </div>
-                 <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                 </div>
-             </div>
-         </div>
-     </div>
-     <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog"
-         aria-labelledby="myModalLabel">
-         <div class="modal-dialog" role="document">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                             aria-hidden="true">&times;</span></button>
-                 </div>
-                 <div class="modal-body">
-                     <center>
-                         <img src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
-                             alt="Foto Nota" class="img-responsive" width="70%" height="auto">
-                     </center>
-                 </div>
-                 <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         <center>
+             <div class="modal fade" id="notaModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                 <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                         </div>
+                         <div class="modal-body">
+                             <center>
+                                 <img src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>" alt="Foto Servis" class="img-responsive" width="70%" height="auto">
+                             </center>
+                         </div>
+                         <div class="modal-footer">
+                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                         </div>
+                     </div>
                  </div>
              </div>
-         </div>
-     </div>
- </center>
+             <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                 <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                         </div>
+                         <div class="modal-body">
+                             <center>
+                                 <img src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>" alt="Foto Nota" class="img-responsive" width="70%" height="auto">
+                             </center>
+                         </div>
+                         <div class="modal-footer">
+                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </center>
  <?php $no++;
         endforeach;
     endif ?>

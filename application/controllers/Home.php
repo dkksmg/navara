@@ -612,8 +612,22 @@ class Home extends CI_Controller
     public function print_data_kendaraan()
     {
         check_level();
-        $this->load->view('admin/template/header');
-        // $this->load->view('admin/servis/editriwayatservis', $data);
-        $this->load->view('admin/template/footer');
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_riwayat_servis($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = "Data Kendaraan Dinas";
+            $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id);
+            // print_r($this->db->last_query());
+            $data['kondisi'] = $this->home_m->datasummary_riwayatkondisibyid($id);
+            $data['bbm'] = $this->home_m->datasummary_riwayatbbmbyid($id);
+            $data['pajak'] = $this->home_m->datasummary_riwayatpajakbyid($id);
+            $data['servis'] = $this->home_m->datasummary_riwayatservisbyid($id);
+            $this->load->view('admin/template/header_print');
+            $this->load->view('admin/print/data_kendaraan', $data);
+            $this->load->view('admin/template/footer_print');
+        } else {
+            show_404();
+        }
     }
 }

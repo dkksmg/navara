@@ -29,7 +29,7 @@
                                  <tr>
                                      <th class="text-center">No</th>
                                      <th width="150px" class="text-center">Aksi</th>
-                                     <th class="text-center">ID ASSETS</th>
+                                     <th class="text-center">ID Aset</th>
                                      <th class="text-center">No. Polisi</th>
                                      <th class="text-center">Jenis</th>
                                      <th class="text-center">Merk</th>
@@ -40,18 +40,17 @@
                                  <?php $no = 1;
                                     if ($kendaraan != '') {
                                         foreach ($kendaraan as $kend) { ?>
-                                 <tr>
-                                     <td><?= $no++; ?></td>
-                                     <td class="text-center">
-                                         <a href="<?= site_url('servis/detail_servis?id=' . $kend['idk'] . '') ?>"
-                                             class="btn btn-sm btn-warning jedatombol">Detail Servis</a>
-                                     </td>
-                                     <td class="text-center"><?= $kend['id_assets'] ?></td>
-                                     <td class="text-center"><?= $kend['no_polisi'] ?></td>
-                                     <td class="text-center"><?= $kend['jenis'] ?></td>
-                                     <td class="text-center"><?= $kend['merk'] ?></td>
-                                     <td class="text-center"><?= $kend['tipe'] ?></td>
-                                 </tr>
+                                         <tr>
+                                             <td><?= $no++; ?></td>
+                                             <td class="text-center">
+                                                 <a href="<?= site_url('servis/detail_servis?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-warning jedatombol">Detail Servis</a>
+                                             </td>
+                                             <td class="text-center"><?= $kend['id_assets'] ?></td>
+                                             <td class="text-center"><?= $kend['no_polisi'] ?></td>
+                                             <td class="text-center"><?= $kend['jenis'] ?></td>
+                                             <td class="text-center"><?= $kend['merk'] ?></td>
+                                             <td class="text-center"><?= $kend['tipe'] ?></td>
+                                         </tr>
                                  <?php }
                                     } ?>
                              </tbody>
