@@ -7,6 +7,7 @@ class Dashboard extends CI_Controller
 	{
 		parent::__construct();
 		check_session();
+		check_level();
 		$this->load->model('dashboard_m');
 	}
 	public function index()

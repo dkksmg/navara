@@ -96,19 +96,34 @@ class Auth extends CI_Controller
             if ($user->num_rows() > 0) {
                 $hasil = $user->row();
                 if (password_verify($password, $hasil->password) && $hasil->status == 'Aktif') {
-                    $session_data = array(
-                        'id'        => $hasil->id,
-                        'name'      => $hasil->name,
-                        'username'  => $hasil->username,
-                        'role'      => $hasil->role,
-                        'wilayah'   => $hasil->wilayah,
-                        'kode'      => $hasil->kode,
-                        'logged_in' => TRUE,
-                        'logged_in_admin' => TRUE,
-                    );
-                    $this->session->set_userdata($session_data);
-                    $this->session->set_flashdata('success', 'Login berhasil');
-                    redirect('home');
+                    // Login Superadmin & Admin
+                    if ($hasil->role == 'Superadmin' || $hasil->role == 'Admin') {
+                        $session_data = array(
+                            'id'        => $hasil->id,
+                            'name'      => $hasil->name,
+                            'username'  => $hasil->username,
+                            'role'      => $hasil->role,
+                            'wilayah'   => $hasil->wilayah,
+                            'logged_in' => TRUE,
+                        );
+                        $this->session->set_userdata($session_data);
+                        $this->session->set_flashdata('success', 'Login berhasil');
+                        redirect('home');
+                    }
+                    // Login Pemakai Kendaraan
+                    else {
+                        $session_data = array(
+                            'id'        => $hasil->id,
+                            'name'      => $hasil->name,
+                            'username'  => $hasil->username,
+                            'role'      => $hasil->role,
+                            'wilayah'   => $hasil->wilayah,
+                            'logged_in' => TRUE,
+                        );
+                        $this->session->set_userdata($session_data);
+                        $this->session->set_flashdata('success', 'Login berhasil');
+                        redirect('pemakai');
+                    }
                 } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
                     $this->session->set_flashdata(
                         'message',

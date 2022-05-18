@@ -100,15 +100,23 @@
                      <div class="row">
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Nama User</label>
-                                 <input type="text" class="form-control" name="nama_user" required>
+                                 <label>Nama</label>
+                                 <input type="text" class="form-control" name="nama_user" placeholder="Masukkan Nama"
+                                     required>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                 <label>NIP</label>
+                                 <input type="number" class="form-control" name="nip_user"
+                                     placeholder="Kosongkan Jika Role Tidak Pemakai Kendaraan" required>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Role</label>
                                  <?php
-                                    $role = array('' => '- Pilih -', 'Admin' => 'Admin', 'Pemakai' => 'Pemakai');
+                                    $role = array('' => '- Pilih -', 'Superadmin' => 'Superadmin', 'Admin' => 'Admin Wilayah', 'Pemakai' => 'Pemakai Kendaraan');
                                     echo form_dropdown(
                                         'role_user',
                                         $role,

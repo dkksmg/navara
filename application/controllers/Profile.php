@@ -36,9 +36,15 @@ class Profile extends CI_Controller
         'id' => $this->session->userdata('id'),
       ])
       ->row_array();
-    $this->load->view('admin/template/header');
-    $this->load->view('admin/profil/data', $data);
-    $this->load->view('admin/template/footer');
+    if ($this->session->userdata('role') != "Pemakai") {
+      $this->load->view('admin/template/header');
+      $this->load->view('admin/profil/data', $data);
+      $this->load->view('admin/template/footer');
+    } else {
+      $this->load->view('pemakai/template/headeruser');
+      $this->load->view('admin/profil/data', $data);
+      $this->load->view('pemakai/template/footeruser');
+    }
   }
   public function ubahdata()
   {
@@ -49,20 +55,27 @@ class Profile extends CI_Controller
       ->row_array();
     $data['title'] = 'Ubah Data Profile ' . $this->session->userdata('name') . '';
     $data['lu'] = $this->profile_model->data_lokasiunit();
-    $this->load->view('admin/template/header');
-    $this->load->view('admin/profil/ubahdata', $data);
-    $this->load->view('admin/template/footer');
+    if ($this->session->userdata('role') != "Pemakai") {
+      $this->load->view('admin/template/header');
+      $this->load->view('admin/profil/ubahdata', $data);
+      $this->load->view('admin/template/footer');
+    } else {
+      $this->load->view('pemakai/template/headeruser');
+      $this->load->view('admin/profil/ubahdata', $data);
+      $this->load->view('pemakai/template/footeruser');
+    }
   }
   public function prosesubahdata()
   {
     $id_user = $this->input->get('id');
     if ($this->input->post()) {
       if ($this->profile_model->edituser($id_user)) {
-        // $this->session->sess_destroy();
-        // print_r($this->db->last_query());
-        // die();
         $this->session->set_flashdata('success', 'Data Anda berhasil di perbaharui');
-        redirect('auth');
+        if ($this->session->userdata('role') != 'Pemakai') {
+          redirect('home');
+        } else {
+          redirect('pemakai');
+        }
       } else {
         $this->session->set_flashdata('danger', 'Data Anda gagal diubah');
         redirect('profile');

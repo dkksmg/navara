@@ -1,4 +1,7 @@
 <?php
+
+use LDAP\Result;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin_m extends CI_Model
@@ -9,15 +12,38 @@ class Admin_m extends CI_Model
         parent::__construct();
     }
 
-    public function pagu_kendaraan($id = null)
+    // public function pagu_kendaraan($id = null)
+    // {
+    //     $query = $this->db->where('id_kend', $id)->get('pagu_service');
+    //     if ($query->num_rows() > 0) {
+    //         foreach ($query->result_array() as $row) {
+    //             $hasil[] = $row;
+    //         }
+    //         return $hasil;
+    //     }
+    //     $this->db->join(' ( SELECT id_kendaraan, sum(total_biaya) as tb FROM riwayat_servis group by id_kendaraan ) rs ', 'rs.id_kendaraan=pagu_service.id_kend');
+    //     $query = $this->db->get('pagu_service');
+    //     if ($query->num_rows() > 0) {
+    //         foreach ($query->result_array() as $row) {
+    //             $hasil[] = $row;
+    //         }
+    //         return $hasil;
+    //     }
+    // }
+    public function pagu_kendaraan_pemeliharaan()
     {
-        $query = $this->db->where('id_kend', $id)->get('pagu_service');
-        if ($query->num_rows() > 0) {
-            foreach ($query->result_array() as $row) {
-                $hasil[] = $row;
-            }
-            return $hasil;
-        }
+        $query = $this->db->query('SELECT * FROM `pagu_service` JOIN ( SELECT id_kendaraan, sum(total_biaya) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` WHERE jenis_pagu = "Pemeliharaan"')->result();
+        return $query;
+    }
+    public function pagu_kendaraan_bbm()
+    {
+        $query = $this->db->query('SELECT * FROM `pagu_service` JOIN ( SELECT id_kendaraan, sum(total_bbm) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` WHERE jenis_pagu = "BBM"')->result();
+        return $query;
+    }
+    public function pagu_kendaraan_pajak()
+    {
+        $query = $this->db->query('SELECT * FROM `pagu_service` JOIN ( SELECT id_kendaraan, sum(total_pajak) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` WHERE jenis_pagu = "Pajak Kendaraan"')->result();
+        return $query;
     }
     public function pagu_service_kendaraan($id = null)
     {
@@ -96,6 +122,7 @@ class Admin_m extends CI_Model
         $data['username']    = $this->input->post('username');
         $data['password']      = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
         $data['name']  = $this->input->post('nama_user');
+        $data['nip_user']  = $this->input->post('nip_user');
         $data['wilayah']  = $this->input->post('lokasi_kerja');
         $data['role']  = $this->input->post('role_user');
         $data['status']  = $this->input->post('status_user');
@@ -107,6 +134,7 @@ class Admin_m extends CI_Model
         if ($this->input->post('password') == "") {
             $data['username']    = $this->input->post('username');
             $data['name']  = $this->input->post('nama_user');
+            $data['nip_user']  = $this->input->post('nip_user');
             $data['wilayah']  = $this->input->post('lokasi_kerja');
             $data['role']  = $this->input->post('role_user');
             $data['status']  = $this->input->post('status_user');
@@ -115,6 +143,7 @@ class Admin_m extends CI_Model
         } else {
             $data['username']    = $this->input->post('username');
             $data['password']      = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+            $data['nip_user']  = $this->input->post('nip_user');
             $data['name']  = $this->input->post('nama_user');
             $data['wilayah']  = $this->input->post('lokasi_kerja');
             $data['role']  = $this->input->post('role_user');

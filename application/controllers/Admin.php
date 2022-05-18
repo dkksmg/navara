@@ -19,12 +19,10 @@ class Admin extends CI_Controller
         if ($cek_id != '') {
             $data = [];
             $data['kend'] = $this->home_m->kendaraanByid($id);
-            $data['pagu'] = $this->admin_m->pagu_kendaraan($id);
-            $data['servis'] = $this->admin_m->pagu_service_kendaraan($id);
-            $data['bbm'] = $this->admin_m->pagu_bbm_kendaraan($id);
-            $data['pajak'] = $this->admin_m->pagu_pajak_kendaraan($id);
-            // print_r($data);
-            // die();
+            $data['pemeliharaan'] = $this->admin_m->pagu_kendaraan_pemeliharaan($id);
+            // print_r($this->db->last_query());
+            $data['bbm'] = $this->admin_m->pagu_kendaraan_bbm($id);
+            $data['pajak'] = $this->admin_m->pagu_kendaraan_pajak($id);
             $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
             $this->load->view('admin/template/header');
             $this->load->view('admin/pagu/pagukendaraan', $data);

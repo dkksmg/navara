@@ -254,10 +254,22 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function listdata_pemakai()
+    {
+
+        $this->db->select('id,name,nip_user,wilayah,role,status')->order_by('id', 'DESC')->where('role', 'Pemakai');
+        $query = $this->db->get('users');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
     public function data_riwayatpemakai($id = null)
     {
-        $this->db->where('id_kendaraan', $id);
-        $query = $this->db->get('riwayat_pemakai');
+        $this->db->join('users as us', 'rp.id_user=us.id')->select('rp.id_rp,rp.id_kendaraan,rp.id_user,rp.lokasi_unit,rp.tgl_awal,rp.tgl_akhir,rp.status, us.id, us.name, us.nip_user')->where('rp.id_kendaraan', $id);
+        $query = $this->db->get('riwayat_pemakai as rp');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -386,6 +398,17 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function kendaraanUser($id = null)
+    {
+        $this->db->join('riwayat_pemakai as rp', 'rp.id_user = us.id')->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')->where('us.id', $id)->where('rp.status', 'aktif');
+        $query = $this->db->get('users as us');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
     public function data_lokasiunit()
     {
         $query = $this->db->get('ref_lokasi_unit');
@@ -507,9 +530,10 @@ class Home_m extends CI_Model
 
         $data['id_kendaraan']   = $idk;
         $data['status']         = "aktif";
-        $data['nama_pemakai']   = $this->input->post('nama');
+        $data['id_user'] = $this->input->post('nama');
+        // $data['nama_pemakai']   = $this->input->post('nama');
+        // $data['nip_pemakai']    = $this->input->post('nip');
         $data['lokasi_unit']    = $this->input->post('lokunit');
-        $data['nip_pemakai']    = $this->input->post('nip');
         $data['tgl_awal']       = date('Y-m-d', strtotime($this->input->post('dari')));
         $data['tgl_akhir']      = date('Y-m-d', strtotime($this->input->post('sampai')));
 

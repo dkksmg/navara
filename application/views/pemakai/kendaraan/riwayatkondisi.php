@@ -52,63 +52,66 @@
              <div class="col-lg-12">
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Riwayat Servis</h3>
+                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
                          <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                             data-target="#modalTambah">
-                             Tambah Riwayat Servis
+                             data-target="#modal-xl">
+                             Tambah Riwayat Kondisi
                          </button>
                      </div>
                      <div class="card-body">
-                         <table class="table table-bordered table-striped example" width="100%" height="auto">
+                         <table class="table table-bordered table-striped example">
                              <thead>
                                  <tr>
                                      <th class="text-center">No</th>
                                      <th class="text-center" width="10%">Aksi</th>
-                                     <th class="text-center">Tgl Service</th>
-                                     <th class="text-center">Bengkel Service</th>
-                                     <th class="text-center">Keluhan</th>
-                                     <th class="text-center">Perbaikan</th>
-                                     <th class="text-center" width="80px">Total Biaya</th>
-                                     <th class="text-center">Foto Service</th>
-                                     <th class="text-center">Foto Nota</th>
+                                     <th class="text-center">Tgl Pencatatan</th>
+                                     <th class="text-center">Kondisi</th>
+                                     <th class="text-center">Foto Tampak Depan</th>
+                                     <th class="text-center">Foto Tampak Kanan</th>
+                                     <th class="text-center">Foto Tampak Kiri</th>
+                                     <th class="text-center">Foto Tampak Belakang</th>
                                  </tr>
                              </thead>
                              <tbody>
                                  <?php
-                                    if ($rs != '') :
+                                    if ($rk != '') :
                                         $no = 1;
-                                        foreach ($rs as $value) : ?>
+                                        foreach ($rk as $value) : ?>
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
-                                     <td class="text-center">
-                                         <a onclick="deleteConfirm('<?php echo site_url('home/delete_servis?id=' . $value['id_rs'] . '') ?>')"
+                                     <td class="text-center"><a
+                                             onclick="deleteConfirm('<?= site_url('pemakai/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>')"
                                              href="#" class="btn btn-sm btn-danger jedatombol"><i
                                                  class="fas fa-trash"></i></a>
-                                         <a onclick="editConfirm('<?php echo site_url('home/editriwayatservis?id=' . $value['id_rs'] . '') ?>')"
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editriwayatkondisi?id=' . $value['id_rk'] . '') ?>')"
                                              href="#" class="btn btn-sm btn-warning jedatombol"><i
                                                  class="fas fa-pen"></i></a>
                                      </td>
-                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
-                                     <td class="text-center"><?= $value['lokasi'] ?></td>
-                                     <td><?= $value['keluhan'] ?></td>
-                                     <td><?= $value['perbaikan'] ?></td>
-                                     <td class="text-left">
-                                         <?= "Rp. " . number_format($value['total_biaya'], 2, ',', '.'); ?></td>
-                                     <td class="text-center">
-                                         <img width="40%"
-                                             src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
-                                             data-toggle="modal" data-target="#servisModal<?php echo $no ?>">
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
                                      </td>
-                                     <td class="text-center"><img width="40%"
-                                             src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
-                                             data-toggle="modal" data-target="#notaModal<?php echo $no ?>">
+                                     <td class="text-center"><?= $value['kondisi'] ?></td>
+                                     <td class="text-center"><img width="70%"
+                                             src="<?= base_url('assets/upload/file_kendaraan/depan/' . $value['foto_tampak_depan'] . '') ?>"
+                                             data-toggle="modal" data-target="#depanModal<?php echo $no ?>">
+                                     </td>
+                                     <td class="text-center"><img width="70%"
+                                             src="<?= base_url('assets/upload/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
+                                             data-toggle="modal" data-target="#kananModal<?php echo $no ?>">
+                                     </td>
+                                     <td class="text-center"><img width="70%"
+                                             src="<?= base_url('assets/upload/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
+                                             data-toggle="modal" data-target="#kiriModal<?php echo $no ?>">
+                                     </td>
+                                     <td class="text-center"><img width="70%"
+                                             src="<?= base_url('assets/upload/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
+                                             data-toggle="modal" data-target="#belakangModal<?php echo $no ?>">
                                      </td>
                                  </tr>
                                  <?php $no++;
-                                        endforeach;
-                                    endif; ?>
+                                        endforeach; ?>
+                                 <?php endif ?>
                              </tbody>
                          </table>
                      </div>
@@ -120,14 +123,14 @@
  </div>
  <!-- /.content -->
 
- <!-- Modal Foto Servis & Nota -->
+ <!-- Modal Foto -->
+ <!-- Modal -->
  <?php
-    if ($rs != '') :
-        $no = 1;
-        foreach ($rs as $value) : ?>
+    $no = 1;
+    if ($rk != '') :
+        foreach ($rk as $value) : ?>
  <center>
-     <!-- Modal -->
-     <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog"
+     <div class="modal fade" id="depanModal<?php echo $no ?>" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel">
          <div class="modal-dialog" role="document">
              <div class="modal-content">
@@ -137,7 +140,7 @@
                  </div>
                  <div class="modal-body">
                      <center>
-                         <img src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
+                         <img src="<?= base_url('assets/upload/file_kendaraan/depan/' . $value['foto_tampak_depan'] . '') ?>"
                              alt="Foto Servis" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>
@@ -147,7 +150,7 @@
              </div>
          </div>
      </div>
-     <div class="modal fade" id="notaModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+     <div class="modal fade" id="kiriModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
          <div class="modal-dialog" role="document">
              <div class="modal-content">
                  <div class="modal-header">
@@ -156,7 +159,47 @@
                  </div>
                  <div class="modal-body">
                      <center>
-                         <img src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
+                         <img src="<?= base_url('assets/upload/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
+                             alt="Foto Nota" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="modal fade" id="kananModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
+                             alt="Foto Nota" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="modal fade" id="belakangModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
                              alt="Foto Nota" class="img-responsive" width="70%" height="auto">
                      </center>
                  </div>
@@ -171,75 +214,59 @@
         endforeach;
     endif ?>
 
- <!-- Modal Input -->
- <div class="modal fade" id="modalTambah" role="dialog">
+ <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('pemakai/prosestambahservis?id=' . $kend['idk'] . '') ?>"
+         <form method="post" action="<?= site_url('home/prosestambahkondisi?id=' . $kend['idk'] . '') ?>"
              enctype="multipart/form-data">
-             <?php
-                echo form_hidden('tipe', $kend['tipe']);
-                echo form_hidden('no_pol', $kend['no_polisi']);
-                ?>
              <div class="modal-content">
                  <div class="modal-header">
-                     <h4 class="modal-title">Form Riwayat Servis</h4>
+                     <h4 class="modal-title">Form Riwayat Kondisi</h4>
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                          <span aria-hidden="true">&times;</span>
                      </button>
                  </div>
                  <div class="modal-body">
+                     <?php
+                        echo form_hidden('tipe', $kend['tipe']);
+                        echo form_hidden('no_pol', $kend['no_polisi']); ?>
                      <div class="row">
-                         <div class="col-md-6">
+                         <div class="col-md-12">
                              <div class="form-group">
-                                 <label>Tanggal Service</label>
-                                 <input type="text" class="form-control pilihtanggal" name="tgl"
-                                     placeholder="Tanggal Servis" required>
-                             </div>
-                         </div>
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                 <label>Nama Bengkel Service</label>
-                                 <input type="text" class="form-control" name="bengkel" placeholder="Nama Bengkel"
-                                     required>
+                                 <label>Keterangan Kondisi</label>
+                                 <select class="form-control" name="kondisi" required>
+                                     <option>Baik</option>
+                                     <option>Rusak Ringan</option>
+                                     <option>Rusak Sedang</option>
+                                     <option>Rusak Berat</option>
+                                 </select>
                              </div>
                          </div>
                      </div>
                      <div class="row">
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Keluhan</label>
-                                 <input type="text" class="form-control" name="keluhan" placeholder="Keluhan Kendaraan"
-                                     required>
+                                 <label>Foto Tampak Depan</label>
+                                 <input type="file" class="form-control" name="depan" required accept="image/*">
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Perbaikan</label>
-                                 <input type="text" class="form-control" name="perbaikan"
-                                     placeholder="Perbaikan Kendaraan" required>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="row">
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                 <label>Total Biaya</label>
-                                 <input type="number" class="form-control" name="biaya" placeholder="Total Biaya"
-                                     required>
+                                 <label>Foto Tampak Belakang</label>
+                                 <input type="file" class="form-control" name="blkg" required accept="image/*">
                              </div>
                          </div>
                      </div>
                      <div class="row">
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Foto Nota</label>
-                                 <input type="file" class="form-control" name="nota" accept="image/*" required>
+                                 <label>Foto Tampak Kiri</label>
+                                 <input type="file" class="form-control" name="kiri" required accept="image/*">
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Foto Service</label>
-                                 <input type="file" class="form-control" name="foto" accept="image/*" required>
+                                 <label>Foto Tampak Kanan</label>
+                                 <input type="file" class="form-control" name="kanan" required accept="image/*">
                              </div>
                          </div>
                      </div>
@@ -247,9 +274,11 @@
                  <div class="modal-footer justify-content-between">
                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                      <button type="sumbit" class="btn btn-primary">Simpan</button>
+
                  </div>
          </form>
      </div>
      <!-- /.modal-content -->
  </div>
+ <!-- /.modal-dialog -->
  </div>

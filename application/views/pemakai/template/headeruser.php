@@ -61,7 +61,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="collapse navbar-collapse order-3" id="navbarCollapse">
                     <!-- Left navbar links -->
                     <ul class="navbar-nav">
-                        <li class="nav-item">
+                        <li class="nav-item <?= $this->uri->segment(1) == 'pemakai' ? 'active' : '' ?>">
                             <a href="<?= site_url('pemakai') ?>" class="nav-link">Home</a>
                         </li>
                     </ul>
@@ -71,14 +71,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="fas fa-sign-out-alt"></i>
+                            <?php echo greetings() ?>,
+                            <strong><?php echo $this->session->userdata('name'); ?></strong>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-header"
-                                style="font-weight:bold;"><?= $this->session->userdata('rule'); ?></span>
-                            <div class="dropdown-divider"></div>
-                            <a href="<?= site_url('home/profile') ?>" class="dropdown-item">
-                                <?= $this->session->userdata('name'); ?>
+                            <a href="<?php echo site_url(
+                                            'profile'
+                                        ); ?>" class="dropdown-item">
+                                <i class="fa-solid fa-user-tie mr-2"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="<?= site_url('auth/logout') ?>" class="dropdown-item dropdown-footer">KELUAR</a>

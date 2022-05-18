@@ -25,6 +25,7 @@ class Pemakai_kendaraan extends CI_Controller
   {
     parent::__construct();
     check_session();
+    check_level();
     $this->load->model('pemakai_kendaraan_model');
   }
 

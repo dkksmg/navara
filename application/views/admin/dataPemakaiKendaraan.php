@@ -52,23 +52,23 @@
                                  <?php $no = 1;
                                     if ($kendaraan != '') {
                                         foreach ($kendaraan as $kend) { ?>
-                                         <tr>
-                                             <td><?= $no++; ?></td>
-                                             <td><?= $kend['id_assets'] ?></td>
-                                             <td><?= $kend['nama_pemakai'] ?></td>
-                                             <td><?= $kend['lokasi_unit'] ?></td>
-                                             <td><?= $kend['no_polisi'] ?></td>
-                                             <td><?= $kend['jenis'] ?></td>
-                                             <td><?= $kend['merk'] ?></td>
-                                             <td><?= $kend['tipe'] ?></td>
-                                             <td><?= $kend['no_stnk'] ?></td>
-                                             <td><?= $kend['masa_berlaku_stnk'] ?></td>
-                                             <td><?= $kend['no_mesin'] ?></td>
-                                             <td><?= $kend['no_rangka'] ?></td>
-                                             <td><?= $kend['tahun_perolehan'] ?></td>
-                                             <td><?= $kend['jenis_bb'] ?></td>
-                                             <td><?= $kend['besar_cc'] ?></td>
-                                         </tr>
+                                 <tr>
+                                     <td><?= $no++; ?></td>
+                                     <td><?= $kend['id_assets'] ?></td>
+                                     <td><?= $kend['nama_pemakai'] ?></td>
+                                     <td><?= $kend['lokasi_unit'] ?></td>
+                                     <td><?= $kend['no_polisi'] ?></td>
+                                     <td><?= $kend['jenis'] ?></td>
+                                     <td><?= $kend['merk'] ?></td>
+                                     <td><?= $kend['tipe'] ?></td>
+                                     <td><?= $kend['no_stnk'] ?></td>
+                                     <td><?= $kend['masa_berlaku_stnk'] ?></td>
+                                     <td><?= $kend['no_mesin'] ?></td>
+                                     <td><?= $kend['no_rangka'] ?></td>
+                                     <td><?= $kend['tahun_perolehan'] ?></td>
+                                     <td><?= $kend['jenis_bb'] ?></td>
+                                     <td><?= $kend['besar_cc'] ?></td>
+                                 </tr>
                                  <?php }
                                     } ?>
                              </tbody>

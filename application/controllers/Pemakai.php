@@ -7,58 +7,65 @@ class Pemakai extends CI_Controller
     function __construct()
     {
         parent::__construct();
-
         check_session();
         $this->load->model('home_m');
     }
     public function index()
     {
         $data = [];
-        $data['kend'] = $this->home_m->kendaraanByid($this->session->userdata('idkend'));
-        $this->load->view('admin/template/headeruser');
-        $this->load->view('admin/data_kendaraan_pemakai', $data);
-        $this->load->view('admin/template/footer');
+        $data['kend'] = $this->home_m->kendaraanUser($this->session->userdata('id'));
+        $this->load->view('pemakai/template/headeruser');
+        $this->load->view('pemakai/kendaraan/data_kendaraan_pemakai', $data);
+        $this->load->view('pemakai/template/footeruser');
     }
 
     public function riwayatkondisi()
     {
         $data = [];
-        $id = $this->session->userdata('idkend');
+        $id = $this->input->get('id');
+        $data['title'] = 'Riwayat Kondisi Kendaraan Dinas';
         $data['rk'] = $this->home_m->data_riwayatKondisi($id);
         $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('admin/template/headeruser');
-        $this->load->view('user/riwayatkondisi', $data);
-        $this->load->view('admin/template/footer');
+        $this->load->view('pemakai/template/headeruser');
+        $this->load->view('pemakai/kendaraan/riwayatkondisi', $data);
+        $this->load->view('pemakai/template/modal');
+        $this->load->view('pemakai/template/footeruser');
     }
     public function riwayatbbm()
     {
         $data = [];
-        $id = $this->session->userdata('idkend');
+        $id = $this->input->get('id');
+        $data['title'] = 'Riwayat BBM Kendaraan Dinas';
         $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
         $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('admin/template/headeruser');
-        $this->load->view('user/riwayatbbm', $data);
-        $this->load->view('admin/template/footer');
+        $this->load->view('pemakai/template/headeruser');
+        $this->load->view('pemakai/kendaraan/riwayatbbm', $data);
+        $this->load->view('pemakai/template/modal');
+        $this->load->view('pemakai/template/footeruser');
     }
     public function riwayatpajak()
     {
         $data = [];
-        $id = $this->session->userdata('idkend');
+        $id = $this->input->get('id');
+        $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
         $data['rp'] = $this->home_m->data_riwayatpajak($id);
         $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('admin/template/headeruser');
-        $this->load->view('user/riwayatpajak', $data);
-        $this->load->view('admin/template/footer');
+        $this->load->view('pemakai/template/headeruser');
+        $this->load->view('pemakai/kendaraan/riwayatpajak', $data);
+        $this->load->view('pemakai/template/modal');
+        $this->load->view('pemakai/template/footeruser');
     }
     public function riwayatservis()
     {
         $data = [];
-        $id = $this->session->userdata('idkend');
+        $id = $this->input->get('id');
+        $data['title'] = 'Riwayat Servis Kendaraan Dinas';
         $data['rs'] = $this->home_m->data_riwayatservis($id);
         $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('admin/template/headeruser');
-        $this->load->view('user/riwayatservis', $data);
-        $this->load->view('admin/template/footer');
+        $this->load->view('pemakai/template/headeruser');
+        $this->load->view('pemakai/kendaraan/riwayatservis', $data);
+        $this->load->view('pemakai/template/modal');
+        $this->load->view('pemakai/template/footeruser');
     }
 
     public function prosestambahkondisi()

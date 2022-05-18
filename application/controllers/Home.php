@@ -8,9 +8,7 @@ class Home extends CI_Controller
     {
         parent::__construct();
         check_session();
-        if (!$this->session->userdata('logged_in_admin') !== FALSE) {
-            redirect('pemakai');
-        }
+        check_level();
         $this->load->model('home_m');
     }
     public function index()
@@ -100,6 +98,7 @@ class Home extends CI_Controller
         if ($cek_id_pemakai != '') {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpemakai($id);
+            $data['pemakai'] = $this->home_m->listdata_pemakai();
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['lu'] = $this->home_m->data_lokasiunit();
             $this->load->view('admin/template/header');
@@ -542,8 +541,6 @@ class Home extends CI_Controller
             redirect('home/riwayat_kondisi?id=' . $simpan . '');
         }
     }
-
-
     public function prosestambahPemakai()
     {
         $idk = $this->input->get('id');

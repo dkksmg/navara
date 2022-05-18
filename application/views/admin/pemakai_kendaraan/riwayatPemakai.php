@@ -55,7 +55,8 @@
                          <h3 style="font-weight:bold;color:white;">Riwayat Pemakai</h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
                              Tambah Pemakai
                          </button>
                      </div>
@@ -75,31 +76,39 @@
                              </thead>
                              <tbody>
                                  <?php if ($rp != '') : ?>
-                                     <?php $no = 1;
+                                 <?php $no = 1;
                                         foreach ($rp as $value) : ?>
-                                         <tr>
-                                             <td class="text-center"><?= $no ?></td>
-                                             <td class="text-center">
-                                                 <?php if ($value['status'] == 'aktif') : ?>
-                                                     <a href="<?= site_url('home/nonaktifkanpemakai?id=' . $value['id_rp'] . '') ?>" class="btn btn-sm btn-secondary jedatombol"><i class="fa-solid fa-octagon-xmark" title="Nonaktifkan Pemakai <?= $value['nama_pemakai'] ?>"></i></a>
-                                                 <?php else : ?>
-                                                     <a href="<?= site_url('home/aktifkanpemakai?id=' . $value['id_rp'] . '') ?>" class="btn btn-sm btn-success jedatombol"><i class="fa-solid fa-badge-check" title="Aktifkan Pemakai <?= $value['nama_pemakai'] ?>"></i></a>
-                                                 <?php endif ?>
-                                                 <a onclick="editConfirm('<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>')" href="#" class="btn btn-sm btn-warning jedatombol"><i class="fas fa-pen" title="Edit Data Pemakai <?= $value['nama_pemakai'] ?>"></i></a>
-                                             </td>
-                                             <td class="text-center"><?= $value['nama_pemakai'] ?></td>
-                                             <td class="text-center"><?= $value['nip_pemakai'] ?></td>
-                                             <td class="text-center"><?= $value['lokasi_unit'] ?></td>
-                                             <td class="text-center"><?php if ($value['status'] == "tidak_aktif") : ?>
-                                                     Tidak Aktif
-                                                 <?php else : ?>
-                                                     Aktif
-                                                 <?php endif ?>
-                                             </td>
-                                             <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
-                                             <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
-                                         </tr>
-                                     <?php $no++;
+                                 <tr>
+                                     <td class="text-center"><?= $no ?></td>
+                                     <td class="text-center">
+                                         <?php if ($value['status'] == 'aktif') : ?>
+                                         <a href="<?= site_url('home/nonaktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
+                                             class="btn btn-sm btn-secondary jedatombol"><i
+                                                 class="fa-solid fa-octagon-xmark"
+                                                 title="Nonaktifkan Pemakai <?= $value['name'] ?>"></i></a>
+                                         <?php else : ?>
+                                         <a href="<?= site_url('home/aktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
+                                             class="btn btn-sm btn-success jedatombol"><i
+                                                 class="fa-solid fa-badge-check"
+                                                 title="Aktifkan Pemakai <?= $value['name'] ?>"></i></a>
+                                         <?php endif ?>
+                                         <a onclick="editConfirm('<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"><i class="fas fa-pen"
+                                                 title="Edit Data Pemakai <?= $value['name'] ?>"></i></a>
+                                     </td>
+                                     <td class="text-center"><?= $value['name'] ?></td>
+                                     <td class="text-center"><?= $value['nip_user'] ?></td>
+                                     <td class="text-center"><?= $value['lokasi_unit'] ?></td>
+                                     <td class="text-center"><?php if ($value['status'] == "tidak_aktif") : ?>
+                                         Tidak Aktif
+                                         <?php else : ?>
+                                         Aktif
+                                         <?php endif ?>
+                                     </td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
+                                 </tr>
+                                 <?php $no++;
                                         endforeach   ?>
                                  <?php endif ?>
                              </tbody>
@@ -115,7 +124,8 @@
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('home/prosestambahPemakai?id=' . $kend['idk'] . '') ?>" enctype="multipart/form-data">
+         <form method="post" action="<?= site_url('home/prosestambahPemakai?id=' . $kend['idk'] . '') ?>"
+             enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
                      <h4 class="modal-title">Form Riwayat Pemakai</h4>
@@ -128,17 +138,20 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Nama Pemakai</label>
-                                 <input type="text" class="form-control" name="nama" required>
+                                 <select class="form-control" name="nama" required>
+                                     <option value="">- Pilih Nama -</option>
+                                     <?php foreach ($pemakai as $p) : ?>
+                                     <option value="<?= $p['id'] ?>"><?= $p['name'] ?> - <?= $p['nip_user'] ?></option>
+                                     <?php endforeach; ?>
+                                 </select>
                              </div>
                          </div>
-                         <div class="col-md-6">
+                         <!-- <div class="col-md-6">
                              <div class="form-group">
                                  <label>NIP / NIK</label>
                                  <input type="number" class="form-control" name="nip" required>
                              </div>
-                         </div>
-                     </div>
-                     <div class="row">
+                         </div> -->
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Lokasi Unit</label>
@@ -146,13 +159,15 @@
                                      <option readonly>-- Pilih Lokasi Unit --</option>
                                      <?php if ($lu != '') {
                                             foreach ($lu as $value) { ?>
-                                             <option><?= $value['lokasi_unit'] ?></option>
+                                     <option><?= $value['lokasi_unit'] ?></option>
                                      <?php }
                                         } ?>
                                  </select>
                              </div>
                          </div>
                      </div>
+                     <!-- <div class="row">
+                     </div> -->
                      <div class="row">
                          <div class="col-md-6">
                              <div class="form-group">

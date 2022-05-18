@@ -9,9 +9,6 @@ class Rekap extends CI_Controller
 		parent::__construct();
 		check_session();
 		check_level();
-		if (!$this->session->userdata('logged_in_admin') !== FALSE) {
-			redirect('pemakai');
-		}
 		$this->load->model('home_m');
 	}
 	public function index()

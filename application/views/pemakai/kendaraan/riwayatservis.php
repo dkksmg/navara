@@ -52,7 +52,7 @@
              <div class="col-lg-12">
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Riwayat Servis</h3>
+                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
                          <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
@@ -77,9 +77,9 @@
                              </thead>
                              <tbody>
                                  <?php
-                                    if ($rs != '') :
-                                        $no = 1;
-                                        foreach ($rs as $value) : ?>
+                  if ($rs != '') :
+                    $no = 1;
+                    foreach ($rs as $value) : ?>
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
                                      <td class="text-center">
@@ -107,8 +107,8 @@
                                      </td>
                                  </tr>
                                  <?php $no++;
-                                        endforeach;
-                                    endif; ?>
+                    endforeach;
+                  endif; ?>
                              </tbody>
                          </table>
                      </div>
@@ -122,9 +122,9 @@
 
  <!-- Modal Foto Servis & Nota -->
  <?php
-    if ($rs != '') :
-        $no = 1;
-        foreach ($rs as $value) : ?>
+  if ($rs != '') :
+    $no = 1;
+    foreach ($rs as $value) : ?>
  <center>
      <!-- Modal -->
      <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog"
@@ -168,8 +168,8 @@
      </div>
  </center>
  <?php $no++;
-        endforeach;
-    endif ?>
+    endforeach;
+  endif ?>
 
  <!-- Modal Input -->
  <div class="modal fade" id="modalTambah" role="dialog">
@@ -177,9 +177,9 @@
          <form method="post" action="<?= site_url('pemakai/prosestambahservis?id=' . $kend['idk'] . '') ?>"
              enctype="multipart/form-data">
              <?php
-                echo form_hidden('tipe', $kend['tipe']);
-                echo form_hidden('no_pol', $kend['no_polisi']);
-                ?>
+        echo form_hidden('tipe', $kend['tipe']);
+        echo form_hidden('no_pol', $kend['no_polisi']);
+        ?>
              <div class="modal-content">
                  <div class="modal-header">
                      <h4 class="modal-title">Form Riwayat Servis</h4>

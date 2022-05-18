@@ -47,7 +47,6 @@
                                          <?= $value['lokasi_unit'] ?></option>
                                      <?php endforeach;
                                         endif; ?>
-
                                  </select>
                              </div>
                          </div>
