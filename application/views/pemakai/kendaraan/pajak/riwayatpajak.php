@@ -73,16 +73,16 @@
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($rp != '') {
-                    foreach ($rp as $value) { ?>
+                                    if ($rp != '') {
+                                        foreach ($rp as $value) { ?>
                                  <tr>
                                      <td class="text-center"><?= $no++; ?></td>
                                      <td class="text-center">
-                                         <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
                                              href="#" class="btn btn-sm btn-warning jedatombol"
                                              title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pencil"></i></a>
-                                         <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                                         <a onclick="deleteConfirm('<?= site_url('pemakai/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
                                              href="#" class="btn btn-sm btn-danger jedatombol"><i
                                                  class="fas fa-trash"></i></a>
                                      </td>
@@ -92,7 +92,7 @@
                                          <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?></td>
                                  </tr>
                                  <?php }
-                  } ?>
+                                    } ?>
                              </tbody>
                          </table>
                      </div>
@@ -121,17 +121,17 @@
                              <div class="form-group">
                                  <label>Tahun</label>
                                  <?php
-                  $year_start  = 2000;
-                  $year_end = date('Y');
-                  $user_selected_year = date('Y');
+                                    $year_start  = 2000;
+                                    $year_end = date('Y') + 20;
+                                    $user_selected_year = date('Y');
 
-                  echo '<select id="year" required class="form-control" name="tahun_pajak">' . "\n";
-                  for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
-                    $selected = ($user_selected_year == $i_year ? ' selected' : '');
-                    echo '<option value="' . $i_year . '"' . $selected . '>' . $i_year . '</option>' . "\n";
-                  }
-                  echo '</select>' . "\n";
-                  ?>
+                                    echo '<select id="year" required class="form-control" name="tahun_pajak">' . "\n";
+                                    for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
+                                        $selected = ($user_selected_year == $i_year ? ' selected' : '');
+                                        echo '<option value="' . $i_year . '"' . $selected . '>' . $i_year . '</option>' . "\n";
+                                    }
+                                    echo '</select>' . "\n";
+                                    ?>
                              </div>
                          </div>
                          <div class="col-md-6">

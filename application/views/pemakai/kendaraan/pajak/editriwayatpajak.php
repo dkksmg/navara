@@ -50,7 +50,7 @@
                         </div>
                         <div class="card-body">
                             <?php echo form_open_multipart(
-                                'home/proseseditpajak?id=' . $value['id_pjk'] . '',
+                                'pemakai/proseseditpajak?id=' . $value['id_pjk'] . '',
                                 'class="form-horizontal"'
                             );
                             echo form_hidden('id_kend', $value['id_kendaraan']);

@@ -50,7 +50,7 @@
                         </div>
                         <div class="card-body">
                             <?php echo form_open_multipart(
-                                'home/proseseditservis?id=' . $servis['id_rs'] . '',
+                                'pemakai/proseseditservis?id=' . $servis['id_rs'] . '',
                                 'class="form-horizontal"'
                             );
                             echo form_hidden('id_kend', $servis['id_kendaraan']);
@@ -122,7 +122,7 @@
                                             <div class="gallery">
 
                                                 <img class="card-img-top"
-                                                    src="<?= base_url('assets//upload/foto_nota/' . $servis['foto_nota']) ?>"
+                                                    src="<?= base_url('assets/upload/foto_nota/' . $servis['foto_nota']) ?>"
                                                     alt="Foto Servis">
                                             </div>
                                         </div>

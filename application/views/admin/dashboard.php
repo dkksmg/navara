@@ -1,40 +1,64 @@
- 
-<!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0"> Data  Kendaraan Dinas <small>NAVARA</small></h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+ <!-- Content Header (Page header) -->
+ <div class="content-header">
+     <div class="container">
+         <div class="row mb-2">
+             <div class="col-sm-6">
+                 <!-- <h1 class="m-0"> Data  Kendaraan Dinas <small>NAVARA</small></h1> -->
+             </div><!-- /.col -->
+             <div class="col-sm-6">
+                 <ol class="breadcrumb float-sm-right">
+                 </ol>
+             </div><!-- /.col -->
+         </div><!-- /.row -->
+     </div><!-- /.container-fluid -->
+ </div>
+ <!-- /.content-header -->
 
-    <!-- Main content -->
-    <div class="content">
-      <div class="container">
-          <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3><?=$totalkendaraan?></h3>
+ <!-- Main content -->
+ <div class="content">
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-3 col-6">
+                 <!-- small box -->
+                 <div class="small-box bg-info">
+                     <div class="inner">
+                         <h3><?= $totalkendaraan ?></h3>
 
-                <p>Total Kendaraan</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
+                         <p>Total Kendaraan</p>
+                     </div>
+                     <div class="icon">
+                         <i class="ion ion-bag"></i>
+                     </div>
+                 </div>
+             </div>
+             <div class="col-lg-3 col-6">
+                 <!-- small box -->
+                 <div class="small-box bg-secondary">
+                     <div class="inner">
+                         <h3><?= $totalkendaraan ?></h3>
 
+                         <p>Total User <b>Admin</b></p>
+                     </div>
+                     <div class="icon">
+                         <i class="ion ion-bag"></i>
+                     </div>
+                 </div>
+             </div>
+             <div class="col-lg-3 col-6">
+                 <!-- small box -->
+                 <div class="small-box bg-secondary">
+                     <div class="inner">
+                         <h3><?= $totalkendaraan ?></h3>
+
+                         <p>Total User <b>Pemakai Kendaraan</b></p>
+                     </div>
+                     <div class="icon">
+                         <i class="ion ion-bag"></i>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <!-- /.row -->
+     </div><!-- /.container-fluid -->
+ </div>
+ <!-- /.content -->

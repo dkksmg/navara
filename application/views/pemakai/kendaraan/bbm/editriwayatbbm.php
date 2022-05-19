@@ -56,7 +56,7 @@
                      </div>
                      <div class="card-body">
                          <?php echo form_open_multipart(
-                                'home/proseseditbbm?id=' . ($rbbm['id_bbm']) . '&idkend=' . ($kend['idk']),
+                                'pemakai/proseseditbbm?id=' . ($rbbm['id_bbm']) . '&idkend=' . ($kend['idk']),
                                 'class="form-horizontal"'
                             ) ?>
                          <?php

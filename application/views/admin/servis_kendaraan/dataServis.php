@@ -40,17 +40,18 @@
                                  <?php $no = 1;
                                     if ($kendaraan != '') {
                                         foreach ($kendaraan as $kend) { ?>
-                                         <tr>
-                                             <td><?= $no++; ?></td>
-                                             <td class="text-center">
-                                                 <a href="<?= site_url('servis/detail_servis?id=' . $kend['idk'] . '') ?>" class="btn btn-sm btn-warning jedatombol">Detail Servis</a>
-                                             </td>
-                                             <td class="text-center"><?= $kend['id_assets'] ?></td>
-                                             <td class="text-center"><?= $kend['no_polisi'] ?></td>
-                                             <td class="text-center"><?= $kend['jenis'] ?></td>
-                                             <td class="text-center"><?= $kend['merk'] ?></td>
-                                             <td class="text-center"><?= $kend['tipe'] ?></td>
-                                         </tr>
+                                 <tr>
+                                     <td><?= $no++; ?></td>
+                                     <td class="text-center">
+                                         <a href="<?= site_url('servis/detail_servis?id=' . $kend['idk'] . '') ?>"
+                                             class="btn btn-sm btn-warning jedatombol">Detail Servis</a>
+                                     </td>
+                                     <td class="text-center"><?= $kend['id_assets'] ?></td>
+                                     <td class="text-center"><?= strtoupper($kend['no_polisi']) ?></td>
+                                     <td class="text-center"><?= strtoupper($kend['jenis']) ?></td>
+                                     <td class="text-center"><?= strtoupper($kend['merk']) ?></td>
+                                     <td class="text-center"><?= strtoupper($kend['tipe']) ?></td>
+                                 </tr>
                                  <?php }
                                     } ?>
                              </tbody>

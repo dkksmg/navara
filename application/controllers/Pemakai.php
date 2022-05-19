@@ -12,8 +12,9 @@ class Pemakai extends CI_Controller
     }
     public function index()
     {
+        $id = $this->session->userdata('id');
         $data = [];
-        $data['kend'] = $this->home_m->kendaraanUser($this->session->userdata('id'));
+        $data['kend'] = $this->home_m->kendaraanUser($id);
         $this->load->view('pemakai/template/headeruser');
         $this->load->view('pemakai/kendaraan/data_kendaraan_pemakai', $data);
         $this->load->view('pemakai/template/footeruser');
@@ -21,53 +22,21 @@ class Pemakai extends CI_Controller
 
     public function riwayatkondisi()
     {
-        $data = [];
         $id = $this->input->get('id');
-        $data['title'] = 'Riwayat Kondisi Kendaraan Dinas';
-        $data['rk'] = $this->home_m->data_riwayatKondisi($id);
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('pemakai/template/headeruser');
-        $this->load->view('pemakai/kendaraan/riwayatkondisi', $data);
-        $this->load->view('pemakai/template/modal');
-        $this->load->view('pemakai/template/footeruser');
+        $cek_id_kondisi = $this->home_m->cek_id_riwayat_kondisi($id);
+        if ($cek_id_kondisi != '') {
+            $data = [];
+            $data['title'] = 'Riwayat Kondisi Kendaraan Dinas';
+            $data['rk'] = $this->home_m->data_riwayatKondisi($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/kondisi/riwayatkondisi', $data);
+            $this->load->view('pemakai/template/modal');
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
+        }
     }
-    public function riwayatbbm()
-    {
-        $data = [];
-        $id = $this->input->get('id');
-        $data['title'] = 'Riwayat BBM Kendaraan Dinas';
-        $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('pemakai/template/headeruser');
-        $this->load->view('pemakai/kendaraan/riwayatbbm', $data);
-        $this->load->view('pemakai/template/modal');
-        $this->load->view('pemakai/template/footeruser');
-    }
-    public function riwayatpajak()
-    {
-        $data = [];
-        $id = $this->input->get('id');
-        $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
-        $data['rp'] = $this->home_m->data_riwayatpajak($id);
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('pemakai/template/headeruser');
-        $this->load->view('pemakai/kendaraan/riwayatpajak', $data);
-        $this->load->view('pemakai/template/modal');
-        $this->load->view('pemakai/template/footeruser');
-    }
-    public function riwayatservis()
-    {
-        $data = [];
-        $id = $this->input->get('id');
-        $data['title'] = 'Riwayat Servis Kendaraan Dinas';
-        $data['rs'] = $this->home_m->data_riwayatservis($id);
-        $data['kend'] = $this->home_m->kendaraanByid($id);
-        $this->load->view('pemakai/template/headeruser');
-        $this->load->view('pemakai/kendaraan/riwayatservis', $data);
-        $this->load->view('pemakai/template/modal');
-        $this->load->view('pemakai/template/footeruser');
-    }
-
     public function prosestambahkondisi()
     {
         $data = [];
@@ -173,13 +142,11 @@ class Pemakai extends CI_Controller
             $res = $this->resizekanan->resize();
             $nama_kanan = $kanan['file_name'];
         }
-        var_dump($nama_blkg, $nama_dpn, $nama_kanan, $nama_kiri);
-        die();
         if (!empty($_FILES['depan']['name']) && !empty($_FILES['blkg']['name']) && !empty($_FILES['kiri']['name']) && !empty($_FILES['kanan']['name'])) {
             $simpan = $this->home_m->tambahriwayatkendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $idk);
             if ($simpan) {
                 $this->session->set_flashdata('success', 'Tambah Riwayat Kondisi Kendaraan Berhasil');
-                redirect('pemakai/riwayatkondisi');
+                redirect('pemakai/riwayatkondisi?id=' . $idk);
             } else {
                 $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal');
                 $data['post'] = $this->input->post();
@@ -198,171 +165,23 @@ class Pemakai extends CI_Controller
                 unlink('./assets/upload/file_kendaraan/kanan/' . $nama_kanan);
             }
             $this->session->set_flashdata('danger', 'Tambah Riwayat Kondisi Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
-            redirect('pemakai/riwayatkondisi');
+            redirect('pemakai/riwayatkondisi?id=' . $idk . '');
             $data['post'] = $this->input->post();
         }
     }
-    public function prosestambahservis()
+    public function editriwayatkondisi()
     {
-
-        $idk = $this->input->get('id');
-        $tgl = $this->input->post('tgl');
-        $tipe = $this->input->post('tipe');
-        $no_pol = $this->input->post('no_pol');
-
-        if (!empty($_FILES['foto']['name'])) {
-            $config['upload_path'] = './assets/upload/foto_servis/'; //path folder
-            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
-            // $config['overwrite'] = TRUE;
-            $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_servis_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
-
-            $this->load->library('upload', $config, 'foto');
-            $this->foto->initialize($config);
-            $this->foto->do_upload('foto');
-            $foto = $this->foto->data();
-            //compress file
-            $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
-            $config['create_thumb'] = FALSE;
-            $config['maintain_ratio'] = TRUE;
-            $config['quality'] = '50%';
-            $config['width'] = 600;
-            $config['height'] = 400;
-            $config['new_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
-            $this->load->library('image_lib', $config, 'resizefoto');
-            $res = $this->resizefoto->resize();
-            $namafoto = $foto['file_name'];
-        }
-        if (!empty($_FILES['nota']['name'])) {
-            $config['upload_path'] = './assets/upload/foto_nota/'; //path folder
-            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
-            // $config['overwrite'] = TRUE;
-            $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_nota_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
-
-            $this->load->library('upload', $config, 'nota');
-            $this->nota->initialize($config);
-            $this->nota->do_upload('nota');
-            $nota = $this->nota->data();
-            //compress file
-            $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
-            $config['create_thumb'] = FALSE;
-            $config['maintain_ratio'] = TRUE;
-            $config['quality'] = '50%';
-            $config['width'] = 600;
-            $config['height'] = 400;
-            $config['new_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
-            $this->load->library('image_lib', $config, 'resizenota');
-            $res = $this->resizenota->resize();
-            $namanota = $nota['file_name'];
-        }
-        if (!empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
-            $simpan = $this->home_m->tambahriwayatserviskendaraan($namafoto, $idk, $namanota);
-            if ($simpan) {
-                $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil');
-                redirect('home/riwayat_servis?id=' . $idk . '');
-            } else {
-                $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
-                $data['post'] = $this->input->post();
-            }
+        $id = $this->input->get('id');
+        $cek_id  = $this->home_m->cek_id_edit_riwayat_kondisi($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
+            $data['value'] = $this->home_m->data_kondisiById($id);
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/kondisi/editriwayatkondisi', $data);
+            $this->load->view('pemakai/template/footeruser');
         } else {
-            if (isset($nama_dpn)) {
-                unlink('./assets/foto_servis/' . $namafoto);
-            }
-            $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
-            redirect('home/riwayat_servis?id=' . $idk . '');
-            $data['post'] = $this->input->post();
-        }
-    }
-
-    public function proseseditservis()
-    {
-        $id_rs = $this->input->get('id');
-        $idk = $this->input->post('id_kend');
-        $tgl = $this->input->post('tgl');
-        $tipe = $this->input->post('tipe');
-        $no_pol = $this->input->post('no_pol');
-        // $config['overwrite'] = true;
-
-        // $this->load->library('upload', $config);
-        if (!empty($_FILES['foto']['name'])) {
-            $config['upload_path'] = './assets/upload/foto_servis/'; //path folder
-            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
-            // $config['overwrite'] = TRUE;
-            $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_servis_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
-
-            $this->load->library('upload', $config);
-            $this->upload->initialize($config);
-            $this->upload->do_upload('foto');
-            $foto = $this->upload->data();
-            //compress file
-            $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
-            $config['create_thumb'] = FALSE;
-            $config['maintain_ratio'] = TRUE;
-            $config['quality'] = '50%';
-            $config['width'] = 600;
-            $config['height'] = 400;
-            $config['new_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
-            $this->load->library('image_lib', $config);
-            $res = $this->image_lib->resize();
-            $namafoto = $foto['file_name'];
-        }
-        if (!empty($_FILES['nota']['name'])) {
-            $config['upload_path'] = './assets/upload/foto_nota/'; //path folder
-            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
-            // $config['overwrite'] = TRUE; //Overwrite nama yang terupload
-            $config['remove_spaces'] = TRUE;
-            $config['file_name'] = 'foto_nota_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
-
-            $this->load->library('upload', $config, 'nota');
-            $this->nota->initialize($config);
-            $this->nota->do_upload('nota');
-            $nota = $this->nota->data();
-            //compress file
-            $config['image_library'] = 'gd2';
-            $config['source_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
-            $config['create_thumb'] = FALSE;
-            $config['maintain_ratio'] = TRUE;
-            $config['quality'] = '50%';
-            $config['width'] = 600;
-            $config['height'] = 400;
-            $config['new_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
-            $this->load->library('image_lib', $config, 'resizenota');
-            $res = $this->resizenota->resize();
-            $namanota = $nota['file_name'];
-        }
-
-        if (!empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
-            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
-            if ($simpan) {
-                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
-                redirect('home/riwayat_servis?id=' . $idk . '');
-            } else {
-                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
-                $data['post'] = $this->input->post();
-            }
-        } else if (empty($_FILES['foto']['name']) && empty($_FILES['nota']['name'])) {
-            $namafoto = $this->input->post('old_servis');
-            $namanota = $this->input->post('old_nota');
-            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
-            if ($simpan) {
-                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
-                redirect('home/riwayat_servis?id=' . $idk . '');
-            } else {
-                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
-                $data['post'] = $this->input->post();
-            }
-        } else {
-            if (isset($nama_dpn)) {
-                unlink('./assets/foto_servis/' . $namafoto);
-            }
-            $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
-            redirect('home/riwayat_servis?id=' . $idk . '');
-            $data['post'] = $this->input->post();
+            show_404();
         }
     }
     public function proseseditkondisi()
@@ -475,7 +294,7 @@ class Pemakai extends CI_Controller
             $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
             if ($simpan) {
                 $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil');
-                redirect('home/riwayat_kondisi?id=' . $idk . '');
+                redirect('pemakai/riwayatkondisi?id=' . $idk . '');
             } else {
                 $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
                 $data['post'] = $this->input->post();
@@ -488,7 +307,7 @@ class Pemakai extends CI_Controller
             $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
             if ($simpan) {
                 $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil');
-                redirect('home/riwayat_kondisi?id=' . $idk . '');
+                redirect('pemakai/riwayatkondisi?id=' . $idk . '');
             } else {
                 $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
                 $data['post'] = $this->input->post();
@@ -511,19 +330,393 @@ class Pemakai extends CI_Controller
             $data['post'] = $this->input->post();
         }
     }
+    public function hapusriwayatkondisi()
+    {
+        $idrk = $this->input->get('id');
+        $simpan = $this->home_m->hapusriwayatkondisi($idrk);
+        if ($simpan) {
+            $this->session->set_flashdata('success', 'Hapus Riwayat Kendaraan Berhasil');
+            redirect('pemakai/riwayatkondisi?id=' . $simpan . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Riwayat Kendaraan gagal');
+            redirect('pemakai/riwayatkondisi?id=' . $simpan . '');
+        }
+    }
+    public function riwayatservis()
+    {
+        $id = $this->input->get('id');
+        $cek_id_kondisi = $this->home_m->cek_id_riwayat_servis($id);
+        if ($cek_id_kondisi != '') {
+            $data = [];
+            $data['title'] = 'Riwayat Servis Kendaraan Dinas';
+            $data['rs'] = $this->home_m->data_riwayatservis($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/servis/riwayatservis', $data);
+            $this->load->view('pemakai/template/modal');
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
+        }
+    }
+    public function prosestambahservis()
+    {
 
+        $idk = $this->input->get('id');
+        $tgl = $this->input->post('tgl');
+        $tipe = $this->input->post('tipe');
+        $no_pol = $this->input->post('no_pol');
 
+        if (!empty($_FILES['foto']['name'])) {
+            $config['upload_path'] = './assets/upload/foto_servis/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE;
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_servis_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+            $this->load->library('upload', $config, 'foto');
+            $this->foto->initialize($config);
+            $this->foto->do_upload('foto');
+            $foto = $this->foto->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
+            $this->load->library('image_lib', $config, 'resizefoto');
+            $res = $this->resizefoto->resize();
+            $namafoto = $foto['file_name'];
+        }
+        if (!empty($_FILES['nota']['name'])) {
+            $config['upload_path'] = './assets/upload/foto_nota/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE;
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_nota_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+            $this->load->library('upload', $config, 'nota');
+            $this->nota->initialize($config);
+            $this->nota->do_upload('nota');
+            $nota = $this->nota->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
+            $this->load->library('image_lib', $config, 'resizenota');
+            $res = $this->resizenota->resize();
+            $namanota = $nota['file_name'];
+        }
+        if (!empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
+            $simpan = $this->home_m->tambahriwayatserviskendaraan($namafoto, $idk, $namanota);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil');
+                redirect('pemakai/riwayatservis?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else {
+            if (isset($nama_dpn)) {
+                unlink('./assets/foto_servis/' . $namafoto);
+            }
+            $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
+            redirect('pemakai/riwayatservis?id=' . $idk . '');
+            $data['post'] = $this->input->post();
+        }
+    }
+    public function editriwayatservis()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_servis($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = "Edit Riwayat Servis Kendaraan";
+            $data['servis'] = $this->home_m->data_servisById($id);
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/servis/editriwayatservis', $data);
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
+        }
+    }
+    public function proseseditservis()
+    {
+        $id_rs = $this->input->get('id');
+        $idk = $this->input->post('id_kend');
+        $tgl = $this->input->post('tgl');
+        $tipe = $this->input->post('tipe');
+        $no_pol = $this->input->post('no_pol');
+        // $config['overwrite'] = true;
+
+        // $this->load->library('upload', $config);
+        if (!empty($_FILES['foto']['name'])) {
+            $config['upload_path'] = './assets/upload/foto_servis/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE;
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_servis_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+            $this->upload->do_upload('foto');
+            $foto = $this->upload->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
+            $this->load->library('image_lib', $config);
+            $res = $this->image_lib->resize();
+            $namafoto = $foto['file_name'];
+        }
+        if (!empty($_FILES['nota']['name'])) {
+            $config['upload_path'] = './assets/upload/foto_nota/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE; //Overwrite nama yang terupload
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'foto_nota_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+            $this->load->library('upload', $config, 'nota');
+            $this->nota->initialize($config);
+            $this->nota->do_upload('nota');
+            $nota = $this->nota->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
+            $this->load->library('image_lib', $config, 'resizenota');
+            $res = $this->resizenota->resize();
+            $namanota = $nota['file_name'];
+        }
+
+        if (!empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
+            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                redirect('pemakai/riwayatservis?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['foto']['name']) && empty($_FILES['nota']['name'])) {
+            $namafoto = $this->input->post('old_servis');
+            $namanota = $this->input->post('old_nota');
+            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                redirect('pemakai/riwayatservis?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else {
+            if (isset($nama_dpn)) {
+                unlink('./assets/foto_servis/' . $namafoto);
+            }
+            $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
+            redirect('pemakai/riwayatservis?id=' . $idk . '');
+            $data['post'] = $this->input->post();
+        }
+    }
+    public function delete_servis()
+    {
+        $id = $this->input->get('id');
+        $this->db->where('id_rs', $id);
+        $this->db->delete('riwayat_servis');
+        redirect($_SERVER['HTTP_REFERER']);
+    }
+    public function riwayatbbm()
+    {
+        $id = ($this->input->get('id'));
+        $cek_id = $this->home_m->cek_id_riwayat_bbm($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = 'Riwayat BBM Kendaraan Dinas';
+            $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/bbm/riwayatbbm', $data);
+            $this->load->view('pemakai/template/modal');
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
+        }
+    }
     public function prosestambahbbm()
     {
-        $idkend = $this->input->get('id');
-        if ($this->input->post()) {
-            if ($this->home_m->tambahriwayatbbm($idkend)) {
+        $id_bbm = ($this->input->get('id'));
+        $id_kend = ($this->input->post('id_kend'));
+        $data = [];
+        $tgl = $this->input->post('tgl_bbm');
+        $tipe = ($this->input->post('tipe'));
+        $no_pol = ($this->input->post('no_pol'));
+
+        if (!empty($_FILES['struk_bbm']['name'])) {
+            $config['upload_path'] = './assets/upload/struk_bbm/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE; //timpa file yang terupload
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'struk_bbm_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+            $this->load->library('upload', $config, 'struk_bbm');
+            $this->struk_bbm->initialize($config);
+            $this->struk_bbm->do_upload('struk_bbm');
+            $st_bbm = $this->struk_bbm->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/upload/struk_bbm/' . $st_bbm['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/upload/struk_bbm/' . $st_bbm['file_name'];
+            $this->load->library('image_lib', $config, 'resize_bbm');
+            $res = $this->resize_bbm->resize();
+            $nama_struk_bbm = $st_bbm['file_name'];
+        }
+        if (!empty($_FILES['struk_bbm']['name'])) {
+            $simpan = $this->home_m->tambahriwayatbbm($id_kend, $nama_struk_bbm);
+            if ($simpan) {
                 $this->session->set_flashdata('success', 'Tambah Riwayat BBM Kendaraan Berhasil');
-                redirect('pemakai/riwayatbbm');
+                redirect('pemakai/riwayatbbm?id=' . $id_bbm);
             } else {
                 $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal');
-                redirect('pemakai/riwayatbbm');
+                $data['post'] = $this->input->post();
             }
+        } else {
+            if (isset($nama_struk_bbm)) {
+                unlink('./assets/upload/struk_bbm/' . $nama_struk_bbm);
+            }
+            $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
+            redirect('pemakai/riwayatbbm?id=' . $id_bbm);
+            $data['post'] = $this->input->post();
+        }
+    }
+    public function editrbbm()
+    {
+        $id_kend = ($this->input->get('idkend'));
+        $id_bbm = ($this->input->get('id'));
+        $cek_id = $this->home_m->cek_id_edit_riwayat_bbm($id_bbm, $id_kend);
+        if ($cek_id != '') {
+            $data = [];
+            $data['title'] = 'Edit Riwayat BBM';
+            $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/bbm/editriwayatbbm', $data);
+            $this->load->view('pemakai/template/modal');
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
+        }
+    }
+    public function proseseditbbm()
+    {
+        $data = [];
+        $id_bbm = ($this->input->get('id'));
+        $id_kend = ($this->input->get('idkend'));
+        $tgl = $this->input->post('tgl_bbm');
+        $tipe = ($this->input->post('tipe'));
+        $no_pol = ($this->input->post('no_pol'));
+
+        if (!empty($_FILES['struk_bbm']['name'])) {
+            $config['upload_path'] = './assets/upload/struk_bbm/'; //path folder
+            $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+            // $config['overwrite'] = TRUE; //timpa file yang terupload
+            $config['remove_spaces'] = TRUE;
+            $config['file_name'] = 'struk_bbm_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+            $this->load->library('upload', $config, 'struk_bbm');
+            $this->struk_bbm->initialize($config);
+            $this->struk_bbm->do_upload('struk_bbm');
+            $st_bbm = $this->struk_bbm->data();
+            //compress file
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = './assets/upload/struk_bbm/' . $st_bbm['file_name'];
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '50%';
+            $config['width'] = 600;
+            $config['height'] = 400;
+            $config['new_image'] = './assets/upload/struk_bbm/' . $st_bbm['file_name'];
+            $this->load->library('image_lib', $config, 'resize_bbm');
+            $res = $this->resize_bbm->resize();
+            $nama_struk_bbm = $st_bbm['file_name'];
+        }
+        if (!empty($_FILES['struk_bbm']['name'])) {
+            $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
+                redirect('pemakai/riwayatbbm?id=' . $id_kend);
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['struk_bbm']['name'])) {
+            $nama_struk_bbm = ($this->input->post('old_struk'));
+            $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
+                redirect('pemakai/riwayatbbm?id=' . $id_kend);
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else {
+            if (isset($nama_struk_bbm)) {
+                unlink('./assets/upload/struk_bbm/' . $nama_struk_bbm);
+            }
+            $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
+            redirect('pemakai/riwayatbbm?id=' . $id_kend);
+            $data['post'] = $this->input->post();
+        }
+    }
+    public function hapusrbbm()
+    {
+        $id_bbm = ($this->input->get('id'));
+        $id_kend = ($this->input->get('idkend'));
+        if ($this->home_m->hapusbbm($id_bbm)) {
+            $this->session->set_flashdata('success', 'Hapus Riwayat BBM Kendaraan Berhasil');
+            redirect('pemakai/riwayatbbm?id=' . $id_kend);
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Riwayat BBM Kendaraan gagal');
+            redirect('pemakai/riwayatbbm?id=' . $id_kend);
+        }
+    }
+    public function riwayatpajak()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_riwayat_pajak($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpajak($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/pajak/riwayatpajak', $data);
+            $this->load->view('pemakai/template/modal');
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
         }
     }
     public function prosestambahpajak()
@@ -533,27 +726,65 @@ class Pemakai extends CI_Controller
             $cektahun = $this->home_m->cek_tahun_pajak($idkend, $this->input->post('tahun_pajak'));
             if ($cektahun != '') {
                 $this->session->set_flashdata('danger', 'Anda sudah menginput pajak untuk tahun ' . $this->input->post('tahun_pajak'));
-                redirect('home/riwayat_pajak?id=' . $idkend . '');
+                redirect('pemakai/riwayatpajak?id=' . $idkend . '');
             } else {
                 if ($this->home_m->tambahriwayatpajak($idkend)) {
                     $this->session->set_flashdata('success', 'Tambah Riwayat Pajak Kendaraan Berhasil');
-                    redirect('home/riwayat_pajak?id=' . $idkend . '');
+                    redirect('pemakai/riwayatpajak?id=' . $idkend . '');
                 } else {
                     $this->session->set_flashdata('danger', 'Tambah Riwayat Pajak Kendaraan gagal');
-                    redirect('home/riwayat_pajak?id=' . $idkend . '');
+                    redirect('pemakai/riwayatpajak?id=' . $idkend . '');
                 }
             }
         }
     }
-    public function hapusrbbm()
+    public function editriwayatpajak()
     {
         $id = $this->input->get('id');
-        if ($this->home_m->hapusbbm($id)) {
-            $this->session->set_flashdata('success', 'Hapus Riwayat BBM Kendaraan Berhasil');
-            redirect('pemakai/riwayatbbm');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_pajak($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpajak($id);
+            $data['value'] = $this->home_m->datapajakById($id);
+            $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/pajak/editriwayatpajak', $data);
+            $this->load->view('pemakai/template/footeruser');
         } else {
-            $this->session->set_flashdata('danger', 'Hapus Riwayat BBM Kendaraan gagal');
-            redirect('pemakai/riwayatbbm');
+            show_404();
+        }
+    }
+    public function proseseditpajak()
+    {
+        $id_pjk = $this->input->get('id');
+        $id = $this->input->get('id');
+        $id_kend = $this->input->post('id_kend');
+        if ($this->input->post()) {
+            $cektahun = $this->home_m->cek_tahun_pajak($id, $this->input->post('tahun_pajak'));
+            if ($cektahun != '') {
+                $this->session->set_flashdata('danger', 'Anda sudah menginput pajak untuk tahun ' . $this->input->post('tahun_pajak'));
+                redirect('pemakai/riwayatpajak?id=' . $id_kend);
+            } else {
+                if ($this->home_m->updateriwayatpajak($id_pjk)) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat Pajak Kendaraan Berhasil');
+                    redirect('pemakai/riwayatpajak?id=' . $id_kend . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat Pajak Kendaraan gagal');
+                    redirect('pemakai/riwayatpajak?id=' . $id_kend . '');
+                }
+            }
+        }
+    }
+    public function hapusriwayatpajak()
+    {
+        $id_pjk = $this->input->get('id');
+        $simpan = $this->home_m->hapusriwayatpajak($id_pjk);
+        if ($simpan) {
+            $this->session->set_flashdata('success', 'Hapus Riwayat Pajak Kendaraan Dinas Berhasil');
+            redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Riwayat Pajak Kendaraan Dinas gagal');
+            redirect($_SERVER['HTTP_REFERER']);
         }
     }
 }

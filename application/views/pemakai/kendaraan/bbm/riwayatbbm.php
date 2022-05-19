@@ -73,16 +73,16 @@
                              </thead>
                              <tbody>
                                  <?php $no = 1;
-                  if ($rbbm != '') :
-                    foreach ($rbbm as $value) : ?>
+                                    if ($rbbm != '') :
+                                        foreach ($rbbm as $value) : ?>
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
                                      <td class="text-center">
-                                         <a onclick="deleteConfirm('<?= site_url('home/hapusrbbm?id=' . encrypt_url($value['id_bbm']) . '&idkend=' . encrypt_url($value['id_kendaraan'])) ?>')"
+                                         <a onclick="deleteConfirm('<?= site_url('pemakai/hapusrbbm?id=' . ($value['id_bbm']) . '&idkend=' . ($value['id_kendaraan'])) ?>')"
                                              href="#" class="btn btn-danger btn-sm jedatombol"
                                              title="Hapus Riwayat BBM <?= $kend['no_polisi'] ?>"><i
                                                  class="fas fa-trash"></i></a>
-                                         <a onclick="editConfirm('<?= site_url('home/editrbbm?id=' . encrypt_url($value['id_bbm']) . '&idkend=' . encrypt_url($value['id_kendaraan'])) ?>')"
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editrbbm?id=' . ($value['id_bbm']) . '&idkend=' . ($value['id_kendaraan'])) ?>')"
                                              href="#" class="btn btn-warning btn-sm jedatombol"
                                              title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pen"></i></a>
@@ -100,8 +100,8 @@
 
                                  </tr>
                                  <?php $no++;
-                    endforeach;
-                  endif ?>
+                                        endforeach;
+                                    endif ?>
                              </tbody>
                          </table>
                      </div>
@@ -114,9 +114,9 @@
  <!-- /.content -->
 
  <?php
-  $no = 1;
-  if ($rbbm != '') :
-    foreach ($rbbm as $value) : ?>
+    $no = 1;
+    if ($rbbm != '') :
+        foreach ($rbbm as $value) : ?>
  <center>
      <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel">
@@ -140,18 +140,18 @@
      </div>
  </center>
  <?php $no++;
-    endforeach;
-  endif ?>
+        endforeach;
+    endif ?>
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
          <?php echo form_open_multipart(
-        'home/prosestambahbbm?id=' . encrypt_url($kend['idk']) . '',
-        'class="form-horizontal"'
-      ) ?>
-         <?php echo form_hidden('id_kend', encrypt_url($kend['idk']));
-      echo form_hidden('tipe', encrypt_url($kend['tipe']));
-      echo form_hidden('no_pol', encrypt_url($kend['no_polisi'])) ?>
+                'pemakai/prosestambahbbm?id=' . ($kend['idk']) . '',
+                'class="form-horizontal"'
+            ) ?>
+         <?php echo form_hidden('id_kend', ($kend['idk']));
+            echo form_hidden('tipe', ($kend['tipe']));
+            echo form_hidden('no_pol', ($kend['no_polisi'])) ?>
          <div class="modal-content">
              <div class="modal-header">
                  <h4 class="modal-title">Form Riwayat BBM</h4>

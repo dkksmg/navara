@@ -65,7 +65,8 @@ class Home_m extends CI_Model
     }
     public function data_riwayatKondisi($id = null)
     {
-        $this->db->where('id_kendaraan', $id);
+        $this->db->order_by('tgl_pencatatan', 'DESC')
+            ->where('id_kendaraan', $id);
         $query = $this->db->get('riwayat_kondisi');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -76,7 +77,7 @@ class Home_m extends CI_Model
     }
     public function data_riwayatbbm($id = null)
     {
-        $this->db->where('id_kendaraan', $id);
+        $this->db->order_by('tgl_pencatatan', 'DESC')->where('id_kendaraan', $id);
         $query = $this->db->get('riwayat_bbm');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -300,6 +301,22 @@ class Home_m extends CI_Model
         $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
     }
+    public function reject_servis($id = null)
+    {
+
+        $data['status_sistem'] = "no";
+        $this->db->where('id_rs', $id);
+        $q = $this->db->update('riwayat_servis', $data);
+        return $q;
+    }
+    public function approve_servis($id = null)
+    {
+
+        $data['status_sistem'] = "yes";
+        $this->db->where('id_rs', $id);
+        $q = $this->db->update('riwayat_servis', $data);
+        return $q;
+    }
     public function data_riwayatpemakaibyid($id = null)
     {
         $this->db->where('id_kendaraan', $id);
@@ -315,6 +332,17 @@ class Home_m extends CI_Model
     {
         $this->db->where('id_rp', $id);
         $query = $this->db->get('riwayat_pemakai');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function data_riwayatservisbyidrp($id = null)
+    {
+        $this->db->where('id_rs', $id);
+        $query = $this->db->get('riwayat_servis');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;

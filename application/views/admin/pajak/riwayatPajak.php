@@ -55,7 +55,8 @@
                          <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
                              Tambah Riwayat Pajak
                          </button>
                      </div>
@@ -74,17 +75,22 @@
                                  <?php $no = 1;
                                     if ($rp != '') {
                                         foreach ($rp as $value) { ?>
-                                         <tr>
-                                             <td class="text-center"><?= $no++; ?></td>
-                                             <td class="text-center">
-                                                 <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')" href="#" class="btn btn-sm btn-warning jedatombol" title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i class="fas fa-pencil"></i></a>
-                                                 <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')" href="#" class="btn btn-sm btn-danger jedatombol"><i class="fas fa-trash"></i></a>
-                                             </td>
-                                             <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
-                                             <td class="text-center"><?= $value['tahun'] ?></td>
-                                             <td class="text-center">
-                                                 <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?></td>
-                                         </tr>
+                                 <tr>
+                                     <td class="text-center"><?= $no++; ?></td>
+                                     <td class="text-center">
+                                         <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"
+                                             title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i
+                                                 class="fas fa-pencil"></i></a>
+                                         <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-danger jedatombol"><i
+                                                 class="fas fa-trash"></i></a>
+                                     </td>
+                                     <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
+                                     <td class="text-center"><?= $value['tahun'] ?></td>
+                                     <td class="text-center">
+                                         <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?></td>
+                                 </tr>
                                  <?php }
                                     } ?>
                              </tbody>
@@ -100,7 +106,8 @@
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('pemakai/prosestambahpajak?id=' . $kend['idk'] . '') ?>" enctype="multipart/form-data">
+         <form method="post" action="<?= site_url('home/prosestambahpajak?id=' . $kend['idk'] . '') ?>"
+             enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
                      <h4 class="modal-title">Form Riwayat Pajak</h4>
@@ -115,9 +122,8 @@
                                  <label>Tahun</label>
                                  <?php
                                     $year_start  = 2000;
-                                    $year_end = date('Y');
+                                    $year_end = date('Y') + 20;
                                     $user_selected_year = date('Y');
-
                                     echo '<select id="year" required class="form-control" name="tahun_pajak">' . "\n";
                                     for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
                                         $selected = ($user_selected_year == $i_year ? ' selected' : '');
@@ -130,7 +136,8 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Total Pajak</label>
-                                 <input type="number" placeholder="Masukkan Total Pajak" class="form-control" name="total_pajak">
+                                 <input type="number" placeholder="Masukkan Total Pajak" class="form-control"
+                                     name="total_pajak">
                              </div>
                          </div>
                      </div>

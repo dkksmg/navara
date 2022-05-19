@@ -65,14 +65,20 @@
                      </div>
                      <div class="card-footer">
                          <a href="<?= site_url('pemakai/riwayatkondisi?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-primary">Riwayat Kondisi</a>
+                             class="btn btn-primary jedatombol"
+                             title="Riwayat Kondisi <?= $kend['no_polisi'] ?>">Riwayat
+                             Kondisi</a>
                          <a href="<?= site_url('pemakai/riwayatservis?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-warning">Riwayat Servis</a>
+                             class="btn btn-warning jedatombol" title="Riwayat Servis <?= $kend['no_polisi'] ?>">Riwayat
+                             Servis</a>
                          <a href="<?= site_url('pemakai/riwayatbbm?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-secondary">Riwayat BBM</a>
+                             class="btn btn-secondary jedatombol" title="Riwayat BBM <?= $kend['no_polisi'] ?>">Riwayat
+                             BBM</a>
                          <a href="<?= site_url('pemakai/riwayatpajak?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-danger">Riwayat Pajak</a>
-                         <a href="#" class="btn btn-success" onClick="alert('Coming Soon')">Form Pengajuan</a>
+                             class="btn btn-danger jedatombol" title="Riwayat Pajak <?= $kend['no_polisi'] ?>">Riwayat
+                             Pajak</a>
+                         <a href="#" class="btn btn-success jedatombol" onClick="alert('Coming Soon')"
+                             title="Form Pengajuan <?= $kend['no_polisi'] ?>">Form Pengajuan</a>
                      </div>
                  </div>
                  <?php else : ?>

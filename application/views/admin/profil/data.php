@@ -34,6 +34,7 @@
                              </div>
 
                              <h3 class="profile-username text-center"><?= $user['name'] ?></h3>
+                             <h5 class="text-dark text-center"><?= $user['nip_user'] ?></h5>
 
                              <p class="text-muted text-center">Lokasi Kerja : <?= $user['wilayah'] ?></p>
 

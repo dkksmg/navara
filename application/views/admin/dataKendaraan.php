@@ -66,7 +66,7 @@
                                              class="btn btn-sm btn-primary jedatombol"
                                              title="Riwayat Service <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-tools"></i></a>
-                                         <a href="<?= site_url('home/riwayat_bbm?id=' . encrypt_url($kend['idk']) . '') ?>"
+                                         <a href="<?= site_url('home/riwayat_bbm?id=' . ($kend['idk']) . '') ?>"
                                              class="btn btn-sm btn-primary jedatombol"
                                              title="Riwayat BBM <?= $kend['no_polisi'] ?>"><i
                                                  class="fa fa-gas-pump"></i></a>

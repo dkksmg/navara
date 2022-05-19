@@ -83,6 +83,17 @@
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
                                      <td class="text-center">
+                                         <?php if ($value['status_sistem'] == 'yes') : ?>
+                                         <a href="<?= site_url('home/reject_servis?id=' . $value['id_rs'] . '') ?>"
+                                             class="btn btn-sm btn-secondary jedatombol"><i
+                                                 class="fa-solid fa-octagon-xmark"
+                                                 title="Tidak Disetujui <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php else : ?>
+                                         <a href="<?= site_url('home/approve_servis?id=' . $value['id_rs'] . '') ?>"
+                                             class="btn btn-sm btn-success jedatombol"><i
+                                                 class="fa-solid fa-badge-check"
+                                                 title="Setujui Data <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php endif ?>
                                          <a onclick="deleteConfirm('<?php echo site_url('home/delete_servis?id=' . $value['id_rs'] . '') ?>')"
                                              href="#" class="btn btn-sm btn-danger jedatombol"><i
                                                  class="fas fa-trash"></i></a>
@@ -174,7 +185,7 @@
  <!-- Modal Input -->
  <div class="modal fade" id="modalTambah" role="dialog">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('pemakai/prosestambahservis?id=' . $kend['idk'] . '') ?>"
+         <form method="post" action="<?= site_url('home/prosestambahservis?id=' . $kend['idk'] . '') ?>"
              enctype="multipart/form-data">
              <?php
                 echo form_hidden('tipe', $kend['tipe']);
