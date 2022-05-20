@@ -24,8 +24,10 @@
                          <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
+                         <?php if ($this->session->userdata('role') == 'Superadmin') : ?>
                          <a href="<?= site_url('home/tambahKendaraanDinas') ?>" class="btn btn-sm btn-success">Tambah
                              Kendaraan</a>
+                         <?php endif; ?>
                      </div>
                      <div class="card-body">
                          <table class="table table-bordered table-striped example width=" 100%" height="auto">
@@ -95,17 +97,17 @@
 
                                      </td>
                                      <td><?= $kend['id_assets'] ?></td>
-                                     <td><?= $kend['no_polisi'] ?></td>
-                                     <td><?= $kend['jenis'] ?></td>
-                                     <td><?= $kend['merk'] ?></td>
-                                     <td><?= $kend['tipe'] ?></td>
-                                     <td><?= $kend['no_stnk'] ?></td>
-                                     <td><?= $kend['masa_berlaku_stnk'] ?></td>
-                                     <td><?= $kend['no_mesin'] ?></td>
-                                     <td><?= $kend['no_rangka'] ?></td>
-                                     <td><?= $kend['tahun_perolehan'] ?></td>
-                                     <td><?= $kend['jenis_bb'] ?></td>
-                                     <td><?= $kend['besar_cc'] ?></td>
+                                     <td><?= strtoupper($kend['no_polisi']) ?></td>
+                                     <td><?= strtoupper($kend['jenis']) ?></td>
+                                     <td><?= strtoupper($kend['merk']) ?></td>
+                                     <td><?= strtoupper($kend['tipe']) ?></td>
+                                     <td><?= strtoupper($kend['no_stnk']) ?></td>
+                                     <td><?= strtoupper($kend['masa_berlaku_stnk']) ?></td>
+                                     <td><?= strtoupper($kend['no_mesin']) ?></td>
+                                     <td><?= strtoupper($kend['no_rangka']) ?></td>
+                                     <td><?= strtoupper($kend['tahun_perolehan']) ?></td>
+                                     <td><?= strtoupper($kend['jenis_bb']) ?></td>
+                                     <td><?= strtoupper($kend['besar_cc']) ?></td>
                                  </tr>
                                  <?php }
                                     } ?>

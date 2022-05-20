@@ -675,10 +675,17 @@ class Home_m extends CI_Model
         $q = $this->db->delete('riwayat_bbm');
         return $q;
     }
+    public function hapus_data_kendaraan($id_kend = null)
+    {
+        $this->db->where('idk', $id_kend);
+        $q = $this->db->delete('kendaraan');
+        return $q;
+    }
     public function datasummary_kendaraanbyid($id = null)
     {
         $this->db
             ->join('riwayat_pemakai as rp', 'rp.id_kendaraan = kend.idk', 'left')
+            ->join('users as us', 'rp.id_user = us.id')
             ->where('idk', $id)
             ->group_start()
             ->where('rp.status', 'aktif')

@@ -71,7 +71,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <li class="nav-item <?= $this->uri->segment(1) == 'home' ? 'active' : '' ?>">
                             <a href="<?= site_url('home') ?>" class="nav-link">Kendaraan</a>
                         </li>
-                        <?php if ($this->session->userdata('role') != 'Pemakai') : ?>
+                        <?php if ($this->session->userdata('role') != 'Admin') : ?>
                         <li class="nav-item
                             <?= $this->uri->segment(1) == 'rekap' || $this->uri->segment(1) == '' ? 'active' : '' ?>">
                             <a href="<?= site_url('rekap') ?>" class="nav-link">Rekap Laporan</a>

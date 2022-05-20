@@ -7,8 +7,9 @@ class Rekap extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
+		check_level_pemakai();
+		check_level_admin();
 		check_session();
-		check_level();
 		$this->load->model('home_m');
 	}
 	public function index()
@@ -23,7 +24,7 @@ class Rekap extends CI_Controller
 			$data['rekap'] = $this->home_m->data_rekap($dari, $sampai);
 		}
 		$this->load->view('admin/template/header');
-		$this->load->view('admin/datarekap', $data);
+		$this->load->view('admin/rekap/datarekap', $data);
 		$this->load->view('admin/template/footer');
 	}
 }

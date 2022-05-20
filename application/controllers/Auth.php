@@ -27,6 +27,7 @@ class Auth extends CI_Controller
     public function index()
     {
         check_sudah_login();
+        // check_session();
         $this->load->view('auth/login');
     }
 
@@ -107,7 +108,7 @@ class Auth extends CI_Controller
                             'logged_in' => TRUE,
                         );
                         $this->session->set_userdata($session_data);
-                        $this->session->set_flashdata('success', 'Login berhasil');
+                        $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
                         redirect('home');
                     }
                     // Login Pemakai Kendaraan
@@ -121,7 +122,7 @@ class Auth extends CI_Controller
                             'logged_in' => TRUE,
                         );
                         $this->session->set_userdata($session_data);
-                        $this->session->set_flashdata('success', 'Login berhasil');
+                        $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
                         redirect('pemakai');
                     }
                 } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
@@ -195,6 +196,15 @@ class Auth extends CI_Controller
     public function logout()
     {
         $this->session->sess_destroy();
-        redirect('auth', 'refresh');
+        $this->session->set_flashdata(
+            'message',
+            '<div class="alert alert-danger alert-dismissible fade show">
+            Anda Berhasil Logout
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>'
+        );
+        redirect('auth');
     }
 }

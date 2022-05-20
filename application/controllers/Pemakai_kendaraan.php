@@ -25,7 +25,7 @@ class Pemakai_kendaraan extends CI_Controller
   {
     parent::__construct();
     check_session();
-    check_level();
+    check_level_pemakai();
     $this->load->model('pemakai_kendaraan_model');
   }
 
@@ -35,7 +35,7 @@ class Pemakai_kendaraan extends CI_Controller
     $data['title'] = "Data Pemakai Kendaraan Dinas";
     $data['kendaraan'] = $this->pemakai_kendaraan_model->dataPemakaiKendaraanByStatusPemakai();
     $this->load->view('admin/template/header');
-    $this->load->view('admin/dataPemakaiKendaraan', $data);
+    $this->load->view('admin/pemakai/dataPemakaiKendaraan', $data);
     $this->load->view('admin/template/footer');
   }
 }

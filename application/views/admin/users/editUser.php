@@ -37,7 +37,7 @@
                                             <label>NIP</label>
                                             <input type="number" class="form-control" name="nip_user"
                                                 value="<?= $user['nip_user'] ?>"
-                                                placeholder="Kosongkan Jika Role Tidak Pemakai Kendaraan" required>
+                                                placeholder="Kosongkan Jika Role Tidak Pemakai Kendaraan">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -51,6 +51,22 @@
                                                 $user['role'],
                                                 form_error('role') == true ? "class='form-control is-invalid' required" : "class='form-control' required"
                                             ); ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Lokasi Kerja</label>
+                                            <select class="form-control" name="lokasi_kerja" required>
+                                                <option readonly>-- Pilih Lokasi Kerja --</option>
+                                                <?php if ($lu != '') : ?>
+                                                <?php foreach ($lu as $value) : ?>
+                                                <option <?php if ($user['wilayah'] == $value['lokasi_unit']) : ?>
+                                                    selected <?php endif ?>>
+                                                    <?= $value['lokasi_unit'] ?></option>
+                                                <?php endforeach;
+                                                endif; ?>
+
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -71,22 +87,6 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Lokasi Kerja</label>
-                                            <select class="form-control" name="lokasi_kerja" required>
-                                                <option readonly>-- Pilih Lokasi Kerja --</option>
-                                                <?php if ($lu != '') : ?>
-                                                <?php foreach ($lu as $value) : ?>
-                                                <option <?php if ($user['wilayah'] == $value['lokasi_unit']) : ?>
-                                                    selected <?php endif ?>>
-                                                    <?= $value['lokasi_unit'] ?></option>
-                                                <?php endforeach;
-                                                endif; ?>
-
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Status</label>

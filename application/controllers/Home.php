@@ -8,7 +8,8 @@ class Home extends CI_Controller
     {
         parent::__construct();
         check_session();
-        check_level();
+        check_level_pemakai();
+
         $this->load->model('home_m');
     }
     public function index()
@@ -17,7 +18,7 @@ class Home extends CI_Controller
         $data['title'] = 'Data Kendaraan Dinas';
         $data['kendaraan'] = $this->home_m->data_kendaraan();
         $this->load->view('admin/template/header');
-        $this->load->view('admin/dataKendaraan', $data);
+        $this->load->view('admin/kendaraan/dataKendaraan', $data);
         $this->load->view('admin/template/modal');
         $this->load->view('admin/template/footer');
     }
@@ -25,7 +26,7 @@ class Home extends CI_Controller
 
     public function tambahKendaraanDinas()
     {
-
+        check_level_admin();
         $data = [];
         $data['title'] = 'Tambah Kendaraan Dinas';
         if ($this->input->post()) {
@@ -37,12 +38,12 @@ class Home extends CI_Controller
             }
         }
         $this->load->view('admin/template/header');
-        $this->load->view('admin/tambahKendaraanDinas', $data);
+        $this->load->view('admin/kendaraan/tambahKendaraanDinas', $data);
         $this->load->view('admin/template/footer');
     }
     public function edit_kendaraan()
     {
-
+        check_level_admin();
         $data = [];
         $data['title'] = 'Edit Kendaraan Dinas';
         $id = $this->input->get('id');
@@ -59,6 +60,17 @@ class Home extends CI_Controller
         $this->load->view('admin/tambahKendaraanDinas', $data);
         $this->load->view('admin/template/footer');
     }
+    public function hapus_data_kendaraan()
+    {
+        $id_kend = ($this->input->get('id'));
+        if ($this->home_m->hapus_data_kendaraan($id_kend)) {
+            $this->session->set_flashdata('success', 'Hapus Data Kendaraan Berhasil');
+            redirect('home');
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Data Kendaraan gagal');
+            redirect('home');
+        }
+    }
 
     public function riwayat_kondisi()
     {
@@ -69,7 +81,7 @@ class Home extends CI_Controller
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['rk'] = $this->home_m->data_riwayatKondisi($id);
             $this->load->view('admin/template/header');
-            $this->load->view('admin/kondisi_kendaraan/riwayatKondisi', $data);
+            $this->load->view('admin/kondisi/riwayatKondisi', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
@@ -85,7 +97,7 @@ class Home extends CI_Controller
             $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
             $data['value'] = $this->home_m->data_kondisiById($id);
             $this->load->view('admin/template/header');
-            $this->load->view('admin/kondisi_kendaraan/editriwayatkondisi', $data);
+            $this->load->view('admin/kondisi/editriwayatkondisi', $data);
             $this->load->view('admin/template/footer');
         } else {
             show_404();
@@ -248,7 +260,7 @@ class Home extends CI_Controller
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['lu'] = $this->home_m->data_lokasiunit();
             $this->load->view('admin/template/header');
-            $this->load->view('admin/pemakai_kendaraan/riwayatPemakai', $data);
+            $this->load->view('admin/kendaraan/riwayatPemakai', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
@@ -265,7 +277,7 @@ class Home extends CI_Controller
             $data['lu'] = $this->home_m->data_lokasiunit();
             $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
             $this->load->view('admin/template/header');
-            $this->load->view('admin/pemakai_kendaraan/editPemakai', $data);
+            $this->load->view('admin/kendaraan/editPemakai', $data);
             $this->load->view('admin/template/footer');
         } else {
             show_404();
@@ -280,7 +292,7 @@ class Home extends CI_Controller
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['rs'] = $this->home_m->data_riwayatservis($id);
             $this->load->view('admin/template/header');
-            $this->load->view('admin/servis_kendaraan/riwayatservis', $data);
+            $this->load->view('admin/servis/riwayatservis', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
@@ -370,7 +382,7 @@ class Home extends CI_Controller
             $data['title'] = "Edit Riwayat Servis Kendaraan";
             $data['servis'] = $this->home_m->data_servisById($id);
             $this->load->view('admin/template/header');
-            $this->load->view('admin/servis_kendaraan/editriwayatservis', $data);
+            $this->load->view('admin/servis/editriwayatservis', $data);
             $this->load->view('admin/template/footer');
         } else {
             show_404();
@@ -956,7 +968,6 @@ class Home extends CI_Controller
     }
     public function print_data_kendaraan()
     {
-        check_level();
         $id = $this->input->get('id');
         $cek_id = $this->home_m->cek_id_riwayat_servis($id);
         if ($cek_id != '') {

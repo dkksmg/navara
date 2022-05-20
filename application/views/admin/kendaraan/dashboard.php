@@ -33,9 +33,22 @@
              </div>
              <div class="col-lg-3 col-6">
                  <!-- small box -->
+                 <div class="small-box bg-success">
+                     <div class="inner">
+                         <h3><?= $totalspm ?></h3>
+
+                         <p>Total Kendaraan <b>Sepeda Motor</b></p>
+                     </div>
+                     <div class="icon">
+                         <i class="ion ion-bag"></i>
+                     </div>
+                 </div>
+             </div>
+             <div class="col-lg-3 col-6">
+                 <!-- small box -->
                  <div class="small-box bg-secondary">
                      <div class="inner">
-                         <h3><?= $totalkendaraan ?></h3>
+                         <h3><?= $totaladmin ?></h3>
 
                          <p>Total User <b>Admin</b></p>
                      </div>
@@ -48,9 +61,37 @@
                  <!-- small box -->
                  <div class="small-box bg-secondary">
                      <div class="inner">
-                         <h3><?= $totalkendaraan ?></h3>
+                         <h3><?= $totalpemakai ?></h3>
 
                          <p>Total User <b>Pemakai Kendaraan</b></p>
+                     </div>
+                     <div class="icon">
+                         <i class="ion ion-bag"></i>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <div class="row">
+             <div class="col-lg-3 col-6">
+                 <!-- small box -->
+                 <div class="small-box bg-info">
+                     <div class="inner">
+                         <h3><?= $totalkendaraan ?></h3>
+
+                         <p>Total Kendaraan <b>Ambulance</b></p>
+                     </div>
+                     <div class="icon">
+                         <i class="ion ion-bag"></i>
+                     </div>
+                 </div>
+             </div>
+             <div class="col-lg-3 col-6">
+                 <!-- small box -->
+                 <div class="small-box bg-info">
+                     <div class="inner">
+                         <h3><?= $totalkendaraan ?></h3>
+
+                         <p>Total Kendaraan <b>Mobil</b></p>
                      </div>
                      <div class="icon">
                          <i class="ion ion-bag"></i>

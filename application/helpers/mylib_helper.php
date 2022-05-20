@@ -5,7 +5,11 @@ function check_sudah_login()
     $ci = &get_instance();
     $session = $ci->session->userdata('logged_in');
     if ($session == TRUE) {
-        redirect('home');
+        if ($ci->session->userdata('role') != 'Pemakai') {
+            redirect('home');
+        } else {
+            redirect('pemakai');
+        }
     }
 }
 function check_session()
@@ -25,11 +29,19 @@ function check_session()
         redirect('auth');
     }
 }
-function check_level()
+function check_level_pemakai()
 {
     $ci = &get_instance();
     $level = $ci->session->userdata('role');
     if ($level == 'Pemakai') {
+        show_404();
+    }
+}
+function check_level_admin()
+{
+    $ci = &get_instance();
+    $level = $ci->session->userdata('role');
+    if ($level == 'Admin') {
         show_404();
     }
 }

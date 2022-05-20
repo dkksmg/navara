@@ -109,7 +109,7 @@
                              <div class="form-group">
                                  <label>NIP</label>
                                  <input type="number" class="form-control" name="nip_user"
-                                     placeholder="Kosongkan Jika Role Tidak Pemakai Kendaraan" required>
+                                     placeholder="Kosongkan Jika Role Tidak Pemakai Kendaraan">
                              </div>
                          </div>
                          <div class="col-md-6">
@@ -127,6 +127,19 @@
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
+                                 <label>Lokasi Kerja</label>
+                                 <select class="form-control" name="lokasi_kerja" required>
+                                     <option readonly>-- Pilih Lokasi Kerja --</option>
+                                     <?php if ($lu != '') {
+                                            foreach ($lu as $value) { ?>
+                                     <option><?= $value['lokasi_unit'] ?></option>
+                                     <?php }
+                                        } ?>
+                                 </select>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
                                  <label>Username</label>
                                  <input type="text" class="form-control" name="username" required>
                              </div>
@@ -139,19 +152,6 @@
                          </div>
                      </div>
                      <div class="row">
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                 <label>Lokasi Kerja</label>
-                                 <select class="form-control" name="lokasi_kerja" required>
-                                     <option readonly>-- Pilih Lokasi Kerja --</option>
-                                     <?php if ($lu != '') {
-                                            foreach ($lu as $value) { ?>
-                                     <option><?= $value['lokasi_unit'] ?></option>
-                                     <?php }
-                                        } ?>
-                                 </select>
-                             </div>
-                         </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Status</label>

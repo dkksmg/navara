@@ -7,15 +7,18 @@ class Dashboard extends CI_Controller
 	{
 		parent::__construct();
 		check_session();
-		check_level();
+		check_level_pemakai();
 		$this->load->model('dashboard_m');
 	}
 	public function index()
 	{
 		$data = [];
 		$data['totalkendaraan'] = $this->dashboard_m->totalkendaraan();
+		$data['totalspm'] = $this->dashboard_m->totalkendaraan_spm();
+		$data['totaladmin'] = $this->dashboard_m->totaluseradmin();
+		$data['totalpemakai'] = $this->dashboard_m->totaluserpemakai();
 		$this->load->view('admin/template/header');
-		$this->load->view('admin/dashboard', $data);
+		$this->load->view('admin/kendaraan/dashboard', $data);
 		$this->load->view('admin/template/footer');
 	}
 }

@@ -138,16 +138,16 @@
                                  <th width="20%">Pemakai Sekarang</th>
                                  <th>:</th>
                                  <th>
-                                     <?php if (empty($kend['nama_pemakai'])) : ?>
-                                     <?= strtoupper($kend['nama_pemakai']) ?>
+                                     <?php if (empty($kend['name'])) : ?>
+                                     <?= strtoupper($kend['name']) ?>
                                      <span
                                          style="font-size:12px;font-style:italic;color:red; font-family:Arial;align-items:right">
                                          Data masih kosong. Harap segera di perbarui
                                      </span>
                                      <?php else : ?>
-                                     <?= strtoupper($kend['nama_pemakai']) ?>
-                                     <?php if (!empty($kend['nip_pemakai'])) : ?>
-                                     (<?= $kend['nip_pemakai'] ?>)
+                                     <?= strtoupper($kend['name']) ?>
+                                     <?php if (!empty($kend['nip_user'])) : ?>
+                                     (<?= $kend['nip_user'] ?>)
                                      <?php endif; ?>
                                      <?php endif; ?>
                                  </th>
