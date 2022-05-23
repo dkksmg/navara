@@ -17,3 +17,7 @@ function logoutConfirm(url) {
   $("#btn-logout").attr("href", url);
   $("#logoutModal").modal();
 }
+function cetakConfirm(url) {
+  $("#btn-cetak").attr("href", url);
+  $("#cetakModal").modal();
+}

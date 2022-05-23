@@ -64,7 +64,7 @@ $(document).ready(function() {
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000
+        timer: 8000
     });
     <?php if ($this->session->flashdata('success') != '') { ?>
     pesansukses('success', ' <?= $this->session->flashdata('success') ?>');

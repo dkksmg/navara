@@ -35,3 +35,20 @@
         </div>
     </div>
 </div>
+<!-- Cetak Confirmation-->
+<div class="modal fade" id="cetakModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ingin mencetak data ini ?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Tidak</button>
+                <a id="btn-cetak" class="btn btn-danger" href="#" target="_blank">Ya</a>
+            </div>
+        </div>
+    </div>
+</div>

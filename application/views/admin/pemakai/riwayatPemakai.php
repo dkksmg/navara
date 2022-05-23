@@ -45,6 +45,21 @@
                                  <th>:</th>
                                  <th><?= strtoupper($kend['merk']) ?></th>
                              </tr>
+                             <tr>
+                                 <th>Tipe</th>
+                                 <th>:</th>
+                                 <th><?= strtoupper($kend['tipe']) ?></th>
+                             </tr>
+                             <tr>
+                                 <th>CC</th>
+                                 <th>:</th>
+                                 <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                             </tr>
+                             <tr>
+                                 <th>Bahan Bakar</th>
+                                 <th>:</th>
+                                 <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                             </tr>
                          </table>
                      </div>
                  </div>

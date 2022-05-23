@@ -61,24 +61,34 @@
                                  <th>:</th>
                                  <th><?= date('d-m-Y', strtotime($kend['masa_berlaku_stnk'])) ?></th>
                              </tr>
+                             <tr>
+                                 <th>Lokasi Unit</th>
+                                 <th>:</th>
+                                 <th><?= strtoupper($kend['lokasi_unit']) ?></th>
+                             </tr>
                          </table>
                      </div>
                      <div class="card-footer">
                          <a href="<?= site_url('pemakai/riwayatkondisi?id=' . $kend['idk'] . '') ?>"
                              class="btn btn-primary jedatombol"
-                             title="Riwayat Kondisi <?= $kend['no_polisi'] ?>">Riwayat
+                             title="Riwayat Kondisi <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                              Kondisi</a>
                          <a href="<?= site_url('pemakai/riwayatservis?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-warning jedatombol" title="Riwayat Servis <?= $kend['no_polisi'] ?>">Riwayat
+                             class="btn btn-warning jedatombol"
+                             title="Riwayat Servis <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                              Servis</a>
                          <a href="<?= site_url('pemakai/riwayatbbm?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-secondary jedatombol" title="Riwayat BBM <?= $kend['no_polisi'] ?>">Riwayat
+                             class="btn btn-secondary jedatombol"
+                             title="Riwayat BBM <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                              BBM</a>
                          <a href="<?= site_url('pemakai/riwayatpajak?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-danger jedatombol" title="Riwayat Pajak <?= $kend['no_polisi'] ?>">Riwayat
+                             class="btn btn-danger jedatombol"
+                             title="Riwayat Pajak <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                              Pajak</a>
-                         <a href="#" class="btn btn-success jedatombol" onClick="alert('Coming Soon')"
-                             title="Form Pengajuan <?= $kend['no_polisi'] ?>">Form Pengajuan</a>
+                         <a href="<?= site_url('pemakai/pengajuanservis?id=' . $kend['idk']) ?>"
+                             class="btn btn-success jedatombol"
+                             title="Pengajuan Servis <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Pengajuan
+                             Servis</a>
                      </div>
                  </div>
                  <?php else : ?>
@@ -100,55 +110,5 @@
  </div>
  <!-- /.content -->
 
- <div class="modal fade" id="modal-xl">
-     <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('home/prosestambahkondisi?id=' . $kend['idk'] . '') ?>"
-             enctype="multipart/form-data">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <h4 class="modal-title">Form Riwayat Kondisi</h4>
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                         <span aria-hidden="true">&times;</span>
-                     </button>
-                 </div>
-                 <div class="modal-body">
-                     <div class="row">
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                 <label>Foto Tampak Depan</label>
-                                 <input type="file" class="form-control" name="depan" required>
-                             </div>
-                         </div>
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                 <label>Foto Tampak Belakang</label>
-                                 <input type="file" class="form-control" name="blkg" required>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="row">
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                 <label>Foto Tampak Kiri</label>
-                                 <input type="file" class="form-control" name="kiri" required>
-                             </div>
-                         </div>
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                 <label>Foto Tampak Kanan</label>
-                                 <input type="file" class="form-control" name="kanan" required>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="modal-footer justify-content-between">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                     <button type="sumbit" class="btn btn-primary">Simpan</button>
-
-                 </div>
-         </form>
-     </div>
-     <!-- /.modal-content -->
- </div>
  <!-- /.modal-dialog -->
  </div>

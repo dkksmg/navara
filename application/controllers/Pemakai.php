@@ -787,4 +787,43 @@ class Pemakai extends CI_Controller
             redirect($_SERVER['HTTP_REFERER']);
         }
     }
+    public function pengajuanservis()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_riwayat_servis($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpengajuanservis($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['title'] = 'Form Pengajuan Servis Kendaraan Dinas';
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/servis/pengajuan', $data);
+            $this->load->view('pemakai/template/modal');
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
+        }
+    }
+    public function prosestambahpengajuanservis()
+    {
+        $idkend = $this->input->get('id');
+        if ($this->input->post()) {
+            $cektahun = $this->home_m->cek_data_pengajuan($idkend);
+            print_r($this->db->last_query());
+            var_dump($cektahun['status_pengajuan']);
+            die();
+            if ($cektahun != '') {
+                $this->session->set_flashdata('danger', 'Anda sudah menginput pajak untuk tahun ' . $this->input->post('tahun_pajak'));
+                redirect('pemakai/pengajuanservis?id=' . $idkend);
+            } else {
+                if ($this->home_m->tambahpengajuanservis($idkend)) {
+                    $this->session->set_flashdata('success', 'Tambah Pengajuan Servis Kendaraan Berhasil. Silakan Menunggu Proses Persetujuan dari Admin');
+                    redirect('pemakai/pengajuanservis?id=' . $idkend . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Pengajuan Servis Kendaraan gagal');
+                    redirect('pemakai/pengajuanservis?id=' . $idkend . '');
+                }
+            }
+        }
+    }
 }

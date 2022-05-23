@@ -11,7 +11,7 @@ class Home_m extends CI_Model
 
     public function data_kendaraan()
     {
-        if ($this->session->userdata('role') == 'Pemakai') :
+        if ($this->session->userdata('role') == 'Admin') :
             $data['user'] = $this->db
                 ->get_where('users', [
                     'id' => $this->session->userdata('id'),
@@ -20,6 +20,7 @@ class Home_m extends CI_Model
             $lokasi = $data['user']['wilayah'];
             $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
                 ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
+                ->join('users as us', 'us.id = riwayat_pemakai.id_user', 'left')
                 ->order_by('idk', 'asc')
                 ->group_start()
                 ->where(array('riwayat_pemakai.status' => 'aktif', 'riwayat_pemakai.lokasi_unit' => $lokasi))
@@ -27,8 +28,15 @@ class Home_m extends CI_Model
                 ->group_end()
                 ->get('kendaraan');
         else :
-            $query = $this->db->order_by('idk', 'ASC')
-                ->get('kendaraan');
+            $query = $this->db->order_by('kn.idk', 'ASC')
+                ->join('riwayat_pemakai as rp', 'kn.idk = rp.id_kendaraan', 'left')
+                ->join('users as us', 'us.id = rp.id_user', 'left')
+                ->where('kn.status', 'aktif')
+                ->group_start()
+                ->where(array('rp.status' => 'aktif'))
+                ->or_where('rp.status is null')
+                ->group_end()
+                ->get('kendaraan as kn');
         endif;
 
         if ($query->num_rows() > 0) {
@@ -109,6 +117,17 @@ class Home_m extends CI_Model
         $this->db->where('id_kendaraan', $id);
         $this->db->where('tahun', $tahun);
         $query = $this->db->get('riwayat_pajak');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_kendaraan($id = null)
+    {
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;
@@ -376,6 +395,20 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function data_riwayatpemakaibypilihanpemakai($id_nama_pemakai = null)
+    {
+        $this->db->join('kendaraan', 'riwayat_pemakai.id_kendaraan=kendaraan.idk');
+        $this->db->join('users', 'users.id=riwayat_pemakai.id_user');
+        $this->db->where('riwayat_pemakai.status', 'aktif');
+        $this->db->where('riwayat_pemakai.id_user', $id_nama_pemakai);
+        $query = $this->db->get('riwayat_pemakai');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
     public function data_riwayatservis($id = null)
     {
         $this->db->where('id_kendaraan', $id);
@@ -470,7 +503,7 @@ class Home_m extends CI_Model
         $q = $this->db->insert('kendaraan', $data);
         return $q;
     }
-    public function edit_kendaraan($id = null)
+    public function editKendaraanDinas($idk = null)
     {
 
         $data['no_polisi']          = $this->input->post('nopol');
@@ -485,11 +518,9 @@ class Home_m extends CI_Model
         $data['besar_cc']           = $this->input->post('besarcc');
         $data['masa_berlaku_stnk']  = date('Y-m-d', strtotime($this->input->post('tgl_stnk')));
 
-        $this->db->where('idk', $id);
-        $q = $this->db->update('kendaraan', $data);
+        $q = $this->db->where('idk', $idk)->update('kendaraan', $data);
         return $q;
     }
-
     public function tambahriwayatkendaraan($dpn = null, $blkg = null, $kiri = null, $kanan = null, $idk = null)
     {
         $data['foto_tampak_depan']      = $dpn;
@@ -742,5 +773,40 @@ class Home_m extends CI_Model
             }
             return $hasil;
         }
+    }
+    public function cek_data_pengajuan($idkend = null)
+    {
+        $this->db->where('id_kendaraan', $idkend);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function data_riwayatpengajuanservis($id = null)
+    {
+        $this->db->order_by('tgl_pengajuan', 'DESC');
+        $this->db->where('id_kendaraan', $id);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function tambahpengajuanservis($idkend = null)
+    {
+        $data['id_kendaraan'] = $idkend;
+        $data['tgl_pengajuan'] = date('Y-m-d');
+        $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+        $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+        $data['id_user'] = $this->session->userdata('id');
+        $data['status_pengajuan'] = 'Wait';
+
+        $q = $this->db->insert('riwayat_pengajuan_servis', $data);
+        return $q;
     }
 }

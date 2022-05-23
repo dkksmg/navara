@@ -17,6 +17,7 @@ class Home extends CI_Controller
         $data = [];
         $data['title'] = 'Data Kendaraan Dinas';
         $data['kendaraan'] = $this->home_m->data_kendaraan();
+        // print_r($this->db->last_query());
         $this->load->view('admin/template/header');
         $this->load->view('admin/kendaraan/dataKendaraan', $data);
         $this->load->view('admin/template/modal');
@@ -44,24 +45,35 @@ class Home extends CI_Controller
     public function edit_kendaraan()
     {
         check_level_admin();
-        $data = [];
-        $data['title'] = 'Edit Kendaraan Dinas';
         $id = $this->input->get('id');
-        $data['kend'] = $this->home_m->dataKendaraanByid($id);
+        $cek_id_kondisi = $this->home_m->cek_id_riwayat_kondisi($id);
+        if ($cek_id_kondisi != '') {
+            $data = [];
+            $data['title'] = 'Edit Kendaraan Dinas';
+            $data['kend'] = $this->home_m->dataKendaraanByid($id);
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/kendaraan/editkendaraandinas', $data);
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function proseseditkendaraandinas()
+    {
+        check_level_admin();
+        $idk = $this->input->get('id');
         if ($this->input->post()) {
-            if ($this->home_m->edit_kendaraan($id)) {
-                $this->session->set_flashdata('success', 'Update data Kendaraan Berhasil');
+            if ($this->home_m->editKendaraanDinas($idk)) {
+                $this->session->set_flashdata('success', 'Update Data Kendaraan Berhasil');
                 redirect('home');
             } else {
-                $this->session->set_flashdata('danger', 'Update data Kendaraan gagal');
+                $this->session->set_flashdata('danger', 'Update Data Kendaraan gagal');
             }
         }
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/tambahKendaraanDinas', $data);
-        $this->load->view('admin/template/footer');
     }
     public function hapus_data_kendaraan()
     {
+        check_level_admin();
         $id_kend = ($this->input->get('id'));
         if ($this->home_m->hapus_data_kendaraan($id_kend)) {
             $this->session->set_flashdata('success', 'Hapus Data Kendaraan Berhasil');
@@ -260,7 +272,7 @@ class Home extends CI_Controller
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['lu'] = $this->home_m->data_lokasiunit();
             $this->load->view('admin/template/header');
-            $this->load->view('admin/kendaraan/riwayatPemakai', $data);
+            $this->load->view('admin/pemakai/riwayatpemakai', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
@@ -882,9 +894,14 @@ class Home extends CI_Controller
         $nopol = $kend['no_polisi'];
         $id_kend = $kend['idk'];
         $nip = $this->input->post('nip');
-        $cekpemakai = $this->home_m->data_riwayatpemakaibynopolandstatus($id_kend);
-        if ($cekpemakai != '') {
+        $id_nama_pemakai = $this->input->post('nama');
+        $cekkendaraan = $this->home_m->data_riwayatpemakaibynopolandstatus($id_kend);
+        $cekpemakai = $this->home_m->data_riwayatpemakaibypilihanpemakai($id_nama_pemakai);
+        if ($cekkendaraan != '') {
             $this->session->set_flashdata('danger', 'Tambah Riwayat Pemakai gagal, Kendaraan sudah terpakai ');
+            redirect('home/riwayat_pemakai?id=' . $idk . '');
+        } else if ($cekpemakai != '') {
+            $this->session->set_flashdata('danger', 'Tambah Riwayat Pemakai gagal, Pemakai yang Anda inputkan sudah memiliki kendaraan aktif ');
             redirect('home/riwayat_pemakai?id=' . $idk . '');
         } else {
             if ($this->home_m->prosestambahPemakai($idk)) {
@@ -968,6 +985,7 @@ class Home extends CI_Controller
     }
     public function print_data_kendaraan()
     {
+        check_level_admin();
         $id = $this->input->get('id');
         $cek_id = $this->home_m->cek_id_riwayat_servis($id);
         if ($cek_id != '') {

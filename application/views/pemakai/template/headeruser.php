@@ -36,6 +36,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     .jedatombol {
         margin: 4px;
     }
+
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+    }
     </style>
 </head>
 
