@@ -1004,4 +1004,121 @@ class Home extends CI_Controller
             show_404();
         }
     }
+    public function pengajuan_servis()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_riwayat_servis($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpengajuanservis_admin($id);
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['title'] = 'Form Pengajuan Servis Kendaraan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/servis/pengajuan/pengajuanservis', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function editpengajuanservis()
+    {
+        $id_pen = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_pengajuan_servis($id_pen);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakaibyidpen($id_pen);
+            $data['title'] = 'Form Edit Pengajuan Servis Kendaraan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/servis/pengajuan/editpengajuanservis', $data);
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function prosestambahpengajuanservis()
+    {
+        $idkend = $this->input->get('id');
+        if ($this->input->post()) {
+            $cekpengajuan = $this->home_m->cek_data_pengajuan($idkend);
+            if ($cekpengajuan['status_pengajuan'] == 'Wait') {
+                $this->session->set_flashdata('danger', 'Anda sudah melakukan input pengajuan. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/pengajuan_servis?id=' . $idkend);
+            } else {
+                if ($this->home_m->tambahpengajuanservis($idkend)) {
+                    $this->session->set_flashdata('success', 'Tambah Pengajuan Servis Kendaraan Berhasil. Silakan Menunggu Proses Persetujuan dari Admin');
+                    redirect('home/pengajuan_servis?id=' . $idkend . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Pengajuan Servis Kendaraan gagal');
+                    redirect('home/pengajuan_servis?id=' . $idkend . '');
+                }
+            }
+        }
+    }
+    public function proseseditpengajuanservis()
+    {
+        $id_pen = $this->input->get('id');
+        $idkend = $this->input->get('id_kend');
+        if ($this->input->post()) {
+            if ($this->home_m->editpengajuanservis($id_pen)) {
+                $this->session->set_flashdata('success', 'Edit Pengajuan Servis Kendaraan Berhasil. Silakan Menunggu Proses Persetujuan dari Admin');
+                redirect('home/pengajuan_servis?id=' . $idkend . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Pengajuan Servis Kendaraan gagal');
+                redirect('home/pengajuan_servis?id=' . $idkend . '');
+            }
+        }
+    }
+    public function approve_pengajuan()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatpengajuanbyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->approve_pengajuan($id)) {
+            $this->session->set_flashdata('success', 'Pengajuan Servis Berhasil Disetujui');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal Menyetujui Pengajuan Servis');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        }
+    }
+    public function reject_pengajuan()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatpengajuanbyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->reject_pengajuan($id)) {
+            $this->session->set_flashdata('success', 'Pengajuan Servis Berhasil Ditolak');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal menolak Pengajuan Servis');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        }
+    }
+    public function wait_pengajuan()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatpengajuanbyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->wait_pengajuan($id)) {
+            $this->session->set_flashdata('success', 'Pengajuan Servis Berhasil Diubah menjadi menunggu');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal menolak mengubah Pengajuan Servis');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        }
+    }
+    public function deletepengajuanservis()
+    {
+        $id = ($this->input->get('id'));
+        $kend = $this->home_m->data_riwayatpengajuanbyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->hapus_data_pengajuan($id)) {
+            $this->session->set_flashdata('success', 'Hapus Data Pengajuan Berhasil');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Data Pengajuan gagal');
+            redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        }
+    }
 }

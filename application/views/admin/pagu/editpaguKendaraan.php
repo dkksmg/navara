@@ -24,22 +24,37 @@
                             <tr>
                                 <th>ID Aset</th>
                                 <th>:</th>
-                                <th><?= $pagu['id_assets'] ?></th>
+                                <th><?= $kend['id_assets'] ?></th>
                             </tr>
                             <tr>
                                 <th>No. Polisi</th>
                                 <th>:</th>
-                                <th><?= $pagu['no_polisi'] ?></th>
+                                <th><?= strtoupper($kend['no_polisi']) ?></th>
                             </tr>
                             <tr>
                                 <th>Jenis</th>
                                 <th>:</th>
-                                <th><?= $pagu['jenis'] ?></th>
+                                <th><?= strtoupper($kend['jenis']) ?></th>
                             </tr>
                             <tr>
                                 <th>Merk</th>
                                 <th>:</th>
-                                <th><?= $pagu['merk'] ?></th>
+                                <th><?= strtoupper($kend['merk']) ?></th>
+                            </tr>
+                            <tr>
+                                <th>Tipe</th>
+                                <th>:</th>
+                                <th><?= strtoupper($kend['tipe']) ?></th>
+                            </tr>
+                            <tr>
+                                <th>CC</th>
+                                <th>:</th>
+                                <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                            </tr>
+                            <tr>
+                                <th>Bahan Bakar</th>
+                                <th>:</th>
+                                <th><?= strtoupper($kend['jenis_bb']) ?></th>
                             </tr>
                         </table>
                     </div>
@@ -63,7 +78,9 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Total Pagu <?= $pagu['jenis_pagu'] ?></label>
-                                    <input type="number" class="form-control" name="pagu" required placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>" value="<?= $pagu['pagu_awal'] ?>">
+                                    <input type="number" class="form-control" name="pagu" required
+                                        placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>"
+                                        value="<?= $pagu['pagu_awal'] ?>">
                                 </div>
                             </div>
                         </div>

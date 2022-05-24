@@ -101,6 +101,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         border-top: 1px solid #000;
     }
 
+    #inner {
+        margin: 0 auto;
+    }
+
     /* .table-content {
         border-collapse: collapse;
         border-spacing: 0;
@@ -136,5 +140,4 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </style>
 </head>
 
-<body class="hold-transition layout-top-nav">
-    <div class="wrapper">
+<body>

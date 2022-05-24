@@ -73,10 +73,6 @@
                              class="btn btn-primary jedatombol"
                              title="Riwayat Kondisi <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                              Kondisi</a>
-                         <a href="<?= site_url('pemakai/riwayatservis?id=' . $kend['idk'] . '') ?>"
-                             class="btn btn-warning jedatombol"
-                             title="Riwayat Servis <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
-                             Servis</a>
                          <a href="<?= site_url('pemakai/riwayatbbm?id=' . $kend['idk'] . '') ?>"
                              class="btn btn-secondary jedatombol"
                              title="Riwayat BBM <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
@@ -85,6 +81,10 @@
                              class="btn btn-danger jedatombol"
                              title="Riwayat Pajak <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                              Pajak</a>
+                         <a href="<?= site_url('pemakai/riwayatservis?id=' . $kend['idk'] . '') ?>"
+                             class="btn btn-warning jedatombol"
+                             title="Riwayat Servis <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
+                             Servis</a>
                          <a href="<?= site_url('pemakai/pengajuanservis?id=' . $kend['idk']) ?>"
                              class="btn btn-success jedatombol"
                              title="Pengajuan Servis <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Pengajuan

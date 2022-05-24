@@ -72,7 +72,7 @@
                      <div class="card-header">
                          <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
                              data-target="#modal-xl">
-                             Tambah Riwayat Pajak
+                             Tambah Pengajuan Servis
                          </button>
                      </div>
                      <div class="card-body">
@@ -81,9 +81,12 @@
                                  <tr>
                                      <th class="text-center">No</th>
                                      <th class="text-center">Aksi</th>
-                                     <th class="text-center">Tanggal Pencatatan</th>
-                                     <th class="text-center">Tahun</th>
-                                     <th class="text-center">Total Pajak</th>
+                                     <th class="text-center">Tanggal Pengajuan</th>
+                                     <th class="text-center">Bengkel Tujuan</th>
+                                     <th class="text-center">Keluhan</th>
+                                     <th class="text-center">Servis</th>
+                                     <th class="text-center">Lain-Lain</th>
+                                     <th class="text-center">Status Pengajuan</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -93,18 +96,50 @@
                                  <tr>
                                      <td class="text-center"><?= $no++; ?></td>
                                      <td class="text-center">
-                                         <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-warning jedatombol"
-                                             title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i
+                                         <?php if ($value['status_pengajuan'] == 'No') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"
+                                             title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pencil"></i></a>
-                                         <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-danger jedatombol"><i
-                                                 class="fas fa-trash"></i></a>
+                                         <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
+                                         <a onclick="cetakConfirm('<?= site_url('pemakai/cetakpengajuanservis?id=' . $value['id_pengajuan'] . '&id_kend=' . $value['id_kendaraan'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-primary jedatombol"
+                                             title="Cetak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fa-solid fa-print"></i></a>
+                                         <?php else : ?>
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"
+                                             title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fas fa-pencil"></i></a>
+                                         <?php endif; ?>
                                      </td>
-                                     <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
-                                     <td class="text-center"><?= $value['tahun'] ?></td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
+                                     </td>
+                                     <td class="text-center"><?= $value['bengkel_tujuan'] ?></td>
+                                     <td class="text-center"><?php if ($value['keluhan'] == '') : ?> -
+                                         <?php else : ?><?= $value['keluhan'] ?><?php endif ?></td>
+                                     <td class="text-center"><?php if ($value['service'] == '') : ?> -
+                                         <?php else : ?><?= $value['service'] ?><?php endif ?></td>
+                                     <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
+                                         <?php else : ?><?= $value['lain_lain'] ?><?php endif ?>
+                                     </td>
                                      <td class="text-center">
-                                         <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?></td>
+                                         <?php if ($value['status_pengajuan'] == 'No') : ?>
+                                         Ditolak <br><i style="color:red;font-size:12px">Jika ingin melanjutkan
+                                             pengajuan. Silakan
+                                             melakukan pengajuan ulang</i>
+                                         <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
+                                         Disetujui
+                                         <br><i style="color:green;font-size:12px">Silakan mengisi form Riwayat Servis
+                                             jika servis telah selesai. <a
+                                                 href="<?php echo base_url('pemakai/riwayatservis?id=' . $kend['idk']); ?>">
+                                                 Klik
+                                                 disini</a></i>
+                                         <?php else : ?>
+                                         Sedang diverifikasi
+                                         <?php endif; ?>
+
+                                     </td>
                                  </tr>
                                  <?php }
                                     } ?>
@@ -119,13 +154,13 @@
  </div>
  <!-- /.content -->
 
- <div class="modal fade" id="modal-xl">
+ <div class=" modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('home/prosestambahpajak?id=' . $kend['idk'] . '') ?>"
+         <form method="post" action="<?= site_url('pemakai/prosestambahpengajuanservis?id=' . $kend['idk'] . '') ?>"
              enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
-                     <h4 class="modal-title">Form Riwayat Pajak</h4>
+                     <h4 class="modal-title">Form Pengajuan Servis</h4>
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                          <span aria-hidden="true">&times;</span>
                      </button>
@@ -134,25 +169,30 @@
                      <div class="row">
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Tahun</label>
-                                 <?php
-                                    $year_start  = 2000;
-                                    $year_end = date('Y') + 20;
-                                    $user_selected_year = date('Y');
-                                    echo '<select id="year" required class="form-control" name="tahun_pajak">' . "\n";
-                                    for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
-                                        $selected = ($user_selected_year == $i_year ? ' selected' : '');
-                                        echo '<option value="' . $i_year . '"' . $selected . '>' . $i_year . '</option>' . "\n";
-                                    }
-                                    echo '</select>' . "\n";
-                                    ?>
+                                 <label>Nama Bengkel</label>
+                                 <input type="text" placeholder="Masukkan Bengkel Tujuan" class="form-control"
+                                     name="nama_bengkel" required>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Total Pajak</label>
-                                 <input type="number" placeholder="Masukkan Total Pajak" class="form-control"
-                                     name="total_pajak">
+                                 <label>Keluhan</label>
+                                 <textarea type="text" placeholder="Masukkan Keluhan Kendaraan Yang Anda Gunakan"
+                                     class="form-control" name="keluhan_kendaraan" required></textarea>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                 <label>Servis</label>
+                                 <textarea type="text" placeholder="Masukkan Servis Kendaraan yang diinginkan"
+                                     class="form-control" name="servis_kendaraan" required></textarea>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                 <label>Lain - Lain</label>
+                                 <textarea type="text" placeholder="" class="form-control"
+                                     name="lain_lain_kendaraan"></textarea>
                              </div>
                          </div>
                      </div>

@@ -31,8 +31,9 @@
                          <div class="form-group row">
                              <label for="nama_user" class="col-sm-2 col-form-label">Nama </label>
                              <div class="col-sm-10">
-                                 <input type="name" class="form-control" name="nama_user" value="<?= $user['name'] ?>"
-                                     placeholder="Nama" disabled readonly>
+                                 <input type="name" class="form-control" name="nama_user" value="<?= $user['name'] ?>" f
+                                     placeholder="Nama" <?php if ($this->session->userdata('role') == 'Superadmin') : ?>
+                                     <?php else : ?>disabled readonly<?php endif; ?>>
                              </div>
                          </div>
                          <div class="form-group row">

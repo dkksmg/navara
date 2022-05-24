@@ -32,14 +32,16 @@ class Pemakai_kendaraan_model extends CI_Model
   // ------------------------------------------------------------------------
   public function dataPemakaiKendaraanByStatusPemakai()
   {
-    if ($this->session->userdata('role') == 'Pemakai') :
+    if ($this->session->userdata('role') == 'Admin') :
       $data['user'] = $this->db
         ->get_where('users', [
           'id' => $this->session->userdata('id'),
         ])
         ->row_array();
       $lokasi = $data['user']['wilayah'];
-      $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+      $query = $this->db
+        ->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+        ->join('users', 'users.id=riwayat_pemakai.id_user', 'left')
         ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
         ->order_by('idk', 'asc')
         ->group_start()
@@ -48,7 +50,9 @@ class Pemakai_kendaraan_model extends CI_Model
         ->group_end()
         ->get('kendaraan');
     else :
-      $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+      $query = $this->db
+        ->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+        ->join('users', 'users.id=riwayat_pemakai.id_user', 'left')
         ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
         ->order_by('idk', 'asc')
         ->group_start()

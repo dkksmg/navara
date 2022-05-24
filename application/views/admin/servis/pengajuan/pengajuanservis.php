@@ -84,7 +84,10 @@
                                      <th class="text-center">Tanggal Pengajuan</th>
                                      <th class="text-center">Bengkel Tujuan</th>
                                      <th class="text-center">Keluhan</th>
+                                     <th class="text-center">Servis</th>
+                                     <th class="text-center">Lain-Lain</th>
                                      <th class="text-center">Status Pengajuan</th>
+                                     <th class="text-center">Update By</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -94,38 +97,67 @@
                                  <tr>
                                      <td class="text-center"><?= $no++; ?></td>
                                      <td class="text-center">
-                                         <?php if ($value['status_pengajuan'] == 'No') : ?>
-                                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-warning jedatombol disabled"
-                                             title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
-                                                 class="fas fa-pencil"></i></a>
-                                         <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
-                                         <a onclick="cetakConfirm('<?= site_url('pemakai/cetakpengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-primary jedatombol"
-                                             title="Cetak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
-                                                 class="fa-solid fa-print"></i></a>
-                                         <?php else : ?>
-                                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
+                                         <a onclick="deleteConfirm('<?= site_url('home/deletepengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-danger jedatombol"
+                                             title="Delete Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fas fa-trash"></i></a>
+                                         <a onclick="editConfirm('<?= site_url('home/editpengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
                                              href="#" class="btn btn-sm btn-warning jedatombol"
                                              title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pencil"></i></a>
+                                         <a onclick="cetakConfirm('<?= site_url('home/cetakpengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
+                                             href="#"
+                                             class="btn btn-sm btn-primary jedatombol <?php if ($value['status_pengajuan'] == 'Wait' || $value['status_pengajuan'] == 'No') : ?> disabled <?php endif; ?>"
+                                             title="Cetak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fa-solid fa-print"></i></a>
+                                         <?php if ($value['status_pengajuan'] == 'No' || $value['status_pengajuan'] == 'Wait') : ?>
+                                         <a href="#"
+                                             onclick="approveConfirm('<?= site_url('home/approve_pengajuan?id=' . $value['id_pengajuan'] . '') ?>')"
+                                             class="btn btn-sm btn-success jedatombol"
+                                             title="Setujui Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                                             <i class="fa-solid fa-badge-check"></i></a>
+                                         <a href="#"
+                                             onclick="waitConfirm('<?= site_url('home/wait_pengajuan?id=' . $value['id_pengajuan'] . '') ?>')"
+                                             class="btn btn-sm btn-dark jedatombol <?php if ($value['status_pengajuan'] == 'Wait') : ?> disabled <?php endif; ?>"
+                                             title="Set Wait Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                                             <i class="fa-solid fa-circle-pause"></i></a>
+                                         <?php else : ?>
+                                         <a href="#"
+                                             onclick="rejectConfirm('<?= site_url('home/reject_pengajuan?id=' . $value['id_pengajuan'] . '') ?>')"
+                                             class="btn btn-sm btn-danger jedatombol"
+                                             title="Tolak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fa-solid fa-circle-xmark"></i></a>
+                                         <a href="#"
+                                             onclick="waitConfirm('<?= site_url('home/wait_pengajuan?id=' . $value['id_pengajuan'] . '') ?>')"
+                                             class="btn btn-sm btn-dark jedatombol"
+                                             title="Set Wait Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                                             <i class="fa-solid fa-circle-pause"></i></a>
                                          <?php endif; ?>
                                      </td>
                                      <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
                                      </td>
                                      <td class="text-center"><?= $value['bengkel_tujuan'] ?></td>
-                                     <td class="text-center"><?= $value['keluhan'] ?></td>
+                                     <td class="text-center"><?php if ($value['keluhan'] == '') : ?> -
+                                         <?php else : ?><?= $value['keluhan'] ?><?php endif ?></td>
+                                     <td class="text-center"><?php if ($value['service'] == '') : ?> -
+                                         <?php else : ?><?= $value['service'] ?><?php endif ?></td>
+                                     <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
+                                         <?php else : ?><?= $value['lain_lain'] ?><?php endif ?>
+                                     </td>
                                      <td class="text-center">
                                          <?php if ($value['status_pengajuan'] == 'No') : ?>
-                                         Ditolak <br><i style="color:red;font-size:12px">Jika ingin melanjutkan
-                                             pengajuan. Silakan
-                                             melakukan pengajuan ulang</i>
+                                         Ditolak oleh <?= $value['name'] ?><br><i
+                                             style="color:red;font-size:12px">Pemakai dapat melakukan
+                                             pengajuan ulang</i>
                                          <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
-                                         Disetujui
+                                         Disetujui oleh <?= $value['name'] ?>
                                          <?php else : ?>
-                                         Sedang Ditinjau
+                                         Perlu dicek <br><i style="color:red"
+                                             class="fa-solid fa-triangle-exclamation"></i>
                                          <?php endif; ?>
-
+                                     </td>
+                                     <td class="text-center"><?php if ($value['name'] == '') : ?> -
+                                         <?php else : ?><?= $value['name'] ?><?php endif; ?>
                                      </td>
                                  </tr>
                                  <?php }
@@ -143,7 +175,7 @@
 
  <div class="modal fade" id="modal-xl">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('pemakai/prosestambahpengajuanservis?id=' . $kend['idk'] . '') ?>"
+         <form method="post" action="<?= site_url('home/prosestambahpengajuanservis?id=' . $kend['idk'] . '') ?>"
              enctype="multipart/form-data">
              <div class="modal-content">
                  <div class="modal-header">
@@ -166,6 +198,20 @@
                                  <label>Keluhan</label>
                                  <textarea type="text" placeholder="Masukkan Keluhan Kendaraan Yang Anda Gunakan"
                                      class="form-control" name="keluhan_kendaraan"></textarea>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                 <label>Servis</label>
+                                 <textarea type="text" placeholder="Masukkan Servis Kendaraan yang diinginkan"
+                                     class="form-control" name="servis_kendaraan"></textarea>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                 <label>Lain - Lain</label>
+                                 <textarea type="text" placeholder="" class="form-control"
+                                     name="lain_lain_kendaraan"></textarea>
                              </div>
                          </div>
                      </div>

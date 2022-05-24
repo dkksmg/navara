@@ -21,3 +21,15 @@ function cetakConfirm(url) {
   $("#btn-cetak").attr("href", url);
   $("#cetakModal").modal();
 }
+function approveConfirm(url) {
+  $("#btn-approve").attr("href", url);
+  $("#approveModal").modal();
+}
+function rejectConfirm(url) {
+  $("#btn-reject").attr("href", url);
+  $("#rejectModal").modal();
+}
+function waitConfirm(url) {
+  $("#btn-wait").attr("href", url);
+  $("#waitModal").modal();
+}

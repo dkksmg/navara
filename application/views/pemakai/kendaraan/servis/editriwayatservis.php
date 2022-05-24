@@ -22,22 +22,37 @@
                                 <tr>
                                     <th>ID Aset</th>
                                     <th>:</th>
-                                    <th><?= $servis['id_assets'] ?></th>
+                                    <th><?= $kend['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
                                     <th>:</th>
-                                    <th><?= $servis['no_polisi'] ?></th>
+                                    <th><?= strtoupper($kend['no_polisi']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= $servis['jenis'] ?></th>
+                                    <th><?= strtoupper($kend['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($servis['merk']) ?></th>
+                                    <th><?= strtoupper($kend['merk']) ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Tipe</th>
+                                    <th>:</th>
+                                    <th><?= strtoupper($kend['tipe']) ?></th>
+                                </tr>
+                                <tr>
+                                    <th>CC</th>
+                                    <th>:</th>
+                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                </tr>
+                                <tr>
+                                    <th>Bahan Bakar</th>
+                                    <th>:</th>
+                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
                                 </tr>
                             </table>
                         </div>

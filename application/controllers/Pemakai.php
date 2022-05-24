@@ -790,14 +790,14 @@ class Pemakai extends CI_Controller
     public function pengajuanservis()
     {
         $id = $this->input->get('id');
-        $cek_id = $this->home_m->cek_id_riwayat_servis($id);
+        $cek_id = $this->home_m->cek_id_riwayat_pengajuan_servis($id);
         if ($cek_id != '') {
             $data = [];
-            $data['rp'] = $this->home_m->data_riwayatpengajuanservis($id);
+            $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakai($id);
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['title'] = 'Form Pengajuan Servis Kendaraan Dinas';
             $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/pengajuan', $data);
+            $this->load->view('pemakai/kendaraan/servis/pengajuan/pengajuanservis', $data);
             $this->load->view('pemakai/template/modal');
             $this->load->view('pemakai/template/footeruser');
         } else {
@@ -808,12 +808,9 @@ class Pemakai extends CI_Controller
     {
         $idkend = $this->input->get('id');
         if ($this->input->post()) {
-            $cektahun = $this->home_m->cek_data_pengajuan($idkend);
-            print_r($this->db->last_query());
-            var_dump($cektahun['status_pengajuan']);
-            die();
-            if ($cektahun != '') {
-                $this->session->set_flashdata('danger', 'Anda sudah menginput pajak untuk tahun ' . $this->input->post('tahun_pajak'));
+            $cekpengajuan = $this->home_m->cek_data_pengajuan($idkend);
+            if ($cekpengajuan['status_pengajuan'] == 'Wait') {
+                $this->session->set_flashdata('danger', 'Anda sudah melakukan input pengajuan. Silakan menunggu proses verifikasi oleh Admin');
                 redirect('pemakai/pengajuanservis?id=' . $idkend);
             } else {
                 if ($this->home_m->tambahpengajuanservis($idkend)) {
@@ -824,6 +821,56 @@ class Pemakai extends CI_Controller
                     redirect('pemakai/pengajuanservis?id=' . $idkend . '');
                 }
             }
+        }
+    }
+    public function editpengajuanservis()
+    {
+        $id_pen = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_edit_riwayat_pengajuan_servis($id_pen);
+        if ($cek_id != '') {
+            $data = [];
+            $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakaibyidpen($id_pen);
+            $data['title'] = 'Form Edit Pengajuan Servis Kendaraan Dinas';
+            $this->load->view('pemakai/template/headeruser');
+            $this->load->view('pemakai/kendaraan/servis/pengajuan/editpengajuanservis', $data);
+            $this->load->view('pemakai/template/footeruser');
+        } else {
+            show_404();
+        }
+    }
+    public function proseseditpengajuanservis()
+    {
+        $id_pen = $this->input->get('id');
+        $idkend = $this->input->get('id_kend');
+        if ($this->input->post()) {
+            if ($this->home_m->editpengajuanservis($id_pen)) {
+                $this->session->set_flashdata('success', 'Edit Pengajuan Servis Kendaraan Berhasil. Silakan Menunggu Proses Persetujuan dari Admin');
+                redirect('pemakai/pengajuanservis?id=' . $idkend . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Pengajuan Servis Kendaraan gagal');
+                redirect('pemakai/pengajuanservis?id=' . $idkend . '');
+            }
+        }
+    }
+    public function cetakpengajuanservis()
+    {
+        $id_pengajuan = $this->input->get('id');
+        $id_kend = $this->input->get('id_kend');
+        $cek_id = $this->home_m->cek_id_riwayat_pengajuan($id_pengajuan, $id_kend);
+        if ($cek_id != '') {
+            if ($cek_id['status_pengajuan'] == 'Yes') {
+                $data = [];
+                $data['title'] = "Pengajuan Servis Kendaraan Dinas";
+                $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id_kend);
+                $data['pengajuan'] = $this->home_m->data_riwayatpengajuanbyidrp($id_pengajuan);
+                $this->load->view('pemakai/template/header_print');
+                $this->load->view('pemakai/kendaraan/servis/cetakpengajuan', $data);
+                $this->load->view('pemakai/template/footer_print');
+            } else {
+                show_404();
+            }
+        } else {
+            show_404();
         }
     }
 }

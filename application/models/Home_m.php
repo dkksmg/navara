@@ -158,6 +158,29 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function cek_id_riwayat_pengajuan_servis($id = null)
+    {
+        $this->db->join('riwayat_pengajuan_servis', 'riwayat_pengajuan_servis.id_kendaraan = kendaraan.idk', 'left');
+        $this->db->where('idk', $id);
+        $query = $this->db->get('kendaraan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_edit_riwayat_pengajuan_servis($id_pen = null)
+    {
+        $this->db->where('id_pengajuan', $id_pen);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
     public function cek_id_riwayat_pemakai($id = null)
     {
         $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left');
@@ -267,6 +290,19 @@ class Home_m extends CI_Model
     {
         $this->db->where('id_ps', $id);
         $query = $this->db->get('pagu_service');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_id_riwayat_pengajuan($id_pengajuan = null, $id_kend = null)
+    {
+        $this->db->join('riwayat_pengajuan_servis', 'riwayat_pengajuan_servis.id_kendaraan = kendaraan.idk', 'left');
+        $this->db->where('id_pengajuan', $id_pengajuan);
+        $this->db->where('id_kendaraan', $id_kend);
+        $query = $this->db->get('kendaraan');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;
@@ -776,7 +812,7 @@ class Home_m extends CI_Model
     }
     public function cek_data_pengajuan($idkend = null)
     {
-        $this->db->where('id_kendaraan', $idkend);
+        $this->db->limit('1')->order_by('id_pengajuan', 'DESC')->where('id_kendaraan', $idkend);
         $query = $this->db->get('riwayat_pengajuan_servis');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -785,14 +821,38 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
-    public function data_riwayatpengajuanservis($id = null)
+    public function data_riwayatpengajuanservis_pemakai($id = null)
     {
-        $this->db->order_by('tgl_pengajuan', 'DESC');
+        $this->db->order_by('id_pengajuan', 'DESC');
         $this->db->where('id_kendaraan', $id);
         $query = $this->db->get('riwayat_pengajuan_servis');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function data_riwayatpengajuanservis_admin($id = null)
+    {
+        $this->db->join('users', 'users.id = riwayat_pengajuan_servis.id_admin', 'left');
+        $this->db->order_by('id_pengajuan', 'DESC');
+        $this->db->where('id_kendaraan', $id);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function data_riwayatpengajuanservis_pemakaibyidpen($id_pen = null)
+    {
+        $this->db->join('kendaraan', 'kendaraan.idk=riwayat_pengajuan_servis.id_kendaraan')->where('id_pengajuan', $id_pen);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
             }
             return $hasil;
         }
@@ -803,10 +863,67 @@ class Home_m extends CI_Model
         $data['tgl_pengajuan'] = date('Y-m-d');
         $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
         $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+        $data['service'] = $this->input->post('servis_kendaraan');
+        $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
         $data['id_user'] = $this->session->userdata('id');
         $data['status_pengajuan'] = 'Wait';
+        // $data['id_admin'] = '1'; //set default id admin ketika tambah pengajuan servis
 
         $q = $this->db->insert('riwayat_pengajuan_servis', $data);
+        return $q;
+    }
+    public function editpengajuanservis($id_pen = null)
+    {
+        $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+        $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+        $data['service'] = $this->input->post('servis_kendaraan');
+        $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
+        $data['id_user'] = $this->session->userdata('id');
+
+        $q = $this->db->where('id_pengajuan', $id_pen)->update('riwayat_pengajuan_servis', $data);
+        return $q;
+    }
+    public function data_riwayatpengajuanbyidrp($id = null)
+    {
+
+        $this->db->join('users', 'users.id= riwayat_pengajuan_servis.id_user')->where('id_pengajuan', $id);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function reject_pengajuan($id = null)
+    {
+
+        $data['status_pengajuan'] = "No";
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_pengajuan', $id);
+        $q = $this->db->update('riwayat_pengajuan_servis', $data);
+        return $q;
+    }
+    public function approve_pengajuan($id = null)
+    {
+        $data['status_pengajuan'] = "Yes";
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_pengajuan', $id);
+        $q = $this->db->update('riwayat_pengajuan_servis', $data);
+        return $q;
+    }
+    public function wait_pengajuan($id = null)
+    {
+        $data['status_pengajuan'] = "Wait";
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_pengajuan', $id);
+        $q = $this->db->update('riwayat_pengajuan_servis', $data);
+        return $q;
+    }
+    public function hapus_data_pengajuan($id = null)
+    {
+        $this->db->where('id_pengajuan', $id);
+        $q = $this->db->delete('riwayat_pengajuan_servis');
         return $q;
     }
 }

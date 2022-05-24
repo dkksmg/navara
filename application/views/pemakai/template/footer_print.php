@@ -7,19 +7,14 @@ footer {
 }
 </style>
 <!-- Main Footer -->
-<footer class="main-footer">
+<footer>
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-        CATDKK
+        <i style="font-size:11px"><b>Generate on Navara : <?php date_default_timezone_set('Asia/Jakarta');
+                                                            echo date('d-m-Y H:i:s') ?></i></b>
     </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2021 - <script>
-        document.write(new Date().getFullYear())
-        </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
-            SEMARANG</a>.</strong> All rights reserved.
 </footer>
-</div>
-<!-- ./wrapper -->
+
 
 <!-- REQUIRED SCRIPTS -->
 
@@ -58,33 +53,6 @@ footer {
 <script src="<?= base_url('assets/admin/') ?>dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <!-- <script src="<?= base_url('assets/admin/') ?>dist/js/demo.js"></script> -->
-<script type="text/javascript">
-$(document).ready(function() {
-    var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 8000
-    });
-    <?php if ($this->session->flashdata('success') != '') { ?>
-    pesansukses('success', ' <?= $this->session->flashdata('success') ?>');
-    <?php } ?>
-    <?php if ($this->session->flashdata('warning') != '') { ?>
-    pesansukses('warning', ' <?= $this->session->flashdata('warning') ?>');
-    <?php } ?>
-    <?php if ($this->session->flashdata('danger') != '') { ?>
-    pesansukses('error', ' <?= $this->session->flashdata('danger') ?>');
-    <?php } ?>
-
-    function pesansukses(status, message) {
-        console.log(status)
-        Toast.fire({
-            icon: status,
-            title: message
-        })
-    }
-});
-</script>
 <script>
 $(function() {
     $('.example').DataTable({
@@ -97,75 +65,7 @@ $(function() {
     });
     $('.example2').DataTable({});
 });
-</script>
-<script>
-$(document).ready(function() {
-    $('.pilihtanggal').datepicker({
-        dateFormat: 'dd-mm-yy',
-        changeYear: true,
-        changeMonth: true,
-        yearRange: '1970:+20'
-    });
-});
-</script>
-<script>
-$(".container-foto").css({
-    'position': 'absolute',
-    'top': '0px',
-    'display': 'none',
-    'width': '100%',
-    'height': 'auto',
-    // 'background': 'rgba(0,0,0,0.1)',
-});
-
-$(".popup").css({
-    'position': 'relative',
-    'top': '-250px',
-    'left': '150px',
-    'bottom': '150px',
-    'width': '500px',
-    'margin': 'auto',
-    'border': '10px solid grey',
-    'z-index': '10000',
-    'background': 'white'
-});
-$(".popup-kondisi").css({
-    'position': 'relative',
-    'top': '150px',
-    'left': '50px',
-    'bottom': '150px',
-    'width': '500px',
-    'margin': 'auto',
-    'border': '10px solid grey',
-    'z-index': '10000',
-    'background': 'white'
-});
-
-$("#close").css({
-    'position': 'absolute',
-    'top': '-15px',
-    'right': '-15px',
-    'font-size': '20px'
-});
-// Show
-
-$(".gallery img").click(function() {
-
-    $(".container-foto").fadeIn("slow");
-
-    var url = $(this).attr('src');
-
-    $(".imageShow").html('<img src="' + url + '">');
-
-    $(".imageShow img").css({
-        'width': '100%'
-    });
-})
-// Close
-
-$("#close").click(function() {
-    $(".container-foto").fadeOut("slow");
-})
+window.print();
 </script>
 </body>
 
