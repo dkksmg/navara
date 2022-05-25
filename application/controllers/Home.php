@@ -286,10 +286,11 @@ class Home extends CI_Controller
         if ($cek_id != '') {
             $data = [];
             $data['value'] = $this->home_m->data_pemakaibyid($id);
+            $data['pemakai'] = $this->home_m->listdata_pemakai();
             $data['lu'] = $this->home_m->data_lokasiunit();
             $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
             $this->load->view('admin/template/header');
-            $this->load->view('admin/kendaraan/editPemakai', $data);
+            $this->load->view('admin/pemakai/editPemakai', $data);
             $this->load->view('admin/template/footer');
         } else {
             show_404();

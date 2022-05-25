@@ -74,7 +74,8 @@
                                      <td class="text-center"><?= strtoupper($value['no_polisi']) ?></td>
                                      <td class="text-center"><?php if ($value['name'] == null) : ?> -
                                          <?php else : ?><?= $value['name'] ?><?php endif ?></td>
-                                     <td class="text-center">Rp. <?= number_format($value['pagu_awal'], 2, ',', '.'); ?>
+                                     <td class="text-center">Rp.
+                                         <?= number_format((float)$value['pagu_awal'], 2, ',', '.')  ?>
                                      </td>
                                  </tr>
                                  <?php }

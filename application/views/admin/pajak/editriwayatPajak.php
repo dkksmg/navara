@@ -22,37 +22,37 @@
                                 <tr>
                                     <th>ID Aset</th>
                                     <th>:</th>
-                                    <th><?= $kend['id_assets'] ?></th>
+                                    <th><?= $value['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['no_polisi']) ?></th>
+                                    <th><?= strtoupper($value['no_polisi']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis']) ?></th>
+                                    <th><?= strtoupper($value['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['merk']) ?></th>
+                                    <th><?= strtoupper($value['merk']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Tipe</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['tipe']) ?></th>
+                                    <th><?= strtoupper($value['tipe']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                    <th><?= strtoupper($value['besar_cc']) ?> CC</th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                                    <th><?= strtoupper($value['jenis_bb']) ?></th>
                                 </tr>
                             </table>
                         </div>

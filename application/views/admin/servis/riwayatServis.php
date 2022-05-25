@@ -85,6 +85,7 @@
                                      <th class="text-center">Bengkel Service</th>
                                      <th class="text-center">Keluhan</th>
                                      <th class="text-center">Perbaikan</th>
+                                     <th class="text-center">Lain-Lain</th>
                                      <th class="text-center" width="80px">Total Biaya</th>
                                      <th class="text-center">Foto Service</th>
                                      <th class="text-center">Foto Nota</th>
@@ -120,6 +121,7 @@
                                      <td class="text-center"><?= $value['lokasi'] ?></td>
                                      <td><?= $value['keluhan'] ?></td>
                                      <td><?= $value['perbaikan'] ?></td>
+                                     <td><?= $value['lain_lain'] ?></td>
                                      <td class="text-left">
                                          <?= "Rp. " . number_format($value['total_biaya'], 2, ',', '.'); ?></td>
                                      <td class="text-center">
@@ -234,19 +236,24 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Keluhan</label>
-                                 <input type="text" class="form-control" name="keluhan" placeholder="Keluhan Kendaraan"
-                                     required>
+                                 <textarea class="form-control" name="keluhan" placeholder="Keluhan Kendaraan"
+                                     required></textarea>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Perbaikan</label>
-                                 <input type="text" class="form-control" name="perbaikan"
-                                     placeholder="Perbaikan Kendaraan" required>
+                                 <textarea class="form-control" name="perbaikan" placeholder="Perbaikan Kendaraan"
+                                     required></textarea>
                              </div>
                          </div>
-                     </div>
-                     <div class="row">
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                 <label>Lain Lain</label>
+                                 <textarea class="form-control" name="lain_lain"
+                                     placeholder="Tambahan/Lain-Lain"></textarea>
+                             </div>
+                         </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Total Biaya</label>

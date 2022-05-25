@@ -105,7 +105,7 @@
                                      <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
                                      </td>
                                      <td class="text-center">
-                                         <?= "Rp. " . number_format($value['total_bbm'], 2, ',', '.'); ?>
+                                         <?= "Rp. " . number_format((float)$value['total_bbm'], 2, ',', '.'); ?>
                                      </td>
                                      <td class="text-center"><img
                                              src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"

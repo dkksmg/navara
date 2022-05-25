@@ -654,9 +654,10 @@ class Home_m extends CI_Model
     }
     public function proseseditPemakai($idk = null)
     {
-        $data['nama_pemakai']   = $this->input->post('nama');
+        $data['id_user'] = $this->input->post('nama');
+        // $data['nama_pemakai']   = $this->input->post('nama');
+        // $data['nip_pemakai']    = $this->input->post('nip');
         $data['lokasi_unit']    = $this->input->post('lokunit');
-        $data['nip_pemakai']    = $this->input->post('nip');
         $data['tgl_awal']       = date('Y-m-d', strtotime($this->input->post('dari')));
         $data['tgl_akhir']      = date('Y-m-d', strtotime($this->input->post('sampai')));
 
@@ -676,6 +677,7 @@ class Home_m extends CI_Model
         $data['lokasi']             = $this->input->post('bengkel');
         $data['keluhan']            = $this->input->post('keluhan');
         $data['perbaikan']          = $this->input->post('perbaikan');
+        $data['lain_lain']          = $this->input->post('lain_lain');
         $data['total_biaya']        = $this->input->post('biaya');
 
         $q = $this->db->insert('riwayat_servis', $data);
@@ -690,6 +692,7 @@ class Home_m extends CI_Model
         $data['lokasi']             = $this->input->post('bengkel');
         $data['keluhan']            = $this->input->post('keluhan');
         $data['perbaikan']          = $this->input->post('perbaikan');
+        $data['lain_lain']          = $this->input->post('lain_lain');
         $data['total_biaya']        = $this->input->post('biaya');
 
         $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);

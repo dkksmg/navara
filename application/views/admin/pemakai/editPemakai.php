@@ -21,37 +21,37 @@
                                 <tr>
                                     <th>ID Aset</th>
                                     <th>:</th>
-                                    <th><?= $kend['id_assets'] ?></th>
+                                    <th><?= $value['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['no_polisi']) ?></th>
+                                    <th><?= strtoupper($value['no_polisi']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis']) ?></th>
+                                    <th><?= strtoupper($value['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['merk']) ?></th>
+                                    <th><?= strtoupper($value['merk']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Tipe</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['tipe']) ?></th>
+                                    <th><?= strtoupper($value['tipe']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                    <th><?= strtoupper($value['besar_cc']) ?> CC</th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                                    <th><?= strtoupper($value['jenis_bb']) ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -78,19 +78,29 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nama Pemakai</label>
-                                            <input type="text" class="form-control" name="nama" required
-                                                value="<?= $value['nama_pemakai'] ?>">
+                                            <select class="form-control" name="nama" required>
+                                                <option value="">- Pilih Nama -</option>
+                                                <?php foreach ($pemakai as $p) : ?>
+                                                <?php if ($value['id_user'] != $p['id']) : ?>
+                                                <option value="<?= $p['id'] ?>"><?= $p['name'] ?> -
+                                                    <?= $p['nip_user'] ?>
+                                                </option>
+                                                <?php else : ?>
+                                                <option value="<?= $p['id'] ?>" selected><?= $p['name'] ?> -
+                                                    <?= $p['nip_user'] ?>
+                                                </option>
+                                                <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <!-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label>NIP / NIK</label>
                                             <input type="number" class="form-control" name="nip" required
                                                 value="<?= $value['nip_pemakai'] ?>">
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
+                                    </div> -->
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Lokasi Unit</label>
@@ -106,6 +116,8 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
