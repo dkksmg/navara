@@ -70,28 +70,17 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Tahun</label>
-                                    <?php
-                                    $year_start  = 2000;
-                                    $year_end = date('Y') + 50;
-                                    $user_selected_year = date('Y');
-                                    echo '<select id="year" required class="form-control" name="tahun" disabled readonly>' . "\n";
-                                    for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
-                                        if ($pagu['tahun'] == null) :
-                                            $selected = ($user_selected_year == $i_year ? ' selected' : '');
-                                        else :
-                                            $selected = ($pagu['tahun'] == $i_year ? ' selected' : '');
-                                        endif;
-                                        echo '<option value="' . $i_year . '"' . $selected . '>' . $i_year . '</option>' . "\n";
-                                    }
-                                    echo '</select>' . "\n";
-                                    ?>
+                                    <label>Tahun Pagu</label>
+                                    <input type="text" class="form-control" value="Pemeliharaan" disabled readonly>
+                                    <input type="hidden" name="jenis" value="<?= $pagu['jenis_pagu'] ?>">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Total Anggaran Pagu <?= $pagu['jenis_pagu'] ?></label>
-                                    <input type="number" class="form-control" name="pagu" required placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>" value="<?= $pagu['pagu_awal'] ?>">
+                                    <input type="number" class="form-control" name="pagu" required
+                                        placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>"
+                                        value="<?= $pagu['pagu_awal'] ?>">
                                 </div>
                             </div>
                         </div>

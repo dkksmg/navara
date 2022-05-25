@@ -71,6 +71,23 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function data_servis($tahun = null)
+    {
+        $this->db
+            ->order_by('kn.jenis', 'DESC')
+            ->order_by('us.name', 'DESC')
+            ->join('pagu_service as ps', 'ps.id_kend = kn.idk', 'left')
+            ->join('riwayat_pemakai as rp', 'rp.id_kendaraan=kn.idk', 'left')
+            ->join('users as us', 'us.id=rp.id_user', 'left');
+        // ->where("tgl_pencatatan BETWEEN '$tahun'");
+        $query = $this->db->get('kendaraan as kn');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
     public function data_riwayatKondisi($id = null)
     {
         $this->db->order_by('tgl_pencatatan', 'DESC')

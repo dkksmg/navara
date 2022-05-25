@@ -60,12 +60,63 @@ class Admin_m extends CI_Model
         $query = $this->db->query('SELECT SUM(total_pajak) as jumlah_total_pajak FROM `riwayat_pajak` WHERE id_kendaraan = ' . $id . '')->row_array();
         return $query;
     }
+    public function pagu_kendaraan($id = null)
+    {
+        $this->db->where('id_kend', $id);
+        $query = $this->db->get('pagu_service');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function total_servis_kend($id = null)
+    {
+        $query = $this->db
+            ->where('id_kendaraan', $id)
+            ->where('YEAR(tgl_servis)', '2022')
+            ->group_by('id_kendaraan')
+            ->select('id_kendaraan, sum(total_biaya) as total_biaya_servis')
+            ->get('riwayat_servis')
+            ->row_array();
+        return $query;
+    }
+    public function total_pajak_kend($id = null)
+    {
+        $query = $this->db
+            ->where('id_kendaraan', $id)
+            ->group_by('id_kendaraan')
+            ->select('id_kendaraan, sum(total_pajak) as total_biaya_pajak')
+            ->get('riwayat_pajak')
+            ->row_array();
+        return $query;
+    }
+    public function total_bbm_kend($id = null)
+    {
+        $query = $this->db
+            ->where('id_kendaraan', $id)
+            ->group_by('id_kendaraan')
+            ->select('id_kendaraan, sum(total_bbm) as total_biaya_bbm')
+            ->get('riwayat_bbm')
+            ->row_array();
+        return $query;
+    }
     public function datapagu_kendaraanbyid($id)
     {
         $query = $this->db
             ->join('kendaraan', 'pagu_service.id_kend = kendaraan.idk')
             ->get_where('pagu_service', ['id_ps' => $id])
             ->row_array();
+        return $query;
+    }
+    public function cek_datapagu($id = null, $tahun = null)
+    {
+        $query = $this->db->query("SELECT * FROM `pagu_service` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)='$tahun', riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rp ON `rp`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)='$tahun', riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)='$tahun', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON `rb`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        WHERE pagu_service.id_kend='$id' AND pagu_service.tahun='$tahun'")->result_array();
         return $query;
     }
     public function user()
@@ -87,7 +138,7 @@ class Admin_m extends CI_Model
     }
 
 
-    public function tambahpagu($id = null, $jenis = null, $pagu = null)
+    public function tambahpagu_old($id = null, $jenis = null, $pagu = null)
     {
 
         $data['id_kend']    = $id;
@@ -97,11 +148,26 @@ class Admin_m extends CI_Model
         $q = $this->db->insert('pagu_service', $data);
         return $q;
     }
+    public function tambahpagu($id = null)
+    {
+
+        $data['id_kend']    = $id;
+        $data['tahun']      = $this->input->post('tahun');
+        $data['pagu_awal']  = $this->input->post('pagu');
+        $q = $this->db->insert('pagu_service', $data);
+        return $q;
+    }
     public function updatepagu($id = null)
     {
         $data['pagu_awal']  = $this->input->post('pagu');
         $data['jenis_pagu']  = $this->input->post('jenis');
         $q = $this->db->where('id_ps', $id)->update('pagu_service', $data);
+        return $q;
+    }
+    public function hapuspagu($id = null)
+    {
+        $this->db->where('id_ps', $id);
+        $q = $this->db->delete('pagu_service');
         return $q;
     }
     public function cek_tahun_pagu($id = null, $tahun = null)

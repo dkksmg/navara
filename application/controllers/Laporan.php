@@ -34,6 +34,13 @@ class Laporan extends CI_Controller
 	{
 		$data = [];
 		$data['title'] = "Rekap Servis Kendaraan Dinas";
+		if ($this->input->get()) {
+			$tahun = ($this->input->get('tahun'));
+			$data['tahun'] = $tahun;
+			$data['rekap'] = $this->home_m->data_servis($tahun);
+			print_r($this->db->last_query());
+			$data['title'] = 'Rekap Servis Kendaraan Dinas Dari Tahun ' . $tahun . '';
+		}
 		$this->load->view('admin/template/header');
 		$this->load->view('admin/laporan/dataservis', $data);
 		$this->load->view('admin/template/footer');

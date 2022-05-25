@@ -86,9 +86,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <li class="nav-item <?= $this->uri->segment(2) == 'user' ? 'active' : '' ?>">
                             <a href="<?= site_url('admin/user') ?>" class="nav-link">User</a>
                         </li>
-                        <li class="nav-item <?= $this->uri->segment(1) == 'servis' ? 'active' : '' ?>">
+                        <!-- <li class="nav-item <?= $this->uri->segment(1) == 'servis' ? 'active' : '' ?>">
                             <a href="<?= site_url('servis') ?>" class="nav-link">Detail Service</a>
-                        </li>
+                        </li> -->
                         <?php endif ?>
                     </ul>
                 </div>

@@ -20,6 +20,18 @@ class Dashboard_m extends CI_Model
         $q = $this->db->where('kendaraan.jenis', 'Sepeda Motor')->get('kendaraan');
         return (int)$q->result_array()[0]['jml'];
     }
+    public function totalkendaraan_abm()
+    {
+        $this->db->select('count(*) as jml ');
+        $q = $this->db->where('kendaraan.jenis', 'Ambulance')->get('kendaraan');
+        return (int)$q->result_array()[0]['jml'];
+    }
+    public function totalkendaraan_mbl()
+    {
+        $this->db->select('count(*) as jml ');
+        $q = $this->db->where('kendaraan.jenis !=', 'Ambulance')->where('kendaraan.jenis !=', 'Sepeda Motor')->get('kendaraan');
+        return (int)$q->result_array()[0]['jml'];
+    }
     public function totaluseradmin()
     {
         $this->db->select('count(*) as jml ');
@@ -31,5 +43,18 @@ class Dashboard_m extends CI_Model
         $this->db->select('count(*) as jml ');
         $q = $this->db->where('users.role', 'Pemakai')->get('users');
         return (int)$q->result_array()[0]['jml'];
+    }
+    public function totalkendaraan_pmkkend()
+    {
+        if ($this->session->userdata('role') == 'Superadmin') {
+            $this->db->select('count(*) as jml ');
+            $q = $this->db->where('riwayat_pemakai.status', 'aktif')->get('riwayat_pemakai');
+            return (int)$q->result_array()[0]['jml'];
+        } else {
+            $cek_wilayah = $this->session->userdata('wilayah');
+            $this->db->select('count(*) as jml ');
+            $q = $this->db->where('riwayat_pemakai.status', 'aktif')->where('riwayat_pemakai.lokasi_unit', $cek_wilayah)->get('riwayat_pemakai');
+            return (int)$q->result_array()[0]['jml'];
+        }
     }
 }

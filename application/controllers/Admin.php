@@ -13,7 +13,7 @@ class Admin extends CI_Controller
         $this->load->model('home_m');
         $this->load->model('admin_m');
     }
-    public function pagu()
+    public function pagu_old()
     {
         $id = $this->input->get('id');
         $cek_id = $this->home_m->cek_id_riwayat_pagu($id);
@@ -21,7 +21,6 @@ class Admin extends CI_Controller
             $data = [];
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['pemeliharaan'] = $this->admin_m->pagu_kendaraan_pemeliharaan($id);
-            // print_r($this->db->last_query());
             $data['bbm'] = $this->admin_m->pagu_kendaraan_bbm($id);
             $data['pajak'] = $this->admin_m->pagu_kendaraan_pajak($id);
             $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
@@ -33,7 +32,31 @@ class Admin extends CI_Controller
             show_404();
         }
     }
-    public function prosestambahpagu()
+    public function pagu()
+    {
+        $id = $this->input->get('id');
+        $cek_id = $this->home_m->cek_id_riwayat_pagu($id);
+        if ($cek_id != '') {
+            $data = [];
+            $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pagu'] = $this->admin_m->pagu_kendaraan($id);
+            $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
+            $data['title_cek'] = 'Cek Sisa Pagu Kendaraan Dinas';
+            if ($this->input->get()) {
+                $tahun = ($this->input->get('tahun'));
+                $data['tahun'] = $tahun;
+                $data['rekap'] = $this->admin_m->cek_datapagu($id, $tahun);
+                $data['title_cek'] = 'Cek Sisa Pagu Kendaraan Dinas Tahun ' . $tahun . '';
+            }
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pagu/pagukendaraan', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        } else {
+            show_404();
+        }
+    }
+    public function prosestambahpagu_old()
     {
 
         $id = $this->input->get('id');
@@ -56,6 +79,27 @@ class Admin extends CI_Controller
             }
         }
     }
+    public function prosestambahpagu()
+    {
+
+        $id = $this->input->get('id');
+        $jenispagu = $this->input->post('jenis');
+        $cektahun = $this->admin_m->cek_tahun_pagu($id, $this->input->post('tahun'));
+        if ($cektahun != '') {
+            $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
+            redirect('admin/pagu?id=' . $id);
+        } else {
+            $simpan = $this->admin_m->tambahpagu($id);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Tambah Pagu Anggaran Pemeliharaan Berhasil');
+                redirect('admin/pagu?id=' . $id);
+            } else {
+                $this->session->set_flashdata('danger', 'Tambah Pagu Anggaran Pemeliharaan Gagal');
+                redirect('admin/pagu?id=' . $id);
+            }
+        }
+    }
+
     public function editpagu()
     {
         $id = $this->input->get('id');
@@ -87,6 +131,15 @@ class Admin extends CI_Controller
     }
     public function hapuspagu()
     {
+        $id = ($this->input->get('id'));
+        $id_kend = ($this->input->get('idkend'));
+        if ($this->admin_m->hapuspagu($id)) {
+            $this->session->set_flashdata('success', 'Hapus Data Pagu Berhasil');
+            redirect('admin/pagu?id=' . $id_kend);
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Data Pagu gagal');
+            redirect('admin/pagu?id=' . $id_kend);
+        }
     }
 
     public function user()

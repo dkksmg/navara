@@ -15,6 +15,9 @@ class Dashboard extends CI_Controller
 		$data = [];
 		$data['totalkendaraan'] = $this->dashboard_m->totalkendaraan();
 		$data['totalspm'] = $this->dashboard_m->totalkendaraan_spm();
+		$data['totalabm'] = $this->dashboard_m->totalkendaraan_abm();
+		$data['totalmbl'] = $this->dashboard_m->totalkendaraan_mbl();
+		$data['totalpmkkend'] = $this->dashboard_m->totalkendaraan_pmkkend();
 		$data['totaladmin'] = $this->dashboard_m->totaluseradmin();
 		$data['totalpemakai'] = $this->dashboard_m->totaluserpemakai();
 		$this->load->view('admin/template/header');
