@@ -128,11 +128,11 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Lokasi Kerja</label>
-                                 <select class="form-control" name="lokasi_kerja" required>
-                                     <option readonly>-- Pilih Lokasi Kerja --</option>
+                                 <select class="form-control" name="lokasi_kerja">
+                                     <option readonly value="">-- Pilih Lokasi Kerja --</option>
                                      <?php if ($lu != '') {
                                             foreach ($lu as $value) { ?>
-                                     <option><?= $value['lokasi_unit'] ?></option>
+                                     <option value="<?= $value['lokasi_unit'] ?>"><?= $value['lokasi_unit'] ?></option>
                                      <?php }
                                         } ?>
                                  </select>

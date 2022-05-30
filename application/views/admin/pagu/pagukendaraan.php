@@ -83,7 +83,8 @@
                             <tbody>
                                 <?php
                                 $no = 1;
-                                foreach ($pagu as $row) :
+                                if (isset($pagu)) :
+                                    foreach ($pagu as $row) :
                                 ?>
                                 <tr>
                                     <td class="text-center"><?= $no ?></td>
@@ -101,8 +102,9 @@
                                     </td>
                                 </tr>
                                 <?php
-                                    $no++;
-                                endforeach; ?>
+                                        $no++;
+                                    endforeach;
+                                endif; ?>
                             </tbody>
                         </table>
                     </div>

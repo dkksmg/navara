@@ -57,12 +57,14 @@
                                         <div class="form-group">
                                             <label>Lokasi Kerja</label>
                                             <select class="form-control" name="lokasi_kerja" required>
-                                                <option readonly>-- Pilih Lokasi Kerja --</option>
+                                                <option readonly value="">-- Pilih Lokasi Kerja --</option>
                                                 <?php if ($lu != '') : ?>
                                                 <?php foreach ($lu as $value) : ?>
-                                                <option <?php if ($user['wilayah'] == $value['lokasi_unit']) : ?>
-                                                    selected <?php endif ?>>
-                                                    <?= $value['lokasi_unit'] ?></option>
+                                                <option value="<?= $value['lokasi_unit'] ?>"
+                                                    <?php if ($user['wilayah'] == $value['lokasi_unit']) : ?> selected
+                                                    <?php endif ?>>
+                                                    <?= $value['lokasi_unit'] ?>
+                                                </option>
                                                 <?php endforeach;
                                                 endif; ?>
 

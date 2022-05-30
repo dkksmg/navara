@@ -22,37 +22,37 @@
                                 <tr>
                                     <th>ID Aset</th>
                                     <th>:</th>
-                                    <th><?= $kend['id_assets'] ?></th>
+                                    <th><?= $servis['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['no_polisi']) ?></th>
+                                    <th><?= strtoupper($servis['no_polisi']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis']) ?></th>
+                                    <th><?= strtoupper($servis['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['merk']) ?></th>
+                                    <th><?= strtoupper($servis['merk']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Tipe</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['tipe']) ?></th>
+                                    <th><?= strtoupper($servis['tipe']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                    <th><?= strtoupper($servis['besar_cc']) ?> CC</th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                                    <th><?= strtoupper($servis['jenis_bb']) ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -103,21 +103,24 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Keluhan</label>
-                                            <input type="text" class="form-control" name="keluhan" required
-                                                value="<?php echo $servis['keluhan'] ?>"
-                                                placeholder="Keluhan Kendaraan">
+                                            <textarea class="form-control" name="keluhan" required
+                                                placeholder="Keluhan Kendaraan"><?php echo htmlspecialchars($servis['keluhan']) ?></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Perbaikan</label>
-                                            <input type="text" class="form-control" name="perbaikan" required
-                                                value="<?php echo $servis['perbaikan'] ?>"
-                                                placeholder="Perbaikan Kendaraan">
+                                            <textarea class="form-control" name="perbaikan" required
+                                                placeholder="perbaikan Kendaraan"><?php echo htmlspecialchars($servis['perbaikan']) ?></textarea>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Lain Lain</label>
+                                            <textarea class="form-control" name="lain_lain"
+                                                placeholder="Tambahan/Lain-Lain"><?php echo htmlspecialchars($servis['lain_lain']) ?></textarea>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Total Biaya</label>
@@ -137,7 +140,7 @@
                                             <div class="gallery">
 
                                                 <img class="card-img-top"
-                                                    src="<?= base_url('assets/upload/foto_nota/' . $servis['foto_nota']) ?>"
+                                                    src="<?= base_url('assets//upload/foto_nota/' . $servis['foto_nota']) ?>"
                                                     alt="Foto Servis">
                                             </div>
                                         </div>

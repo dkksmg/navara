@@ -50,6 +50,19 @@
                                  </div>
                              </div>
                          </form>
+                         <br>
+                         <div class="row">
+                             <div class="col-md-3">
+                                 <?php
+                                    $tahun = $this->input->get('tahun');
+                                    if (isset($rekap) && $rekap != '') : ?>
+                                 <a href="<?= site_url('laporan/export_excel?tahun=' . $tahun) ?>"
+                                     class="btn btn-sm btn-warning"><i class="fa-solid fa-file-excel"></i>
+                                     Export
+                                     Excel</a>
+                                 <?php endif; ?>
+                             </div>
+                         </div>
                      </div>
                      <div class="card-body">
                          <table class="table table-bordered table-striped example" width="100%">
@@ -58,6 +71,7 @@
                                      <th class="text-center">No</th>
                                      <th class="text-center">Jenis Kendaraan</th>
                                      <th class="text-center">Merk</th>
+                                     <th class="text-center">Tipe</th>
                                      <th class="text-center">No Polisi</th>
                                      <th class="text-center">Pemakai</th>
                                      <th class="text-center">Pagu</th>
@@ -71,6 +85,7 @@
                                      <td class="text-center"><?= $no++; ?></td>
                                      <td class="text-center"><?= strtoupper($value['jenis']) ?></td>
                                      <td class="text-center"><?= strtoupper($value['merk']) ?></td>
+                                     <td class="text-center"><?= strtoupper($value['tipe']) ?></td>
                                      <td class="text-center"><?= strtoupper($value['no_polisi']) ?></td>
                                      <td class="text-center"><?php if ($value['name'] == null) : ?> -
                                          <?php else : ?><?= $value['name'] ?><?php endif ?></td>

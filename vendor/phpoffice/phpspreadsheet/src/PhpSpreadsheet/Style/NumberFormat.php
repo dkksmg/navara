@@ -46,8 +46,10 @@ class NumberFormat extends Supervisor
     const FORMAT_CURRENCY_USD = '$#,##0_-';
     const FORMAT_CURRENCY_EUR_SIMPLE = '#,##0.00_-"€"';
     const FORMAT_CURRENCY_EUR = '#,##0_-"€"';
+    // const FORMAT_CURRENCY_IDR = '"Rp"#.##0.00_-';
     const FORMAT_ACCOUNTING_USD = '_("$"* #,##0.00_);_("$"* \(#,##0.00\);_("$"* "-"??_);_(@_)';
     const FORMAT_ACCOUNTING_EUR = '_("€"* #,##0.00_);_("€"* \(#,##0.00\);_("€"* "-"??_);_(@_)';
+    const FORMAT_ACCOUNTING_IDR = '_("Rp"* #,##0.00_);_("Rp"* \(#,##0.00\);_("Rp"* "-"??_);_(@_)';
 
     /**
      * Excel built-in number formats.
@@ -385,8 +387,8 @@ class NumberFormat extends Supervisor
 
         return md5(
             $this->formatCode .
-            $this->builtInFormatCode .
-            __CLASS__
+                $this->builtInFormatCode .
+                __CLASS__
         );
     }
 

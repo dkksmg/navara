@@ -75,6 +75,8 @@ class Home_m extends CI_Model
     {
         $this->db
             ->order_by('kn.jenis', 'DESC')
+            ->order_by('kn.merk', 'ASC')
+            ->order_by('kn.tipe', 'ASC')
             ->order_by('us.name', 'DESC')
             ->join('pagu_service as ps', 'ps.id_kend = kn.idk', 'left')
             ->join('riwayat_pemakai as rp', 'rp.id_kendaraan=kn.idk', 'left')
