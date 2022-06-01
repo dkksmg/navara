@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID Aset</th>
+                                 <th width="30%">ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -60,6 +60,24 @@
                                  <th>:</th>
                                  <th><?= strtoupper($kend['jenis_bb']) ?></th>
                              </tr>
+                             <tr>
+                                 <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+                             </tr>
+                             <?php
+                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                             <tr>
+                                 <th>Pagu Terpakai</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+                             </tr>
+                             <tr>
+                                 <th>Sisa Pagu</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
+                             </tr>
                          </table>
                      </div>
                  </div>
@@ -84,9 +102,10 @@
                                      <th class="text-center">Tgl Pencatatan</th>
                                      <th class="text-center">Kondisi</th>
                                      <th class="text-center">Foto Tampak Depan</th>
+                                     <th class="text-center">Foto Tampak Belakang</th>
                                      <th class="text-center">Foto Tampak Kanan</th>
                                      <th class="text-center">Foto Tampak Kiri</th>
-                                     <th class="text-center">Foto Tampak Belakang</th>
+                                     <th class="text-center">Status</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -96,13 +115,23 @@
                                         foreach ($rk as $value) : ?>
                                  <tr>
                                      <td class="text-center"><?= $no; ?></td>
-                                     <td class="text-center"><a
-                                             onclick="deleteConfirm('<?= site_url('pemakai/hapusriwayatkondisi?id=' . $value['id_rk'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-danger jedatombol"><i
+                                     <td class="text-center">
+                                         <?php if ($value['status_rk'] == 'Wait') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i
+                                                 class="fas fa-pen"></i></a>
+                                         <?php elseif ($value['status_rk'] == 'Yes') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i
+                                                 class="fas fa-pen"></i></a>
+                                         <?php else : ?>
+                                         <a style="display: none" onclick="deleteConfirm('#')" href="#"
+                                             class="btn btn-sm btn-danger jedatombol disabled"><i
                                                  class="fas fa-trash"></i></a>
-                                         <a onclick="editConfirm('<?= site_url('pemakai/editriwayatkondisi?id=' . $value['id_rk'] . '') ?>')"
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editriwayatkondisi?id=' . $value['id_rk'] . '&idkend=' . $value['id_kendaraan']) ?>')"
                                              href="#" class="btn btn-sm btn-warning jedatombol"><i
                                                  class="fas fa-pen"></i></a>
+                                         <?php endif ?>
                                      </td>
                                      <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
                                      </td>
@@ -112,6 +141,10 @@
                                              data-toggle="modal" data-target="#depanModal<?php echo $no ?>">
                                      </td>
                                      <td class="text-center"><img width="70%"
+                                             src="<?= base_url('assets/upload/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
+                                             data-toggle="modal" data-target="#belakangModal<?php echo $no ?>">
+                                     </td>
+                                     <td class="text-center"><img width="70%"
                                              src="<?= base_url('assets/upload/file_kendaraan/kanan/' . $value['foto_tampak_kanan'] . '') ?>"
                                              data-toggle="modal" data-target="#kananModal<?php echo $no ?>">
                                      </td>
@@ -119,9 +152,19 @@
                                              src="<?= base_url('assets/upload/file_kendaraan/kiri/' . $value['foto_tampak_kiri'] . '') ?>"
                                              data-toggle="modal" data-target="#kiriModal<?php echo $no ?>">
                                      </td>
-                                     <td class="text-center"><img width="70%"
-                                             src="<?= base_url('assets/upload/file_kendaraan/belakang/' . $value['foto_tampak_belakang'] . '') ?>"
-                                             data-toggle="modal" data-target="#belakangModal<?php echo $no ?>">
+                                     <td class="text-center" width="20%">
+                                         <?php if ($value['status_rk'] == 'Wait') : ?>
+                                         <p>Sedang Diverifikasi</p>
+                                         <?php elseif ($value['status_rk'] == 'No') : ?>
+                                         Ditolak<br><i style="color:red;font-size:12px">
+                                             <?= $value['reject_reason'] ?>.
+                                             Silakan melakukan input/edit data kembali.<br>Reject on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php else : ?>
+                                         Disetujui
+                                         <br><i style="color:green;font-size:12px">Approved on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php endif ?>
                                      </td>
                                  </tr>
                                  <?php $no++;

@@ -21,12 +21,12 @@
              <div class="col-lg-12">
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas</h3>
+                         <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas Anda</h3>
                      </div>
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID Aset</th>
+                                 <th width="30%">ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -59,6 +59,24 @@
                                  <th>Bahan Bakar</th>
                                  <th>:</th>
                                  <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                             </tr>
+                             <tr>
+                                 <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+                             </tr>
+                             <?php
+                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                             <tr>
+                                 <th>Pagu Terpakai</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+                             </tr>
+                             <tr>
+                                 <th>Sisa Pagu</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
                              </tr>
                          </table>
                      </div>
@@ -97,8 +115,8 @@
                                      <td class="text-center"><?= $no++; ?></td>
                                      <td class="text-center">
                                          <?php if ($value['status_pengajuan'] == 'No') : ?>
-                                         <a onclick="editConfirm('#')" href="#"
-                                             class="btn btn-sm btn-warning jedatombol disabled"
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"
                                              title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pencil"></i></a>
                                          <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
@@ -107,7 +125,7 @@
                                              title="Cetak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
                                                  class="fa-solid fa-print"></i></a>
                                          <?php else : ?>
-                                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '') ?>')"
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
                                              href="#" class="btn btn-sm btn-warning jedatombol"
                                              title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pencil"></i></a>
@@ -125,16 +143,21 @@
                                      </td>
                                      <td class="text-center">
                                          <?php if ($value['status_pengajuan'] == 'No') : ?>
-                                         Ditolak <br><i style="color:red;font-size:12px">Jika ingin melanjutkan
+                                         Ditolak<br><i style="color:red;font-size:12px">
+                                             <?= $value['reject_reason'] ?>. Jika
+                                             ingin melanjutkan
                                              pengajuan. Silakan
-                                             melakukan pengajuan ulang</i>
+                                             melakukan pengajuan ulang.<br>Reject on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
                                          <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
                                          Disetujui
-                                         <br><i style="color:green;font-size:12px">Silakan mengisi form Riwayat Servis
+                                         <br><i style="color:green;font-size:12px">Silakan mengisi form Riwayat
+                                             Servis
                                              jika servis telah selesai. <a
                                                  href="<?php echo base_url('pemakai/riwayatservis?id=' . $kend['idk']); ?>">
                                                  Klik
-                                                 disini</a></i>
+                                                 disini</a>.<br>Approved on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
                                          <?php else : ?>
                                          Sedang diverifikasi
                                          <?php endif; ?>

@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID Aset</th>
+                                 <th width="30%">ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -59,6 +59,24 @@
                                  <th>Bahan Bakar</th>
                                  <th>:</th>
                                  <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                             </tr>
+                             <tr>
+                                 <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+                             </tr>
+                             <?php
+                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                             <tr>
+                                 <th>Pagu Terpakai</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+                             </tr>
+                             <tr>
+                                 <th>Sisa Pagu</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
                              </tr>
                          </table>
                      </div>

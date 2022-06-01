@@ -73,8 +73,9 @@
                                      <th class="text-center">Merk</th>
                                      <th class="text-center">Tipe</th>
                                      <th class="text-center">No Polisi</th>
-                                     <th class="text-center">Pemakai</th>
-                                     <th class="text-center">Pagu</th>
+                                     <th class="text-center" width="5%">Tahun Anggaran</th>
+                                     <th class="text-center" width="25%">Pemakai</th>
+                                     <th class="text-center" width="15%">Pagu</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -87,8 +88,12 @@
                                      <td class="text-center"><?= strtoupper($value['merk']) ?></td>
                                      <td class="text-center"><?= strtoupper($value['tipe']) ?></td>
                                      <td class="text-center"><?= strtoupper($value['no_polisi']) ?></td>
-                                     <td class="text-center"><?php if ($value['name'] == null) : ?> -
-                                         <?php else : ?><?= $value['name'] ?><?php endif ?></td>
+                                     <td class="text-center"><?= $this->input->get('tahun') ?></td>
+                                     <?php if ($value['name'] == null) : ?>
+                                     <td class="text-center"> - </td>
+                                     <?php else : ?>
+                                     <td class="text-justify"><?= $value['name'] ?></td>
+                                     <?php endif ?>
                                      <td class="text-center">Rp.
                                          <?= number_format((float)$value['pagu_awal'], 2, ',', '.')  ?>
                                      </td>

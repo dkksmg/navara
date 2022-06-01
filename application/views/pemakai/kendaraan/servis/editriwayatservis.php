@@ -20,39 +20,57 @@
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>ID Aset</th>
+                                    <th width="30%">ID Aset</th>
                                     <th>:</th>
-                                    <th><?= $servis['id_assets'] ?></th>
+                                    <th><?= $kend['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($servis['no_polisi']) ?></th>
+                                    <th><?= strtoupper($kend['no_polisi']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($servis['jenis']) ?></th>
+                                    <th><?= strtoupper($kend['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($servis['merk']) ?></th>
+                                    <th><?= strtoupper($kend['merk']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Tipe</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($servis['tipe']) ?></th>
+                                    <th><?= strtoupper($kend['tipe']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($servis['besar_cc']) ?> CC</th>
+                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($servis['jenis_bb']) ?></th>
+                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+                                </tr>
+                                <?php
+                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                                <tr>
+                                    <th>Pagu Terpakai</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Sisa Pagu</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -137,6 +155,7 @@
                                                 <?php if ($servis['foto_nota'] == null) : ?> required <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
+                                            <h5 class="card-title text-center mt-3 mb-3">Foto Nota</h5>
                                             <div class="gallery">
 
                                                 <img class="card-img-top"
@@ -159,6 +178,7 @@
                                                 <?php if ($servis['foto_servis'] == null) : ?> required <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
+                                            <h5 class="card-title text-center mt-3 mb-3">Foto Servis</h5>
                                             <div class="gallery">
                                                 <img class="card-img-top"
                                                     src="<?= base_url('assets/upload/foto_servis/' . $servis['foto_servis']) ?>"

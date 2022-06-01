@@ -26,7 +26,7 @@
                      <div class="card-body">
                          <table class="table table-striped">
                              <tr>
-                                 <th>ID Aset</th>
+                                 <th width="30%">ID Aset</th>
                                  <th>:</th>
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
@@ -60,6 +60,24 @@
                                  <th>:</th>
                                  <th><?= strtoupper($kend['jenis_bb']) ?></th>
                              </tr>
+                             <tr>
+                                 <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+                             </tr>
+                             <?php
+                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                             <tr>
+                                 <th>Pagu Terpakai</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+                             </tr>
+                             <tr>
+                                 <th>Sisa Pagu</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
+                             </tr>
                          </table>
                      </div>
                  </div>
@@ -84,6 +102,7 @@
                                      <th class="text-center">Tanggal Pencatatan</th>
                                      <th class="text-center">Tahun</th>
                                      <th class="text-center">Total Pajak</th>
+                                     <th class="text-center">Status</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -93,18 +112,43 @@
                                  <tr>
                                      <td class="text-center"><?= $no++; ?></td>
                                      <td class="text-center">
-                                         <a onclick="editConfirm('<?= site_url('pemakai/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-warning jedatombol"
+                                         <?php if ($value['status_pjk'] == 'Wait') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen"
+                                                 title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php elseif ($value['status_pjk'] == 'Yes') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen"
+                                                 title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php else : ?>
+                                         <a style="display: none" onclick="deleteConfirm('#')" href="#"
+                                             class="btn btn-sm btn-danger jedatombol disabled"><i class="fas fa-trash"
+                                                 title="Hapus Riwayat Pajak <?= $kend['no_polisi'] ?>"></i></a>
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editriwayatpajak?id=' . $value['id_pjk'] . '&idkend=' . ($value['id_kendaraan'])) ?>')"
+                                             href="#" class="btn btn-warning btn-sm jedatombol"
                                              title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i
-                                                 class="fas fa-pencil"></i></a>
-                                         <a onclick="deleteConfirm('<?= site_url('pemakai/hapusriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                                             href="#" class="btn btn-sm btn-danger jedatombol"><i
-                                                 class="fas fa-trash"></i></a>
+                                                 class="fas fa-pen"></i></a>
+                                         <?php endif ?>
                                      </td>
                                      <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
                                      <td class="text-center"><?= $value['tahun'] ?></td>
                                      <td class="text-center">
-                                         <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?></td>
+                                         <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?>
+                                     </td>
+                                     <td class="text-center" width="20%">
+                                         <?php if ($value['status_pjk'] == 'Wait') : ?>
+                                         <p>Sedang Diverifikasi</p>
+                                         <?php elseif ($value['status_pjk'] == 'No') : ?>
+                                         Ditolak<br><i style="color:red;font-size:12px">
+                                             <?= $value['reject_reason'] ?>.
+                                             Silakan melakukan input/edit data kembali.<br>Reject on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php else : ?>
+                                         Disetujui
+                                         <br><i style="color:green;font-size:12px">Approved on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php endif ?>
+                                     </td>
                                  </tr>
                                  <?php }
                                     } ?>

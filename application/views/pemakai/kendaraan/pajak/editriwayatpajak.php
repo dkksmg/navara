@@ -20,39 +20,57 @@
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>ID Aset</th>
+                                    <th width="30%">ID Aset</th>
                                     <th>:</th>
                                     <th><?= $value['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($value['no_polisi']) ?></th>
+                                    <th><?= strtoupper($kend['no_polisi']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($value['jenis']) ?></th>
+                                    <th><?= strtoupper($kend['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($value['merk']) ?></th>
+                                    <th><?= strtoupper($kend['merk']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Tipe</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($value['tipe']) ?></th>
+                                    <th><?= strtoupper($kend['tipe']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($value['besar_cc']) ?> CC</th>
+                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($value['jenis_bb']) ?></th>
+                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+                                </tr>
+                                <?php
+                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                                <tr>
+                                    <th>Pagu Terpakai</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Sisa Pagu</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
                                 </tr>
                             </table>
                         </div>

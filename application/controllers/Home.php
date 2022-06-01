@@ -87,10 +87,12 @@ class Home extends CI_Controller
     public function riwayat_kondisi()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id_kondisi = $this->home_m->cek_id_riwayat_kondisi($id);
         if ($cek_id_kondisi != '') {
             $data = [];
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['rk'] = $this->home_m->data_riwayatKondisi($id);
             $this->load->view('admin/template/header');
             $this->load->view('admin/kondisi/riwayatKondisi', $data);
@@ -103,11 +105,14 @@ class Home extends CI_Controller
     public function editriwayatkondisi()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id  = $this->home_m->cek_id_edit_riwayat_kondisi($id);
         if ($cek_id != '') {
             $data = [];
             $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
             $data['value'] = $this->home_m->data_kondisiById($id);
+            $id_kend = $data['value']['id_kendaraan'];
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/kondisi/editriwayatkondisi', $data);
             $this->load->view('admin/template/footer');
@@ -230,6 +235,178 @@ class Home extends CI_Controller
                 $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
                 $data['post'] = $this->input->post();
             }
+        } else if (empty($_FILES['depan']['name']) && empty($_FILES['blkg']['name'])) {
+            $nama_dpn = $this->input->post('old_depan');
+            $nama_blkg = $this->input->post('old_belakang');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['depan']['name']) && empty($_FILES['kiri']['name'])) {
+            $nama_dpn = $this->input->post('old_depan');
+            $nama_kiri = $this->input->post('old_kiri');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['depan']['name']) && empty($_FILES['kanan']['name'])) {
+            $nama_dpn = $this->input->post('old_depan');
+            $nama_kanan = $this->input->post('old_kanan');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['blkg']['name']) && empty($_FILES['depan']['name'])) {
+            $nama_blkg = $this->input->post('old_belakang');
+            $nama_dpn = $this->input->post('old_depan');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['blkg']['name']) && empty($_FILES['kanan']['name'])) {
+            $nama_blkg = $this->input->post('old_belakang');
+            $nama_kanan = $this->input->post('old_kanan');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['blkg']['name']) && empty($_FILES['kiri']['name'])) {
+            $nama_blkg = $this->input->post('old_belakang');
+            $nama_kiri = $this->input->post('old_kiri');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kiri']['name']) && empty($_FILES['depan']['name'])) {
+            $nama_kiri = $this->input->post('old_kiri');
+            $nama_dpn = $this->input->post('old_depan');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kiri']['name']) && empty($_FILES['blkg']['name'])) {
+            $nama_kiri = $this->input->post('old_kiri');
+            $nama_blkg = $this->input->post('old_belakang');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kiri']['name']) && empty($_FILES['kanan']['name'])) {
+            $nama_kiri = $this->input->post('old_kiri');
+            $nama_kanan = $this->input->post('old_kanan');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kanan']['name']) && empty($_FILES['depan']['name'])) {
+            $nama_kanan = $this->input->post('old_kanan');
+            $nama_dpn = $this->input->post('old_depan');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kanan']['name']) && empty($_FILES['blkg']['name'])) {
+            $nama_kanan = $this->input->post('old_kanan');
+            $nama_blkg = $this->input->post('old_belakang');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kanan']['name']) && empty($_FILES['kiri']['name'])) {
+            $nama_kanan = $this->input->post('old_kanan');
+            $nama_kiri = $this->input->post('old_kiri');
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['depan']['name'])) {
+            $nama_dpn = $this->input->post('old_depan');;
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['blkg']['name'])) {
+            $nama_blkg = $this->input->post('old_belakang');;
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kiri']['name'])) {
+            $nama_kiri = $this->input->post('old_kiri');;
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['kanan']['name'])) {
+            $nama_kanan = $this->input->post('old_kanan');;
+            $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                redirect('home/riwayat_kondisi?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
         } else if (empty($_FILES['depan']['name']) && empty($_FILES['blkg']['name']) && empty($_FILES['kiri']['name']) && empty($_FILES['kanan']['name'])) {
             $nama_dpn = $this->input->post('old_depan');
             $nama_blkg = $this->input->post('old_belakang');
@@ -237,7 +414,7 @@ class Home extends CI_Controller
             $nama_kanan = $this->input->post('old_kanan');
             $simpan = $this->home_m->updateriwayatkondisikendaraan($nama_dpn, $nama_blkg, $nama_kiri, $nama_kanan, $id_rk);
             if ($simpan) {
-                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil');
+                $this->session->set_flashdata('success', 'Update Riwayat Kondisi Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
                 redirect('home/riwayat_kondisi?id=' . $idk . '');
             } else {
                 $this->session->set_flashdata('danger', 'Update Riwayat Kondisi Kendaraan gagal');
@@ -264,12 +441,14 @@ class Home extends CI_Controller
     public function riwayat_pemakai()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id_pemakai = $this->home_m->cek_id_riwayat_pemakai($id);
         if ($cek_id_pemakai != '') {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpemakai($id);
             $data['pemakai'] = $this->home_m->listdata_pemakai();
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['lu'] = $this->home_m->data_lokasiunit();
             $this->load->view('admin/template/header');
             $this->load->view('admin/pemakai/riwayatpemakai', $data);
@@ -282,10 +461,13 @@ class Home extends CI_Controller
     public function edit_pemakai()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id  = $this->home_m->cek_id_edit_riwayat_pemakai($id);
         if ($cek_id != '') {
             $data = [];
             $data['value'] = $this->home_m->data_pemakaibyid($id);
+            $id_kend = $data['value']['id_kendaraan'];
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $data['pemakai'] = $this->home_m->listdata_pemakai();
             $data['lu'] = $this->home_m->data_lokasiunit();
             $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
@@ -299,11 +481,13 @@ class Home extends CI_Controller
     public function riwayat_servis()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_servis($id);
         if ($cek_id != '') {
             $data = [];
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['rs'] = $this->home_m->data_riwayatservis($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/servis/riwayatservis', $data);
             $this->load->view('admin/template/modal');
@@ -389,11 +573,14 @@ class Home extends CI_Controller
     public function editriwayatservis()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_edit_riwayat_servis($id);
         if ($cek_id != '') {
             $data = [];
             $data['title'] = "Edit Riwayat Servis Kendaraan";
             $data['servis'] = $this->home_m->data_servisById($id);
+            $id_kend = $data['servis']['id_kendaraan'];
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/servis/editriwayatservis', $data);
             $this->load->view('admin/template/footer');
@@ -480,6 +667,26 @@ class Home extends CI_Controller
                 $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
                 $data['post'] = $this->input->post();
             }
+        } else if (empty($_FILES['nota']['name'])) {
+            $namanota = $this->input->post('old_nota');
+            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                redirect('home/riwayat_servis?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
+        } else if (empty($_FILES['nota']['foto'])) {
+            $namafoto = $this->input->post('old_servis');
+            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                redirect('home/riwayat_servis?id=' . $idk . '');
+            } else {
+                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                $data['post'] = $this->input->post();
+            }
         } else {
             if (isset($nama_dpn)) {
                 unlink('./assets/foto_servis/' . $namafoto);
@@ -500,12 +707,14 @@ class Home extends CI_Controller
     public function riwayat_bbm()
     {
         $id = ($this->input->get('id'));
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_bbm($id);
         if ($cek_id != '') {
             $data = [];
             $data['title'] = 'Riwayat BBM Kendaraan Dinas';
             $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/bbm/riwayatBBM', $data);
             $this->load->view('admin/template/modal');
@@ -518,12 +727,14 @@ class Home extends CI_Controller
     {
         $id_kend = ($this->input->get('idkend'));
         $id_bbm = ($this->input->get('id'));
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_edit_riwayat_bbm($id_bbm, $id_kend);
         if ($cek_id != '') {
             $data = [];
             $data['title'] = 'Edit Riwayat BBM';
             $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
             $data['kend'] = $this->home_m->kendaraanByid($id_kend);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/bbm/editriwayatBBM', $data);
             $this->load->view('admin/template/modal');
@@ -660,11 +871,13 @@ class Home extends CI_Controller
     public function riwayat_pajak()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_pajak($id);
         if ($cek_id != '') {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpajak($id);
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
             $this->load->view('admin/template/header');
             $this->load->view('admin/pajak/riwayatPajak', $data);
@@ -696,11 +909,14 @@ class Home extends CI_Controller
     public function editriwayatpajak()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_edit_riwayat_pajak($id);
         if ($cek_id != '') {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpajak($id);
             $data['value'] = $this->home_m->datapajakById($id);
+            $id_kend = $data['value']['id_kendaraan'];
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
             $this->load->view('admin/template/header');
             $this->load->view('admin/pajak/editriwayatPajak', $data);
@@ -901,10 +1117,12 @@ class Home extends CI_Controller
         if ($cekkendaraan != '') {
             $this->session->set_flashdata('danger', 'Tambah Riwayat Pemakai gagal, Kendaraan sudah terpakai ');
             redirect('home/riwayat_pemakai?id=' . $idk . '');
-        } else if ($cekpemakai != '') {
-            $this->session->set_flashdata('danger', 'Tambah Riwayat Pemakai gagal, Pemakai yang Anda inputkan sudah memiliki kendaraan aktif ');
-            redirect('home/riwayat_pemakai?id=' . $idk . '');
-        } else {
+        }
+        // else if ($cekpemakai != '') {
+        //     $this->session->set_flashdata('danger', 'Tambah Riwayat Pemakai gagal, Pemakai yang Anda inputkan sudah memiliki kendaraan aktif ');
+        //     redirect('home/riwayat_pemakai?id=' . $idk . '');
+        // } 
+        else {
             if ($this->home_m->prosestambahPemakai($idk)) {
                 $this->session->set_flashdata('success', 'Tambah Riwayat Pemakai Berhasil');
                 redirect('home/riwayat_pemakai?id=' . $idk . '');
@@ -958,32 +1176,6 @@ class Home extends CI_Controller
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
         }
     }
-    public function approve_servis()
-    {
-        $id = $this->input->get('id');
-        $kend = $this->home_m->data_riwayatservisbyidrp($id);
-        $id_kend = $kend['id_kendaraan'];
-        if ($this->home_m->approve_servis($id)) {
-            $this->session->set_flashdata('success', 'Data Servis Berhasil Disetujui');
-            redirect('home/riwayat_servis?id=' . $id_kend . '');
-        } else {
-            $this->session->set_flashdata('warning', 'Gagal Menyetujui Data Servis');
-            redirect('home/riwayat_servis?id=' . $id_kend . '');
-        }
-    }
-    public function reject_servis()
-    {
-        $id = $this->input->get('id');
-        $kend = $this->home_m->data_riwayatservisbyidrp($id);
-        $id_kend = $kend['id_kendaraan'];
-        if ($this->home_m->reject_servis($id)) {
-            $this->session->set_flashdata('success', 'Data Servis Berhasil Ditolak');
-            redirect('home/riwayat_servis?id=' . $id_kend . '');
-        } else {
-            $this->session->set_flashdata('warning', 'Gagal Menolak Data Servis');
-            redirect('home/riwayat_servis?id=' . $id_kend . '');
-        }
-    }
     public function print_data_kendaraan()
     {
         check_level_admin();
@@ -1008,11 +1200,13 @@ class Home extends CI_Controller
     public function pengajuan_servis()
     {
         $id = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_servis($id);
         if ($cek_id != '') {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_admin($id);
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['title'] = 'Form Pengajuan Servis Kendaraan Dinas';
             $this->load->view('admin/template/header');
             $this->load->view('admin/servis/pengajuan/pengajuanservis', $data);
@@ -1025,10 +1219,13 @@ class Home extends CI_Controller
     public function editpengajuanservis()
     {
         $id_pen = $this->input->get('id');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_edit_riwayat_pengajuan_servis($id_pen);
         if ($cek_id != '') {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakaibyidpen($id_pen);
+            $id_kend = $data['rp']['id_kendaraan'];
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $data['title'] = 'Form Edit Pengajuan Servis Kendaraan Dinas';
             $this->load->view('admin/template/header');
             $this->load->view('admin/servis/pengajuan/editpengajuanservis', $data);
@@ -1070,6 +1267,27 @@ class Home extends CI_Controller
             }
         }
     }
+    public function cetakpengajuanservis()
+    {
+        $id_pengajuan = $this->input->get('id');
+        $id_kend = $this->input->get('idkend');
+        $cek_id = $this->home_m->cek_id_riwayat_pengajuan($id_pengajuan, $id_kend);
+        if ($cek_id != '') {
+            if ($cek_id['status_pengajuan'] == 'Yes') {
+                $data = [];
+                $data['title'] = "Pengajuan Servis Kendaraan Dinas";
+                $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id_kend);
+                $data['pengajuan'] = $this->home_m->data_riwayatpengajuanbyidrp($id_pengajuan);
+                $this->load->view('pemakai/template/header_print');
+                $this->load->view('pemakai/kendaraan/servis/cetakpengajuan', $data);
+                $this->load->view('pemakai/template/footer_print');
+            } else {
+                show_404();
+            }
+        } else {
+            show_404();
+        }
+    }
     public function approve_pengajuan()
     {
         $id = $this->input->get('id');
@@ -1105,7 +1323,7 @@ class Home extends CI_Controller
             $this->session->set_flashdata('success', 'Pengajuan Servis Berhasil Diubah menjadi menunggu');
             redirect('home/pengajuan_servis?id=' . $id_kend . '');
         } else {
-            $this->session->set_flashdata('danger', 'Gagal menolak mengubah Pengajuan Servis');
+            $this->session->set_flashdata('danger', 'Gagal mengubah Pengajuan Servis');
             redirect('home/pengajuan_servis?id=' . $id_kend . '');
         }
     }
@@ -1120,6 +1338,162 @@ class Home extends CI_Controller
         } else {
             $this->session->set_flashdata('danger', 'Hapus Data Pengajuan gagal');
             redirect('home/pengajuan_servis?id=' . $id_kend . '');
+        }
+    }
+    public function approve_riwayatkondisi()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatKondisibyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->approve_rk($id)) {
+            $this->session->set_flashdata('success', 'Data Kondisi Berhasil Disetujui');
+            redirect('home/riwayat_kondisi?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal Menyetujui Data Kondisi');
+            redirect('home/riwayat_kondisi?id=' . $id_kend . '');
+        }
+    }
+    public function reject_riwayatkondisi()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatKondisibyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->reject_rk($id)) {
+            $this->session->set_flashdata('success', 'Data Kondisi Berhasil Ditolak');
+            redirect('home/riwayat_kondisi?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal menolak Data Kondisi');
+            redirect('home/riwayat_kondisi?id=' . $id_kend . '');
+        }
+    }
+    public function wait_riwayatkondisi()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatKondisibyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->wait_rk($id)) {
+            $this->session->set_flashdata('success', 'Data Kondisi Berhasil Diubah menjadi menunggu');
+            redirect('home/riwayat_kondisi?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal mengubah Data Kondisi');
+            redirect('home/riwayat_kondisi?id=' . $id_kend . '');
+        }
+    }
+    public function approve_riwayatbbm()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatBBMbyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->approve_rbm($id)) {
+            $this->session->set_flashdata('success', 'Data BBM Berhasil Disetujui');
+            redirect('home/riwayat_bbm?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal Menyetujui Data BBM');
+            redirect('home/riwayat_bbm?id=' . $id_kend . '');
+        }
+    }
+    public function reject_riwayatbbm()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatBBMbyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->reject_rbm($id)) {
+            $this->session->set_flashdata('success', 'Data BBM Berhasil Ditolak');
+            redirect('home/riwayat_bbm?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal menolak Data BBM');
+            redirect('home/riwayat_bbm?id=' . $id_kend . '');
+        }
+    }
+    public function wait_riwayatbbm()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatBBMbyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->wait_rbm($id)) {
+            $this->session->set_flashdata('success', 'Data BBM Berhasil Diubah menjadi menunggu');
+            redirect('home/riwayat_bbm?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal mengubah Data BBM');
+            redirect('home/riwayat_bbm?id=' . $id_kend . '');
+        }
+    }
+    public function approve_riwayatpajak()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatPajakbyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->approve_pjk($id)) {
+            $this->session->set_flashdata('success', 'Data Pajak Berhasil Disetujui');
+            redirect('home/riwayat_pajak?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal Menyetujui Data Pajak');
+            redirect('home/riwayat_pajak?id=' . $id_kend . '');
+        }
+    }
+    public function reject_riwayatpajak()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatPajakbyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->reject_pjk($id)) {
+            $this->session->set_flashdata('success', 'Data Pajak Berhasil Ditolak');
+            redirect('home/riwayat_pajak?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal menolak Data Pajak');
+            redirect('home/riwayat_pajak?id=' . $id_kend . '');
+        }
+    }
+    public function wait_riwayatpajak()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatPajakbyid($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->wait_pjk($id)) {
+            $this->session->set_flashdata('success', 'Data Pajak Berhasil Diubah menjadi menunggu');
+            redirect('home/riwayat_pajak?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal mengubah Data Pajak');
+            redirect('home/riwayat_pajak?id=' . $id_kend . '');
+        }
+    }
+    public function approve_servis()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatservisbyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->approve_servis($id)) {
+            $this->session->set_flashdata('success', 'Data Servis Berhasil Disetujui');
+            redirect('home/riwayat_servis?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('warning', 'Gagal Menyetujui Data Servis');
+            redirect('home/riwayat_servis?id=' . $id_kend . '');
+        }
+    }
+    public function reject_servis()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatservisbyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->reject_servis($id)) {
+            $this->session->set_flashdata('success', 'Data Servis Berhasil Ditolak');
+            redirect('home/riwayat_servis?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('warning', 'Gagal Menolak Data Servis');
+            redirect('home/riwayat_servis?id=' . $id_kend . '');
+        }
+    }
+    public function wait_servis()
+    {
+        $id = $this->input->get('id');
+        $kend = $this->home_m->data_riwayatservisbyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->wait_servis($id)) {
+            $this->session->set_flashdata('success', 'Data Servis Berhasil Diubah menjadi menunggu');
+            redirect('home/riwayat_servis?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Gagal mengubah Data Servis');
+            redirect('home/riwayat_servis?id=' . $id_kend . '');
         }
     }
 }

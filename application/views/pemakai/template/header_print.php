@@ -105,6 +105,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
         margin: 0 auto;
     }
 
+    /* body {
+            background-image: url("<?php echo base_url('assets/logo/pemkot.png'); ?>");
+        } */
+    .content-container:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-image: url("<?php echo base_url('assets/logo/logo-pemkot.png'); ?>");
+        background-size: 500px;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 100%;
+        opacity: .2;
+        z-index: 2;
+
+    }
+
     /* .table-content {
         border-collapse: collapse;
         border-spacing: 0;

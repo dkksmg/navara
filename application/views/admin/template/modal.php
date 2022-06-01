@@ -52,11 +52,12 @@
         </div>
     </div>
 </div>
+<!-- Approve Confirmation-->
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Setujui Pengajuan Servis ini ?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Setujui Data ini ?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -68,14 +69,26 @@
         </div>
     </div>
 </div>
+<!-- Reject Confirmation-->
 <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tolak Pengajuan Servis ini ?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tolak Data ini ?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Alasan Penolakan</label>
+                            <input type="text" class="form-control" name="reason_reject"
+                                placeholder="Masukkan Alasan Penolakan" required>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Tidak</button>

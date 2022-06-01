@@ -7,6 +7,7 @@ class Home_m extends CI_Model
     function __construct()
     {
         parent::__construct();
+        date_default_timezone_set('Asia/Jakarta');
     }
 
     public function data_kendaraan()
@@ -28,7 +29,9 @@ class Home_m extends CI_Model
                 ->group_end()
                 ->get('kendaraan');
         else :
-            $query = $this->db->order_by('kn.idk', 'ASC')
+            $query = $this->db
+                // ->order_by('rp.is_pejabat', 'DESC')
+                ->order_by('kn.idk', 'ASC')
                 ->join('riwayat_pemakai as rp', 'kn.idk = rp.id_kendaraan', 'left')
                 ->join('users as us', 'us.id = rp.id_user', 'left')
                 ->where('kn.status', 'aktif')
@@ -74,14 +77,22 @@ class Home_m extends CI_Model
     public function data_servis($tahun = null)
     {
         $this->db
+            ->order_by('rp.is_pejabat', 'DESC')
+            ->order_by('cast(ps.pagu_awal as int)', 'DESC')
             ->order_by('kn.jenis', 'DESC')
             ->order_by('kn.merk', 'ASC')
-            ->order_by('kn.tipe', 'ASC')
-            ->order_by('us.name', 'DESC')
+            ->order_by('kn.tipe', 'DESC')
+            ->order_by('kn.no_polisi', 'ASC')
+            // ->order_by('us.name', 'DESC')
             ->join('pagu_service as ps', 'ps.id_kend = kn.idk', 'left')
             ->join('riwayat_pemakai as rp', 'rp.id_kendaraan=kn.idk', 'left')
-            ->join('users as us', 'us.id=rp.id_user', 'left');
-        // ->where("tgl_pencatatan BETWEEN '$tahun'");
+            ->join('users as us', 'us.id=rp.id_user', 'left')
+            ->where('kn.status', 'aktif')
+            ->where('ps.tahun', $tahun)
+            ->group_start()
+            ->where(array('rp.status' => 'aktif'))
+            ->or_where('rp.status is null')
+            ->group_end();
         $query = $this->db->get('kendaraan as kn');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -92,9 +103,11 @@ class Home_m extends CI_Model
     }
     public function data_riwayatKondisi($id = null)
     {
-        $this->db->order_by('tgl_pencatatan', 'DESC')
-            ->where('id_kendaraan', $id);
-        $query = $this->db->get('riwayat_kondisi');
+        $this->db
+            ->join('users as us', 'us.id=rk.input_user', 'left')
+            ->order_by('rk.tgl_pencatatan', 'DESC')
+            ->where('rk.id_kendaraan', $id);
+        $query = $this->db->get('riwayat_kondisi as rk');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -104,8 +117,12 @@ class Home_m extends CI_Model
     }
     public function data_riwayatbbm($id = null)
     {
-        $this->db->order_by('tgl_pencatatan', 'DESC')->where('id_kendaraan', $id);
-        $query = $this->db->get('riwayat_bbm');
+        $this->db
+            ->order_by('rbm.tgl_pencatatan', 'DESC')
+            ->order_by('rbm.created_bbm', 'DESC')
+            ->join('users as us', 'us.id=rbm.input_user', 'left')
+            ->where('rbm.id_kendaraan', $id);
+        $query = $this->db->get('riwayat_bbm as rbm');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -121,9 +138,10 @@ class Home_m extends CI_Model
     }
     public function data_riwayatpajak($id = null)
     {
-        $this->db->order_by('tahun', 'DESC');
-        $this->db->where('id_kendaraan', $id);
-        $query = $this->db->get('riwayat_pajak');
+        $this->db->order_by('rpk.tahun', 'DESC')
+            ->join('users as us', 'us.id=rpk.input_user', 'left');
+        $this->db->where('rpk.id_kendaraan', $id);
+        $query = $this->db->get('riwayat_pajak as rpk');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -156,9 +174,9 @@ class Home_m extends CI_Model
     }
     public function cek_id_riwayat_kondisi($id = null)
     {
-        $this->db->join('riwayat_kondisi', 'riwayat_kondisi.id_kendaraan = kendaraan.idk', 'left');
-        $this->db->where('idk', $id);
-        $query = $this->db->get('kendaraan');
+        $this->db->join('riwayat_kondisi as rk', 'rk.id_kendaraan = kn.idk', 'left');
+        $this->db->where('kn.idk', $id);
+        $query = $this->db->get('kendaraan as kn');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;
@@ -329,6 +347,19 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function cek_id_riwayat_kondisi_pemakai($id = null)
+    {
+        $this->db->join('riwayat_kondisi as rk', 'rk.id_kendaraan = kn.idk', 'left');
+        $this->db->where('kn.idk', $id);
+        $query = $this->db->get('kendaraan as kn');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+
     public function listdata_pemakai()
     {
 
@@ -375,22 +406,7 @@ class Home_m extends CI_Model
         $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
     }
-    public function reject_servis($id = null)
-    {
 
-        $data['status_sistem'] = "no";
-        $this->db->where('id_rs', $id);
-        $q = $this->db->update('riwayat_servis', $data);
-        return $q;
-    }
-    public function approve_servis($id = null)
-    {
-
-        $data['status_sistem'] = "yes";
-        $this->db->where('id_rs', $id);
-        $q = $this->db->update('riwayat_servis', $data);
-        return $q;
-    }
     public function data_riwayatpemakaibyid($id = null)
     {
         $this->db->where('id_kendaraan', $id);
@@ -466,8 +482,13 @@ class Home_m extends CI_Model
     }
     public function data_riwayatservis($id = null)
     {
-        $this->db->where('id_kendaraan', $id);
-        $query = $this->db->order_by('tgl_servis', 'DESC')->get('riwayat_servis');
+        $this->db
+            ->join('users as us', 'us.id=rs.input_user', 'left')
+            ->where('rs.id_kendaraan', $id);
+        $query = $this->db
+            ->order_by('rs.tgl_servis', 'DESC')
+            ->order_by('rs.created_rs', 'DESC')
+            ->get('riwayat_servis as rs');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -503,10 +524,10 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
-    public function kendaraanByid($id = null)
+    public function data_riwayatBBMbyid($id = null)
     {
-        $this->db->where('idk', $id);
-        $query = $this->db->get('kendaraan');
+        $this->db->where('id_bbm', $id);
+        $query = $this->db->get('riwayat_bbm');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;
@@ -514,16 +535,102 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
-    public function kendaraanUser($id = null)
+    public function data_riwayatPajakbyid($id = null)
     {
-        $this->db->join('riwayat_pemakai as rp', 'rp.id_user = us.id')->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')->where('us.id', $id)->where('rp.status', 'aktif');
-        $query = $this->db->get('users as us');
+        $this->db->where('id_pjk', $id);
+        $query = $this->db->get('riwayat_pajak');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;
             }
             return $hasil;
         }
+    }
+    public function kendaraanByid($id = null)
+    {
+        $this->db
+            ->where('idk', $id);
+        $query = $this->db->get('kendaraan as kn');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function pagukendaraanById($id = null, $tahun = null)
+    {
+        $query = $this->db->query('SELECT * FROM pagu_service as ps 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        WHERE ps.id_kend = ' . $id . ' AND ps.tahun = ' . $tahun . '')->row_array();
+        return $query;
+    }
+    public function kendaraanByidwithpagu($id = null, $tahun = null)
+    {
+        $query = $this->db->query('SELECT * FROM kendaraan as kn 
+        LEFT JOIN pagu_service as ps ON ps.id_kend=kn.idk 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        WHERE kn.idk = ' . $id . ' AND ps.tahun = ' . $tahun . '')->row_array();
+        return $query;
+    }
+    public function kendaraanByidwithpaguadmin($id = null, $tahun = null)
+    {
+        $query = $this->db->query('SELECT * FROM kendaraan as kn 
+        LEFT JOIN pagu_service as ps ON ps.id_kend=kn.idk 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        WHERE kn.idk = ' . $id . ' AND ps.tahun = ' . $tahun . '')->row_array();
+        return $query;
+    }
+    public function kendaraanUser_old($id = null, $tahun = null)
+    {
+        $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
+            ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
+            ->where('us.id', $id)
+            ->where('rp.status', 'aktif');
+        $query = $this->db->get('users as us');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function kendaraanUser($id = null, $tahun = null)
+    {
+        $query = $this->db->query('SELECT * FROM users as us 
+        JOIN riwayat_pemakai as rp ON rp.id_user = us.id 
+        JOIN kendaraan as kd ON kd.idk = rp.id_kendaraan 
+        JOIN pagu_service as ps ON ps.id_kend = kd.idk 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        WHERE us.id = ' . $id . ' AND ps.tahun = ' . $tahun . ' AND rp.status = "aktif"')->result_array();
+        return $query;
+    }
+    public function cek_datapagu($id = null, $tahun = null)
+    {
+        $query = $this->db->query("SELECT * FROM `pagu_service` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)='$tahun', riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rp ON `rp`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)='$tahun', riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)='$tahun', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON `rb`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        WHERE pagu_service.id_kend='$id' AND pagu_service.tahun='$tahun'")->result_array();
+        return $query;
+    }
+    public function cekkendaraanUser($id = null)
+    {
+        $query = $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
+            ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
+            ->where('us.id', $id)
+            ->where('rp.status', 'aktif')->get('users as us')->result_array();
+        return $query;
     }
     public function data_lokasiunit()
     {
@@ -584,7 +691,8 @@ class Home_m extends CI_Model
         $data['foto_tampak_kanan']      = $kanan;
         $data['id_kendaraan']           = $idk;
         $data['tgl_pencatatan']         = date('Y-m-d');
-
+        $data['status_rk']         = 'Wait';
+        $data['last_time_update'] = date('Y-m-d H:i:s');
         $data['kondisi']          = $this->input->post('kondisi');
         $data['input_pemakai']          = $this->session->userdata('name');
         if ($this->session->userdata('rule') == 'admin' || $this->session->userdata('rule') == 'superadmin') {
@@ -604,6 +712,8 @@ class Home_m extends CI_Model
         $data['foto_tampak_kiri']       = $kiri;
         $data['foto_tampak_kanan']      = $kanan;
         $data['kondisi']          = $this->input->post('kondisi');
+        $data['status_rk']          = 'Wait';
+        $data['last_time_update'] = date('Y-m-d H:i:s');
         $data['input_pemakai']          = $this->session->userdata('name');
         if ($this->session->userdata('rule') == 'admin' || $this->session->userdata('rule') == 'superadmin') {
             $data['input_user']             = $this->session->userdata('id');
@@ -674,13 +784,16 @@ class Home_m extends CI_Model
         $data['id_kendaraan'] = $idk;
         $data['foto_servis']  = $fotoservis;
         $data['foto_nota']  = $nota;
-
         $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
         $data['lokasi']             = $this->input->post('bengkel');
         $data['keluhan']            = $this->input->post('keluhan');
         $data['perbaikan']          = $this->input->post('perbaikan');
         $data['lain_lain']          = $this->input->post('lain_lain');
         $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_pemakai'] = $this->session->userdata('name');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
 
         $q = $this->db->insert('riwayat_servis', $data);
         return $q;
@@ -696,6 +809,9 @@ class Home_m extends CI_Model
         $data['perbaikan']          = $this->input->post('perbaikan');
         $data['lain_lain']          = $this->input->post('lain_lain');
         $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
 
         $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
         return $q;
@@ -709,6 +825,10 @@ class Home_m extends CI_Model
         $data['total_bbm'] = $this->input->post('harga_bbm');
         $data['struk_bbm'] = $nama_struk_bbm;
         $data['user_id'] = $this->session->userdata('id');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_rbm']         = 'Wait';
+
 
         $q = $this->db->insert('riwayat_bbm', $data);
         return $q;
@@ -719,7 +839,10 @@ class Home_m extends CI_Model
         $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
         $data['total_bbm'] = $this->input->post('harga_bbm');
         $data['struk_bbm'] = $nama_struk_bbm;
+        $data['status_rbm']         = 'Wait';
+        $data['last_time_update'] = date('Y-m-d H:i:s');
         $data['user_id'] = $this->session->userdata('id');
+        $data['input_user'] = $this->session->userdata('id');
         $q = $this->db->where('id_bbm', $id_bbm)->update('riwayat_bbm', $data);
         return $q;
     }
@@ -729,6 +852,9 @@ class Home_m extends CI_Model
         $data['tgl_pencatatan'] = date('Y-m-d');
         $data['total_pajak'] = $this->input->post('total_pajak');
         $data['user_id'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['status_pjk']  = 'Wait';
         $data['tahun'] = $this->input->post('tahun_pajak');
 
         $q = $this->db->insert('riwayat_pajak', $data);
@@ -738,6 +864,9 @@ class Home_m extends CI_Model
     {
         $data['total_pajak'] = $this->input->post('total_pajak');
         $data['user_id'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['status_pjk']  = 'Wait';
         // $data['tahun'] = $this->input->post('tahun_pajak');
 
         $q = $this->db->where('id_pjk', $id_pjk)->update('riwayat_pajak', $data);
@@ -845,7 +974,8 @@ class Home_m extends CI_Model
     }
     public function data_riwayatpengajuanservis_pemakai($id = null)
     {
-        $this->db->order_by('id_pengajuan', 'DESC');
+        $this->db
+            ->order_by('id_pengajuan', 'DESC');
         $this->db->where('id_kendaraan', $id);
         $query = $this->db->get('riwayat_pengajuan_servis');
         if ($query->num_rows() > 0) {
@@ -857,10 +987,12 @@ class Home_m extends CI_Model
     }
     public function data_riwayatpengajuanservis_admin($id = null)
     {
-        $this->db->join('users', 'users.id = riwayat_pengajuan_servis.id_admin', 'left');
-        $this->db->order_by('id_pengajuan', 'DESC');
-        $this->db->where('id_kendaraan', $id);
-        $query = $this->db->get('riwayat_pengajuan_servis');
+        $this->db
+            // ->join('users', 'users.id = riwayat_pengajuan_servis.id_admin', 'left');
+            ->join('users as us', 'us.id=rps.input_user', 'left');
+        $this->db->order_by('rps.id_pengajuan', 'DESC');
+        $this->db->where('rps.id_kendaraan', $id);
+        $query = $this->db->get('riwayat_pengajuan_servis as rps');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -888,6 +1020,8 @@ class Home_m extends CI_Model
         $data['service'] = $this->input->post('servis_kendaraan');
         $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
         $data['id_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
         $data['status_pengajuan'] = 'Wait';
         // $data['id_admin'] = '1'; //set default id admin ketika tambah pengajuan servis
 
@@ -917,10 +1051,210 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
-    public function reject_pengajuan($id = null)
+    public function data_riwayatkondisiidrp($id = null)
     {
 
+        $this->db
+            ->where('id_rk', $id);
+        $query = $this->db->get('riwayat_kondisi');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function hapus_data_pengajuan($id = null)
+    {
+        $this->db->where('id_pengajuan', $id);
+        $q = $this->db->delete('riwayat_pengajuan_servis');
+        return $q;
+    }
+    public function cek_data_rk($idk = null)
+    {
+        $this->db->limit('1')->order_by('id_rk', 'DESC')->where('id_kendaraan', $idk);
+        $query = $this->db->get('riwayat_kondisi');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_data_srs($idk = null)
+    {
+        $this->db->limit('1')->order_by('id_rs', 'DESC')->where('id_kendaraan', $idk);
+        $query = $this->db->get('riwayat_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_data_rbm($id_kend = null)
+    {
+        $this->db->limit('1')->order_by('id_bbm', 'DESC')->where('id_kendaraan', $id_kend);
+        $query = $this->db->get('riwayat_bbm');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function cek_data_pajak($id_kend = null)
+    {
+        $this->db->limit('1')->order_by('id_pjk', 'DESC')->where('id_kendaraan', $id_kend);
+        $query = $this->db->get('riwayat_pajak');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function approve_rk($id = null)
+    {
+        $data['status_rk'] = "Yes";
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $this->db->where('id_rk', $id);
+        $q = $this->db->update('riwayat_kondisi', $data);
+        return $q;
+    }
+    public function reject_rk($id = null)
+    {
+        $data['status_rk'] = "No";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['reject_reason'] = $this->input->post('reason_reject');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_rk', $id);
+        $q = $this->db->update('riwayat_kondisi', $data);
+        return $q;
+    }
+    public function wait_rk($id = null)
+    {
+        $data['status_rk'] = "Wait";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_rk', $id);
+        $q = $this->db->update('riwayat_kondisi', $data);
+        return $q;
+    }
+    public function approve_rbm($id = null)
+    {
+        $data['status_rbm'] = "Yes";
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $this->db->where('id_bbm', $id);
+        $q = $this->db->update('riwayat_bbm', $data);
+        return $q;
+    }
+    public function reject_rbm($id = null)
+    {
+        $data['status_rbm'] = "No";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['reject_reason'] = $this->input->post('reason_reject');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_bbm', $id);
+        $q = $this->db->update('riwayat_bbm', $data);
+        return $q;
+    }
+    public function wait_rbm($id = null)
+    {
+        $data['status_rbm']         = "Wait";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_bbm', $id);
+        $q = $this->db->update('riwayat_bbm', $data);
+        return $q;
+    }
+    public function approve_pjk($id = null)
+    {
+        $data['status_pjk'] = "Yes";
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $this->db->where('id_pjk', $id);
+        $q = $this->db->update('riwayat_pajak', $data);
+        return $q;
+    }
+    public function reject_pjk($id = null)
+    {
+        $data['status_pjk'] = "No";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['reject_reason'] = $this->input->post('reason_reject');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_pjk', $id);
+        $q = $this->db->update('riwayat_pajak', $data);
+        return $q;
+    }
+    public function wait_pjk($id = null)
+    {
+        $data['status_pjk']         = "Wait";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_pjk', $id);
+        $q = $this->db->update('riwayat_pajak', $data);
+        return $q;
+    }
+    public function reject_servis($id = null)
+    {
+
+        $data['status_srs']         = "No";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['reject_reason'] = $this->input->post('reason_reject');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_rs', $id);
+        $q = $this->db->update('riwayat_servis', $data);
+        return $q;
+    }
+    public function approve_servis($id = null)
+    {
+
+        $data['status_srs']         = "Yes";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_rs', $id);
+        $q = $this->db->update('riwayat_servis', $data);
+        return $q;
+    }
+    public function wait_servis($id = null)
+    {
+        $data['status_srs']         = "Wait";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['id_admin'] = $this->session->userdata('id');
+        $this->db->where('id_rs', $id);
+        $q = $this->db->update('riwayat_servis', $data);
+        return $q;
+    }
+    public function reject_pengajuan($id = null)
+    {
         $data['status_pengajuan'] = "No";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['reject_reason'] = $this->input->post('reason_reject');
+        $data['input_user'] = $this->session->userdata('id');
         $data['id_admin'] = $this->session->userdata('id');
         $this->db->where('id_pengajuan', $id);
         $q = $this->db->update('riwayat_pengajuan_servis', $data);
@@ -929,6 +1263,9 @@ class Home_m extends CI_Model
     public function approve_pengajuan($id = null)
     {
         $data['status_pengajuan'] = "Yes";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['datetime_approve'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
         $data['id_admin'] = $this->session->userdata('id');
         $this->db->where('id_pengajuan', $id);
         $q = $this->db->update('riwayat_pengajuan_servis', $data);
@@ -937,15 +1274,11 @@ class Home_m extends CI_Model
     public function wait_pengajuan($id = null)
     {
         $data['status_pengajuan'] = "Wait";
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['input_user'] = $this->session->userdata('id');
         $data['id_admin'] = $this->session->userdata('id');
         $this->db->where('id_pengajuan', $id);
         $q = $this->db->update('riwayat_pengajuan_servis', $data);
-        return $q;
-    }
-    public function hapus_data_pengajuan($id = null)
-    {
-        $this->db->where('id_pengajuan', $id);
-        $q = $this->db->delete('riwayat_pengajuan_servis');
         return $q;
     }
 }

@@ -100,7 +100,7 @@
                              <div class="row">
                                  <div class="col-md-12">
                                      <div class="form-group">
-                                         <label>Tipe (Avanza, Vario, Supra, Dll...)</label>
+                                         <label>Tipe (Avanza, Rush, Hiace, Vario, Supra, Dll...)</label>
                                          <input type="text" class="form-control" name="tipe"
                                              value="<?= isset($kend) ? $kend['tipe'] : ""; ?>" required>
                                      </div>

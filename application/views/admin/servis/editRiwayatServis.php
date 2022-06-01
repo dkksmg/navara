@@ -20,7 +20,7 @@
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>ID Aset</th>
+                                    <th width="30%">ID Aset</th>
                                     <th>:</th>
                                     <th><?= $servis['id_assets'] ?></th>
                                 </tr>
@@ -53,6 +53,28 @@
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
                                     <th><?= strtoupper($servis['jenis_bb']) ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                    <th>:</th>
+                                    <th>Rp. <?= isset($pagu) ? number_format($pagu['pagu_awal'], 2, ',', '.') : 0 ?>
+                                    </th>
+                                </tr>
+                                <?php
+                                if (isset($pagu)) {
+                                    $terpakai = $pagu['total_biaya_pajak'] + $pagu['total_biaya_servis'] + $pagu['total_biaya_bbm'];
+                                    $sisa = $pagu['pagu_awal'] - $terpakai;
+                                }
+                                ?>
+                                <tr>
+                                    <th>Pagu Terpakai</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= isset($terpakai) ? number_format($terpakai, 2, ',', '.') : 0 ?></th>
+                                </tr>
+                                <tr>
+                                    <th>Sisa Pagu</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= isset($sisa) ? number_format($sisa, 2, ',', '.') : 0 ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -137,6 +159,7 @@
                                                 <?php if ($servis['foto_nota'] == null) : ?> required <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
+                                            <h5 class="card-title text-center mt-3 mb-3">Foto Nota</h5>
                                             <div class="gallery">
 
                                                 <img class="card-img-top"
@@ -159,6 +182,7 @@
                                                 <?php if ($servis['foto_servis'] == null) : ?> required <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
+                                            <h5 class="card-title text-center mt-3 mb-3">Foto Servis</h5>
                                             <div class="gallery">
                                                 <img class="card-img-top"
                                                     src="<?= base_url('assets/upload/foto_servis/' . $servis['foto_servis']) ?>"

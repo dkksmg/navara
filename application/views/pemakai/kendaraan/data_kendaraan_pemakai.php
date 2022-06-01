@@ -19,10 +19,15 @@
      <div class="container">
          <div class="row">
              <div class="col-lg-12">
-                 <?php if ($kend != '') : ?>
+                 <?php
+
+                    if ($kends != '') : ?>
+                 <?php
+                        $no = 1;
+                        foreach ($kends as $kend) : ?>
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas Anda</h3>
+                         <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas Anda Ke-<?= $no ?></h3>
                      </div>
                      <div class="card-body">
                          <table class="table table-striped">
@@ -66,6 +71,27 @@
                                  <th>:</th>
                                  <th><?= strtoupper($kend['lokasi_unit']) ?></th>
                              </tr>
+                             <tr>
+                                 <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
+                                 <th>:</th>
+                                 <th>Rp. <?= isset($kend) ? number_format($kend['pagu_awal'], 2, ',', '.') : 0 ?></th>
+                             </tr>
+                             <?php
+                                        if (isset($kend)) {
+                                            $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                            $sisa = $kend['pagu_awal'] - $terpakai;
+                                        }
+                                        ?>
+                             <tr>
+                                 <th>Pagu Terpakai</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= isset($terpakai) ? number_format($terpakai, 2, ',', '.') : 0 ?></th>
+                             </tr>
+                             <tr>
+                                 <th>Sisa Pagu</th>
+                                 <th>:</th>
+                                 <th>Rp. <?= isset($sisa) ? number_format($sisa, 2, ',', '.') : 0 ?></th>
+                             </tr>
                          </table>
                      </div>
                      <div class="card-footer">
@@ -91,6 +117,9 @@
                              Servis</a>
                      </div>
                  </div>
+                 <?php
+                            $no++;
+                        endforeach; ?>
                  <?php else : ?>
                  <div class="card">
                      <div class="card-header" style="background-color:#4a2f3a;">

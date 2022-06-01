@@ -9,9 +9,9 @@ footer {
 <!-- Main Footer -->
 <footer>
     <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-        <i style="font-size:11px"><b>Generate on Navara : <?php date_default_timezone_set('Asia/Jakarta');
-                                                            echo date('d-m-Y H:i:s') ?></i></b>
+    <div class="text-center">
+        <i style="font-size:11px"><b>Print on Navara : <?php date_default_timezone_set('Asia/Jakarta');
+                                                        echo date('d-m-Y H:i:s') ?></i></b>
     </div>
 </footer>
 
