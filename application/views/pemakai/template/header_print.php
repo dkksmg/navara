@@ -76,7 +76,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         margin-top: 10;
         text-align: center;
         font-family: 'Times New Roman';
-        font-size: 12pt;
+        font-size: 14pt;
     }
 
     .text-bap {
@@ -122,6 +122,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
         opacity: .2;
         z-index: 2;
 
+    }
+
+    @media screen {
+        div.footer-print {
+            display: none;
+        }
+    }
+
+    @media print {
+        div.footer-print {
+            position: fixed;
+            bottom: 0;
+        }
     }
 
     /* .table-content {

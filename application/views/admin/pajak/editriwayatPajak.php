@@ -106,7 +106,7 @@
                                             $year_end = date('Y') + 20;
                                             $user_selected_year = date('Y');
 
-                                            echo '<select id="year" required class="form-control" name="tahun_pajak" disabled readonly>' . "\n";
+                                            echo '<select id="year" required class="form-control" name="tahun_pajak">' . "\n";
                                             for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
                                                 if ($value['tahun'] == null) :
                                                     $selected = ($user_selected_year == $i_year ? ' selected' : '');

@@ -141,7 +141,7 @@
                          <button type="sumbit" class="btn btn-primary">Simpan</button>
 
                      </div>
-                     <?php form_close() ?>
+                     <?php echo form_close() ?>
                  </div>
              </div>
          </div>

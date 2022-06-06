@@ -53,7 +53,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="container">
                 <a href="#" class="navbar-brand">
                     <img style="width:40px;height:40px;" src="<?= base_url('assets/') ?>logo/favicon.png"
-                        alt="Pemkot Logo" class="brand-image" style="opacity: .8">
+                        alt="Pemkot Logo" class="brand-image">
                     <span class="brand-text font-weight-light">NAVARA</span>
                 </a>
 

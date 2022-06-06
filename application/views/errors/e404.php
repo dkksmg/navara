@@ -18,13 +18,13 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h3 class="panel-title" style="text-align: center">
-                        <i class="fa-duotone fa-circle-exclamation"></i> Ops!
+                        Ops !!! <i style="color:red;" class="fa-thin fa-hand"></i>
                     </h3>
                 </div>
                 <div class="panel-body timer" onload="timer(5)">
                     <div class="time">
-                        <h3 class="panel-title" style="text-align: center"> Maaf , halaman tidak ditemukan.
-                            <!-- Anda akan dialihkan ke halaman Home dalam <span id="time"></span> -->
+                        <h3 class="panel-title" style="text-align: center"> Maaf, halaman tidak ditemukan. <br>
+                            Anda akan dialihkan ke halaman Utama dalam <span id="time"></span>
                         </h3>
                     </div>
                 </div>
@@ -46,17 +46,17 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
     <script type="text/javascript">
-    var time = 10;
+    var time = 15;
     setInterval(function() {
         var seconds = time % 60;
         var minutes = (time - seconds) / 60;
         if (seconds.toString().length == 1) {
             seconds = seconds;
         }
-        document.getElementById("time").innerHTML = seconds;
+        document.getElementById("time").innerHTML = seconds + " detik.";
         time--;
         if (time == 0) {
-            window.location.href = "<?= base_url('home') ?>";
+            window.location.href = "<?= base_url() ?>";
         }
     }, 1000);
     </script>

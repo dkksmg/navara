@@ -26,21 +26,16 @@ class Pemakai extends CI_Controller
     {
         $id = $this->input->get('id');
         $tahun = date('Y');
-        $id_user = $this->session->userdata('id');
         // $cek_id_kondisi = $this->home_m->cek_id_riwayat_kondisi($id);
+        $id_user = $this->session->userdata('id');
         $cek = $this->home_m->cekkendaraanUser($id_user);
-        // print_r($this->db->last_query());
-
         $found = false;
         foreach ($cek as $ck) {
-            // echo $ck['id_kendaraan'];
             if (in_array($id, $ck)) {
                 $found = true;
                 break;
             }
         }
-        // echo $found === true ? "Match found" : "Match not found";
-        // die();
 
 
         if ($found === true) {
@@ -199,8 +194,16 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $idkend = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id  = $this->home_m->cek_id_edit_riwayat_kondisi($id);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatkondisi($id_user, $id);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($idkend, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
             $data['value'] = $this->home_m->data_kondisiById($id);
@@ -547,7 +550,18 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $tahun = date('Y');
         $cek_id_kondisi = $this->home_m->cek_id_riwayat_servis($id);
-        if ($cek_id_kondisi != '') {
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+
+        $found = false;
+        foreach ($cek as $ck) {
+            // echo $ck['id_kendaraan'];
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Riwayat Servis Kendaraan Dinas';
             $data['rs'] = $this->home_m->data_riwayatservis($id);
@@ -644,8 +658,16 @@ class Pemakai extends CI_Controller
         $id_rs = $this->input->get('id');
         $id = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_servis($id_rs);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatservis($id_user, $id_rs);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = "Edit Riwayat Servis Kendaraan";
             $data['servis'] = $this->home_m->data_servisById($id_rs);
@@ -777,7 +799,18 @@ class Pemakai extends CI_Controller
         $id = ($this->input->get('id'));
         $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_bbm($id);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+
+        $found = false;
+        foreach ($cek as $ck) {
+
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Riwayat BBM Kendaraan Dinas';
             $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
@@ -853,8 +886,16 @@ class Pemakai extends CI_Controller
         $id = ($this->input->get('idkend'));
         $id_bbm = ($this->input->get('id'));
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_bbm($id_bbm, $id);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatbbm($id_user, $id_bbm);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Edit Riwayat BBM';
             $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
@@ -944,8 +985,18 @@ class Pemakai extends CI_Controller
     {
         $id = $this->input->get('id');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_riwayat_pajak($id);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+
+        $found = false;
+        foreach ($cek as $ck) {
+            // echo $ck['id_kendaraan'];
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpajak($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
@@ -973,7 +1024,7 @@ class Pemakai extends CI_Controller
                     redirect('pemakai/riwayatpajak?id=' . $idkend . '');
                 } else {
                     if ($this->home_m->tambahriwayatpajak($idkend)) {
-                        $this->session->set_flashdata('success', 'Tambah Riwayat Pajak Kendaraan Berhasil.. Silakan menunggu proses verifikasi oleh Admin');
+                        $this->session->set_flashdata('success', 'Tambah Riwayat Pajak Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
                         redirect('pemakai/riwayatpajak?id=' . $idkend . '');
                     } else {
                         $this->session->set_flashdata('danger', 'Tambah Riwayat Pajak Kendaraan gagal');
@@ -988,8 +1039,16 @@ class Pemakai extends CI_Controller
         $id_pjk = $this->input->get('id');
         $id = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_pajak($id_pjk);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatpajak($id_user, $id_pjk);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpajak($id_pjk);
             $data['value'] = $this->home_m->datapajakById($id_pjk);
@@ -1040,7 +1099,18 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_pengajuan_servis($id);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+
+        $found = false;
+        foreach ($cek as $ck) {
+            // echo $ck['id_kendaraan'];
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakai($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
@@ -1077,8 +1147,16 @@ class Pemakai extends CI_Controller
         $id_pen = $this->input->get('id');
         $idkend = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_pengajuan_servis($id_pen);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithpengajuanservis($id_user, $id_pen);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($idkend, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakaibyidpen($id_pen);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($idkend, $tahun);
@@ -1112,7 +1190,7 @@ class Pemakai extends CI_Controller
         if ($cek_id != '') {
             if ($cek_id['status_pengajuan'] == 'Yes') {
                 $data = [];
-                $data['title'] = "Pengajuan Servis Kendaraan Dinas";
+                $data['title'] = "Cetak Pengajuan Servis Kendaraan Dinas";
                 $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id_kend);
                 $data['pengajuan'] = $this->home_m->data_riwayatpengajuanbyidrp($id_pengajuan);
                 $this->load->view('pemakai/template/header_print');

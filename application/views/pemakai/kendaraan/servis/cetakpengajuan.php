@@ -3,7 +3,8 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-auto">
-                <img class="logodisp" src="<?php echo base_url() ?>assets/logo/pemkot.png" type="image/png" />
+                <img class="logodisp" src="<?php echo base_url() ?>assets/logo/pemkot.png" type="image/png" width="auto"
+                    height="auto" />
             </div>
             <div class="col-md-8 ml-5">
                 <p class="header">
@@ -24,7 +25,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8" id="inner">
-                    <p style="text-align:left">Yth. Bengkel <b><?= $pengajuan['bengkel_tujuan'] ?></b> <br><br>di tempat
+                    <p style="text-align:left;font-size:14px;">Yth. Bengkel <b><?= $pengajuan['bengkel_tujuan'] ?></b>
+                        <br><br>di tempat
                     </p>
 
                     <p>Bersama dengan surat ini kami ajukan untuk melakukan servis kendaraan dinas dengan data dibawah
@@ -35,7 +37,7 @@
                     <br>
                     <table class="table table-striped table-bordered" border="1">
                         <tr>
-                            <th width="40%">ID Aset</th>
+                            <th width="30%">ID Aset</th>
                             <th>:</th>
                             <td><?= $kend['id_assets'] ?></td>
                         </tr>
@@ -76,7 +78,7 @@
                     <br>
                     <table class="table table-striped table-bordered" border="1">
                         <tr>
-                            <th width="40%">Nama Pengguna Kendaraan</th>
+                            <th width="30%">Nama Pengguna Kendaraan</th>
                             <th>:</th>
                             <td><?= $pengajuan['name'] . ' (' . $pengajuan['nip_user'] . ')' ?></td>
                         </tr>
@@ -120,7 +122,6 @@
                             </td>
                         </tr>
                     </table>
-                    <br>
                     <table border="0" width="100%">
                         <thead>
                             <td width="500px"></td>

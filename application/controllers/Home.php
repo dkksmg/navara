@@ -1275,7 +1275,7 @@ class Home extends CI_Controller
         if ($cek_id != '') {
             if ($cek_id['status_pengajuan'] == 'Yes') {
                 $data = [];
-                $data['title'] = "Pengajuan Servis Kendaraan Dinas";
+                $data['title'] = "Cetak Pengajuan Servis Kendaraan Dinas";
                 $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id_kend);
                 $data['pengajuan'] = $this->home_m->data_riwayatpengajuanbyidrp($id_pengajuan);
                 $this->load->view('pemakai/template/header_print');
