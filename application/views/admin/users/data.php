@@ -37,6 +37,7 @@
                                      <th width="80px" class="text-center">Aksi</th>
                                      <th class="text-center">Username</th>
                                      <th class="text-center">Nama</th>
+                                     <th class="text-center">NIP</th>
                                      <th class="text-center">Lokasi Kerja</th>
                                      <th class="text-center">Role</th>
                                      <th class="text-center">Status</th>
@@ -69,6 +70,7 @@
                                      </td>
                                      <td class="text-center"><?= $usr['username'] ?></td>
                                      <td class="text-center"><?= $usr['name'] ?></td>
+                                     <td class="text-center"><?= $usr['nip_user'] ?></td>
                                      <td class="text-center"><?= $usr['wilayah'] ?></td>
                                      <td class="text-center"><?= $usr['role'] ?></td>
                                      <td class="text-center"><?= $usr['status'] ?></td>

@@ -17,9 +17,28 @@ class Home extends CI_Controller
         $data = [];
         $data['title'] = 'Data Kendaraan Dinas';
         $data['kendaraan'] = $this->home_m->data_kendaraan();
-        // print_r($this->db->last_query());
         $this->load->view('admin/template/header');
         $this->load->view('admin/kendaraan/dataKendaraan', $data);
+        $this->load->view('admin/template/modal');
+        $this->load->view('admin/template/footer');
+    }
+    public function kendaraan_pemakai()
+    {
+        $data = [];
+        $data['title'] = 'Data Kendaraan Dinas';
+        $data['kendaraan'] = $this->home_m->data_kendaraan();
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/kendaraan/dataKendaraan', $data);
+        $this->load->view('admin/template/modal');
+        $this->load->view('admin/template/footer');
+    }
+    public function all_kendaraan()
+    {
+        $data = [];
+        $data['title'] = 'Data Kendaraan Dinas';
+        $data['kendaraan'] = $this->home_m->data_kendaraan_all();
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/kendaraan/dataKendaraanall', $data);
         $this->load->view('admin/template/modal');
         $this->load->view('admin/template/footer');
     }

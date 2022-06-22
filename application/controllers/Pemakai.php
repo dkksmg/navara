@@ -16,6 +16,7 @@ class Pemakai extends CI_Controller
         $tahun = date('Y');
         $data = [];
         $data['kends'] = $this->home_m->kendaraanUser($id, $tahun);
+        // print_r($this->db->last_query());
         $data['pagu'] = $this->home_m->cek_datapagu($id, $tahun);
         $this->load->view('pemakai/template/headeruser');
         $this->load->view('pemakai/kendaraan/data_kendaraan_pemakai', $data);

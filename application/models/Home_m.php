@@ -49,6 +49,27 @@ class Home_m extends CI_Model
             return $hasil;
         }
     }
+    public function data_kendaraan_all()
+    {
+        $query = $this->db
+            // ->order_by('rp.is_pejabat', 'DESC')
+            ->order_by('kn.idk', 'ASC')
+            // ->join('riwayat_pemakai as rp', 'kn.idk = rp.id_kendaraan', 'left')
+            // ->join('users as us', 'us.id = rp.id_user', 'left')
+            ->where('kn.status', 'aktif')
+            // ->group_start()
+            // ->where(array('rp.status' => 'aktif'))
+            // ->or_where('rp.status is null')
+            // ->group_end()
+            ->get('kendaraan as kn');
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
     public function dataKendaraanByid($id = null)
     {
         $this->db->where('idk', $id);

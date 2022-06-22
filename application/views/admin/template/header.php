@@ -68,12 +68,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <li class="nav-item <?= $this->uri->segment(1) == 'pemakai_kendaraan'  ? 'active' : '' ?>">
                             <a href="<?= site_url('pemakai_kendaraan') ?>" class="nav-link">Pemakai</a>
                         </li>
-                        <li class="nav-item <?= $this->uri->segment(1) == 'home' ? 'active' : '' ?>">
-                            <a href="<?= site_url('home') ?>" class="nav-link">Kendaraan</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link <?= $this->uri->segment(1) == 'home' ? 'active' : '' ?>"
+                                data-toggle="dropdown" href="#">
+                                Kendaraan
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                <a href="<?= site_url('home/kendaraan_pemakai') ?>" class="dropdown-item">Semua
+                                    Kendaraan
+                                    dengan pemakai</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="<?= site_url('home/all_kendaraan') ?>" class="dropdown-item">Semua
+                                    Kendaraan</a>
+                            </div>
                         </li>
                         <?php if ($this->session->userdata('role') != 'Admin') : ?>
                         <li class="nav-item dropdown">
-                            <a class="nav-link" data-toggle="dropdown" href="#">
+                            <a class="nav-link <?= $this->uri->segment(1) == 'laporan' ? 'active' : '' ?>"
+                                data-toggle="dropdown" href="#">
                                 Laporan
                             </a>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">

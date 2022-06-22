@@ -1,0 +1,35 @@
+/* html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+} */
+.container {
+  width: auto;
+  margin: auto;
+}
+/* .main-footer { */
+/* position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%; */
+/* clear: both; */
+/* background: red; */
+/* } */
+/* footer {
+  position: relative;
+  height: 50px;
+  margin-top: 20px;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+} */
+.jedatombol {
+  margin: 4px;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

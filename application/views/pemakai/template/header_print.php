@@ -44,6 +44,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     .logodisp {
         float: left;
+        margin-top: 10px;
         position: relative;
         width: 80px;
         height: 80px;
