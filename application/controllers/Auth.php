@@ -27,55 +27,88 @@ class Auth extends CI_Controller
     public function index()
     {
         check_sudah_login();
-        // check_session();
         $this->load->view('auth/login');
     }
-
-    public function pemakai()
+    public function admin()
     {
-        $this->load->view('auth/loginPemakai');
+        check_sudah_login();
+        $this->load->view('auth/loginAdmin');
     }
-
-    public function loginadminProses()
+    // Login pemakai
+    public function check_login_user()
     {
-        if ($this->input->post()) {
-            $username = $this->input->post("username", TRUE);
-            $hash = $this->get_hash($username);
-            $password = $this->input->post('password');
-            $fixpass = password_verify($password, $hash);
-            if ($fixpass) {
-                $pass =  "cocok";
-            } else {
-                $pass = "tidak cocok";
-            }
-            $checking = $this->auth_m->check_login('users', array('username' => $username), array('password' => $password));
-            if ($pass == "cocok" && $checking != FALSE) {
-                foreach ($checking as $apps) {
-                    $rule = $apps->rule;
+        check_sudah_login();
+        $this->form_validation->set_rules(
+            'nip_user',
+            'NIP',
+            'required|xss_clean|trim',
+            ['required' => 'Username wajib diisi']
+        );
+        $this->form_validation->set_rules('password', 'Password', 'required|xss_clean|trim', [
+            'required' => 'Password wajib diisi',
+        ]);
+        if ($this->form_validation->run() == false) {
+            $this->load->view('auth/login');
+        } else {
+            $nip_user = $this->input->post('nip_user', true);
+            $password = $this->input->post('password', true);
+
+            $user = $this->db->get_where('users', ['nip_user' => $nip_user]);
+            if ($user->num_rows() > 0) {
+                $hasil = $user->row();
+                if (password_verify($password, $hasil->password) && $hasil->status == 'Aktif') {
+
                     $session_data = array(
-                        'id'        => $apps->id,
-                        'name'      => $apps->name,
-                        'username'  => $apps->username,
-                        'role'      => $apps->role,
-                        'wilayah'   => $apps->wilayah,
-                        'kode'      => $apps->kode,
+                        'id'        => $hasil->id,
+                        'name'      => $hasil->name,
+                        'nip_user'  => $hasil->nip_user,
+                        'username'  => $hasil->username,
+                        'role'      => $hasil->role,
+                        'wilayah'   => $hasil->wilayah,
                         'logged_in' => TRUE,
-                        'logged_in_admin' => TRUE
                     );
-                    //set session userdata
-                    print_r($session_data);
-                    die();
                     $this->session->set_userdata($session_data);
-                    $this->session->set_flashdata('success', 'Login berhasil');
-                    redirect('home/');
+                    $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
+                    redirect('pemakai');
+                } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
+                    $this->session->set_flashdata(
+                        'message',
+                        '<div class="alert alert-danger alert-dismissible fade show">
+						Akun Anda telah dinonaktifkan.<br>Silahkan hubungi Admin Sistem
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>'
+                    );
+                    redirect('auth');
+                } else {
+                    $this->session->set_flashdata(
+                        'message',
+                        '<div class="alert alert-danger alert-dismissible fade show">
+						Password yang Anda masukkan tidak sesuai !
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>'
+                    );
+                    redirect('auth');
                 }
             } else {
-                $this->session->set_flashdata('danger', 'Username atau Password anda salah');
-                redirect('auth/');
+                $this->session->set_flashdata(
+                    'message',
+                    '<div class="alert alert-danger alert-dismissible fade show">
+					NIP & Password yang Anda masukkan tidak sesuai !
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>'
+                );
+                redirect('auth');
             }
         }
     }
-    public function check_login()
+    // Login Admin
+    public function check_login_admin()
     {
         check_sudah_login();
         $this->form_validation->set_rules(
@@ -111,20 +144,6 @@ class Auth extends CI_Controller
                         $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
                         redirect('home');
                     }
-                    // Login Pemakai Kendaraan
-                    else {
-                        $session_data = array(
-                            'id'        => $hasil->id,
-                            'name'      => $hasil->name,
-                            'username'  => $hasil->username,
-                            'role'      => $hasil->role,
-                            'wilayah'   => $hasil->wilayah,
-                            'logged_in' => TRUE,
-                        );
-                        $this->session->set_userdata($session_data);
-                        $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
-                        redirect('pemakai');
-                    }
                 } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
                     $this->session->set_flashdata(
                         'message',
@@ -140,7 +159,7 @@ class Auth extends CI_Controller
                     $this->session->set_flashdata(
                         'message',
                         '<div class="alert alert-danger alert-dismissible fade show">
-						Password yang Anda masukkan salah !
+						Password yang Anda masukkan tidak sesuai !
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -152,7 +171,7 @@ class Auth extends CI_Controller
                 $this->session->set_flashdata(
                     'message',
                     '<div class="alert alert-danger alert-dismissible fade show">
-					Username & Password yang Anda masukkan salah !
+					Username & Password yang Anda masukkan tidak sesuai !
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -193,7 +212,7 @@ class Auth extends CI_Controller
         }
     }
 
-    public function logout()
+    public function logout_user()
     {
         $this->session->sess_destroy();
         $this->session->set_flashdata(
@@ -206,5 +225,19 @@ class Auth extends CI_Controller
         </div>'
         );
         redirect('auth');
+    }
+    public function logout_admin()
+    {
+        $this->session->sess_destroy();
+        $this->session->set_flashdata(
+            'message',
+            '<div class="alert alert-danger alert-dismissible fade show">
+            Anda Berhasil Logout
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>'
+        );
+        redirect('auth/admin');
     }
 }

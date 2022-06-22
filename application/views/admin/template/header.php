@@ -119,7 +119,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <i class="fa-solid fa-user-tie mr-2"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="<?= site_url('auth/logout') ?>" class="dropdown-item dropdown-footer">KELUAR</a>
+                            <a href="<?= site_url('auth/logout_admin') ?>"
+                                class="dropdown-item dropdown-footer">KELUAR</a>
                         </div>
                     </li>
                 </ul>
