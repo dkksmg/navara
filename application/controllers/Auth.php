@@ -142,7 +142,7 @@ class Auth extends CI_Controller
                         );
                         $this->session->set_userdata($session_data);
                         $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
-                        redirect('home/kendaraan_pemakai');
+                        redirect('dashboard');
                     }
                 } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
                     $this->session->set_flashdata(

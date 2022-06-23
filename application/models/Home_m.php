@@ -384,7 +384,7 @@ class Home_m extends CI_Model
     public function listdata_pemakai()
     {
 
-        $this->db->select('id,name,nip_user,wilayah,role,status')->order_by('id', 'DESC')->where('role', 'Pemakai');
+        $this->db->select('id,name,nip_user,wilayah,role,status')->order_by('name', 'ASC')->order_by('id', 'DESC')->where('role', 'Pemakai');
         $query = $this->db->get('users');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
