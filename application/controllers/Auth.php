@@ -142,7 +142,7 @@ class Auth extends CI_Controller
                         );
                         $this->session->set_userdata($session_data);
                         $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
-                        redirect('home');
+                        redirect('home/kendaraan_pemakai');
                     }
                 } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
                     $this->session->set_flashdata(
@@ -181,37 +181,6 @@ class Auth extends CI_Controller
             }
         }
     }
-    public function loginuserProses()
-    {
-        if ($this->input->post()) {
-            $nopol  = $this->input->post("nopol", TRUE);
-            $nik    = $this->input->post("nik", TRUE);
-
-            $checking = $this->auth_m->check_login_users('riwayat_pemakai', array('no_polisi' => $nopol), array('nip_pemakai' => $nik));
-            if ($checking != FALSE) {
-                foreach ($checking as $apps) {
-                    $rule = $apps->rule;
-                    $session_data = array(
-                        'id'        => $apps->id_rp,
-                        'idkend'    => $apps->id_kendaraan,
-                        'name'      => $apps->nama_pemakai,
-                        'nik'       => $apps->nik,
-                        'rule'      => "pemakai",
-                        'logged_in' => TRUE,
-                        'logged_in_user' => TRUE
-                    );
-                    //set session userdata
-                    $this->session->set_userdata($session_data);
-                    $this->session->set_flashdata('success', 'login berhasil');
-                    redirect('pemakai/');
-                }
-            } else {
-                $this->session->set_flashdata('danger', 'username atau password anda salah');
-                redirect('auth/pemakai');
-            }
-        }
-    }
-
     public function logout_user()
     {
         $this->session->sess_destroy();

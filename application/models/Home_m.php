@@ -628,11 +628,11 @@ class Home_m extends CI_Model
         $query = $this->db->query('SELECT * FROM users as us 
         JOIN riwayat_pemakai as rp ON rp.id_user = us.id 
         JOIN kendaraan as kd ON kd.idk = rp.id_kendaraan 
-        JOIN pagu_service as ps ON ps.id_kend = kd.idk 
+        LEFT JOIN pagu_service as ps ON ps.id_kend = kd.idk 
         LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ' AND riwayat_bbm.status_rbm="Yes" , riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
         LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ' AND riwayat_servis.status_srs="Yes",riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
         LEFT JOIN (SELECT id_kendaraan, sum(if(riwayat_pajak.tahun=' . $tahun . ' AND riwayat_pajak.status_pjk="Yes",riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
-        WHERE us.id = ' . $id . ' AND ps.tahun = ' . $tahun . ' AND rp.status = "aktif"')->result_array();
+        WHERE us.id = ' . $id . ' AND (CASE WHEN ps.tahun is null THEN ps.tahun is null ELSE ps.tahun=' . $tahun . ' END) AND rp.status = "aktif"')->result_array();
         return $query;
     }
     public function cek_datapagu($id = null, $tahun = null)

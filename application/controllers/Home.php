@@ -14,13 +14,14 @@ class Home extends CI_Controller
     }
     public function index()
     {
-        $data = [];
-        $data['title'] = 'Data Kendaraan Dinas';
-        $data['kendaraan'] = $this->home_m->data_kendaraan();
-        $this->load->view('admin/template/header');
-        $this->load->view('admin/kendaraan/dataKendaraan', $data);
-        $this->load->view('admin/template/modal');
-        $this->load->view('admin/template/footer');
+        // $data = [];
+        // $data['title'] = 'Data Kendaraan Dinas';
+        // $data['kendaraan'] = $this->home_m->data_kendaraan();
+        // $this->load->view('admin/template/header');
+        // $this->load->view('admin/kendaraan/dataKendaraan', $data);
+        // $this->load->view('admin/template/modal');
+        // $this->load->view('admin/template/footer');
+        return redirect('home/kendaraan_pemakai');
     }
     public function kendaraan_pemakai()
     {
@@ -470,7 +471,7 @@ class Home extends CI_Controller
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['lu'] = $this->home_m->data_lokasiunit();
             $this->load->view('admin/template/header');
-            $this->load->view('admin/pemakai/riwayatpemakai', $data);
+            $this->load->view('admin/pemakai/riwayatPemakai', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
@@ -508,7 +509,7 @@ class Home extends CI_Controller
             $data['rs'] = $this->home_m->data_riwayatservis($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $this->load->view('admin/template/header');
-            $this->load->view('admin/servis/riwayatservis', $data);
+            $this->load->view('admin/servis/riwayatServis', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
