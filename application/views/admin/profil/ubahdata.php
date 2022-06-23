@@ -50,16 +50,29 @@
                                  </select>
                              </div>
                          </div>
+                         <?php if ($this->session->userdata('role') == 'Admin' || $this->session->userdata('role') == 'Superadmin') : ?>
                          <div class="form-group row">
                              <label for="nip_user" class="col-sm-2 col-form-label">Username</label>
                              <div class="col-sm-10">
-                                 <input type="username"
+                                 <input type="text"
                                      class="form-control <?php if (form_error('username') == true) : ?>is-invalid <?php endif ?>"
                                      name="username" value="<?= set_value('username', $user['username']) ?>"
                                      placeholder="Username" required>
                                  <?= form_error('username', '<small class="text-danger pl-3">', '</small>') ?>
                              </div>
                          </div>
+                         <?php else : ?>
+                         <div class="form-group row">
+                             <label for="nip_user" class="col-sm-2 col-form-label">NIP</label>
+                             <div class="col-sm-10">
+                                 <input type="number"
+                                     class="form-control <?php if (form_error('nip_user') == true) : ?>is-invalid <?php endif ?>"
+                                     name="nip_user" value="<?= set_value('nip_user', $user['nip_user']) ?>"
+                                     placeholder="NIP" required>
+                                 <?= form_error('nip_user', '<small class="text-danger pl-3">', '</small>') ?>
+                             </div>
+                         </div>
+                         <?php endif; ?>
                          <div class="form-group row">
                              <label for="password" class="col-sm-2 col-form-label">Password</label>
                              <div class="col-sm-10">

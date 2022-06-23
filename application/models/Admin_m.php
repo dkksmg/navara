@@ -121,7 +121,11 @@ class Admin_m extends CI_Model
     }
     public function user()
     {
-        $this->db->where('role !=', 'superadmin');
+        $this->db
+            ->order_by('users.role', 'DESC')
+            ->order_by('users.wilayah', 'DESC')
+            ->order_by('users.name', 'ASC')
+            ->where('role !=', 'superadmin');
         $query = $this->db->get('users');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {

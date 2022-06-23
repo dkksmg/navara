@@ -42,17 +42,32 @@ class Profile_model extends CI_Model
   }
   public function edituser($id_user = null)
   {
-    if ($this->input->post('password') == "") {
-      $data['name']    = $this->input->post('nama_user');
-      $data['username']    = $this->input->post('username');
-      $q = $this->db->where('id', $id_user)->update('users', $data);
-      return $q;
+    if ($this->session->userdata('role') == 'Admin' || $this->session->userdata('role') == 'Superadmin') {
+      if ($this->input->post('password') == "") {
+        $data['name']    = $this->input->post('nama_user');
+        $data['username']    = $this->input->post('username');
+        $q = $this->db->where('id', $id_user)->update('users', $data);
+        return $q;
+      } else {
+        $data['name']    = $this->input->post('nama_user');
+        $data['username']    = $this->input->post('username');
+        $data['password']      = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+        $q = $this->db->where('id', $id_user)->update('users', $data);
+        return $q;
+      }
     } else {
-      $data['name']    = $this->input->post('nama_user');
-      $data['username']    = $this->input->post('username');
-      $data['password']      = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
-      $q = $this->db->where('id', $id_user)->update('users', $data);
-      return $q;
+      if ($this->input->post('password') == "") {
+        $data['name']    = $this->input->post('nama_user');
+        $data['nip_user']    = $this->input->post('nip_user');
+        $q = $this->db->where('id', $id_user)->update('users', $data);
+        return $q;
+      } else {
+        $data['name']    = $this->input->post('nama_user');
+        $data['nip_user']    = $this->input->post('nip_user');
+        $data['password']      = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+        $q = $this->db->where('id', $id_user)->update('users', $data);
+        return $q;
+      }
     }
   }
 

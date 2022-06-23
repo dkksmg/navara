@@ -419,6 +419,12 @@ class Home_m extends CI_Model
         $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
     }
+    public function hapus_pemakai($id = null)
+    {
+        $this->db->where('id_rp', $id);
+        $q = $this->db->delete('riwayat_pemakai');
+        return $q;
+    }
     public function aktifkanpemakai($id = null)
     {
 

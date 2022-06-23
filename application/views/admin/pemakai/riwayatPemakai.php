@@ -131,6 +131,9 @@
                                          <a onclick="editConfirm('<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>')"
                                              href="#" class="btn btn-sm btn-warning jedatombol"><i class="fas fa-pen"
                                                  title="Edit Data Pemakai <?= $value['name'] ?>"></i></a>
+                                         <a onclick="deleteConfirm('<?= site_url('home/delete_pemakai?id=' . $value['id_rp'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-danger jedatombol"><i class="fas fa-trash"
+                                                 title="Hapus Data Pemakai <?= $value['name'] ?>"></i></a>
                                      </td>
                                      <td class="text-center"><?= $value['name'] ?></td>
                                      <td class="text-center"><?= $value['nip_user'] ?></td>

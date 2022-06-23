@@ -28,6 +28,7 @@ class Home extends CI_Controller
         $data = [];
         $data['title'] = 'Data Kendaraan Dinas';
         $data['kendaraan'] = $this->home_m->data_kendaraan();
+        // print_r($this->db->last_query());
         $this->load->view('admin/template/header');
         $this->load->view('admin/kendaraan/dataKendaraan', $data);
         $this->load->view('admin/template/modal');
@@ -43,8 +44,6 @@ class Home extends CI_Controller
         $this->load->view('admin/template/modal');
         $this->load->view('admin/template/footer');
     }
-
-
     public function tambahKendaraanDinas()
     {
         check_level_admin();
@@ -1194,6 +1193,19 @@ class Home extends CI_Controller
         } else {
             $this->session->set_flashdata('warning', 'Nonaktifkan Pemakai gagal');
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
+        }
+    }
+    public function delete_pemakai()
+    {
+        $id = ($this->input->get('id'));
+        $kend = $this->home_m->data_riwayatpemakaibyidrp($id);
+        $id_kend = $kend['id_kendaraan'];
+        if ($this->home_m->hapus_pemakai($id)) {
+            $this->session->set_flashdata('success', 'Hapus Data Pemakai Berhasil');
+            redirect('home/riwayat_pemakai?id=' . $id_kend . '');
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Data Pemakai gagal');
+            redirect('home/riwayat_pemakai?id=' . $id_kend . '');
         }
     }
     public function print_data_kendaraan()
