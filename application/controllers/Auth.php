@@ -42,7 +42,7 @@ class Auth extends CI_Controller
             'nip_user',
             'NIP',
             'required|xss_clean|trim',
-            ['required' => 'Username wajib diisi']
+            ['required' => 'NIP wajib diisi']
         );
         $this->form_validation->set_rules('password', 'Password', 'required|xss_clean|trim', [
             'required' => 'Password wajib diisi',
@@ -124,6 +124,7 @@ class Auth extends CI_Controller
             'required' => 'Password wajib diisi',
         ]);
         if ($this->form_validation->run() == false) {
+            $username = $this->input->post('username', true);
             $this->load->view('auth/loginAdmin');
             // redirect('auth/admin');
         } else {

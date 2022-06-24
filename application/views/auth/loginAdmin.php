@@ -37,7 +37,9 @@
                     <input type="text"
                         class="form-control <?php if (form_error('username') == TRUE) : ?> is-invalid <?php endif ?>"
                         placeholder="Username" name="username"
-                        value="<?php if ($this->session->flashdata('username')) echo $this->session->flashdata('username'); ?>">
+                        <?php if ($this->session->flashdata('username') == TRUE) : ?>
+                        value="<?= $this->session->flashdata('username'); ?>" <?php else : ?>
+                        value="<?= set_value('username'); ?>" <?php endif; ?>>
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
