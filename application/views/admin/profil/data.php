@@ -39,9 +39,15 @@
                              <p class="text-muted text-center">Lokasi Kerja : <?= $user['wilayah'] ?></p>
 
                              <ul class="list-group list-group-unbordered mb-3">
+                                 <?php if ($this->session->userdata('role') == 'Pemakai') : ?>
+                                 <li class="list-group-item">
+                                     <b>NIP</b> <a class="float-right"><?= $user['nip_user'] ?></a>
+                                 </li>
+                                 <?php else : ?>
                                  <li class="list-group-item">
                                      <b>Username</b> <a class="float-right"><?= $user['username'] ?></a>
                                  </li>
+                                 <?php endif ?>
                                  <li class="list-group-item">
                                      <b>Role</b> <a class="float-right"><?= $user['role'] ?></a>
                                  </li>

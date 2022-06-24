@@ -109,7 +109,7 @@ class Admin extends CI_Controller
             $data['pagu'] = $this->admin_m->datapagu_kendaraanbyid($id);
             $data['title'] = 'Edit Pagu Anggaran Kendaraan Dinas';
             $this->load->view('admin/template/header');
-            $this->load->view('admin/pagu/editpagukendaraan', $data);
+            $this->load->view('admin/pagu/editpaguKendaraan', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
@@ -119,15 +119,20 @@ class Admin extends CI_Controller
     public function proseseditpagu()
     {
         $id = $this->input->get('id');
-        if ($this->input->post()) :
-            if ($this->admin_m->updatepagu($id)) :
+        $idkend = $this->input->get('idkend');
+        if ($this->input->post()) {
+
+            if ($this->admin_m->updatepagu($id)) {
+                // print_r($this->db->last_query());
+                // die();
                 $this->session->set_flashdata('success', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Berhasil');
-                redirect('admin/pagu?id=' . $id);
-            else :
+                redirect('admin/pagu?id=' . $idkend);
+            } else {
+
                 $this->session->set_flashdata('danger', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Gagal');
-                redirect('admin/pagu?id=' . $id);
-            endif;
-        endif;
+                redirect('admin/pagu?id=' . $idkend);
+            }
+        }
     }
     public function hapuspagu()
     {

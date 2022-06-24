@@ -164,7 +164,7 @@ class Admin_m extends CI_Model
     public function updatepagu($id = null)
     {
         $data['pagu_awal']  = $this->input->post('pagu');
-        $data['jenis_pagu']  = $this->input->post('jenis');
+        // $data['jenis_pagu']  = $this->input->post('jenis');
         $q = $this->db->where('id_ps', $id)->update('pagu_service', $data);
         return $q;
     }

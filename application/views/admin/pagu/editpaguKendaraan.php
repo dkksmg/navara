@@ -66,7 +66,7 @@
                     <div class="card-header" style="background-color:#4a2f3a;">
                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                     </div>
-                    <?= form_open('admin/proseseditpagu?id=' . $pagu['id_ps'], 'class="form-horizontal"') ?>
+                    <?= form_open('admin/proseseditpagu?id=' . $pagu['id_ps'] . '&idkend=' . $pagu['id_kend'], 'class="form-horizontal"') ?>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
