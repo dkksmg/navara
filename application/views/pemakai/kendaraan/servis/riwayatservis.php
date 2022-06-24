@@ -53,7 +53,8 @@
                              <tr>
                                  <th>CC</th>
                                  <th>:</th>
-                                 <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                 <th><?php if ($kend['besar_cc'] == '') :  ?> -
+                                     <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
                              </tr>
                              <tr>
                                  <th>Bahan Bakar</th>
@@ -88,7 +89,8 @@
                          <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalTambah">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modalTambah">
                              Tambah Riwayat Servis
                          </button>
                      </div>
@@ -114,45 +116,58 @@
                                     if ($rs != '') :
                                         $no = 1;
                                         foreach ($rs as $value) : ?>
-                                         <tr>
-                                             <td class="text-center"><?= $no; ?></td>
-                                             <td class="text-center">
-                                                 <?php if ($value['status_srs'] == 'Wait') : ?>
-                                                     <a onclick="editConfirm('#')" href="#" class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen" title="Edit Riwayat Servis <?= $kend['no_polisi'] ?>"></i></a>
-                                                 <?php elseif ($value['status_srs'] == 'Yes') : ?>
-                                                     <a onclick="editConfirm('#')" href="#" class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen" title="Edit Riwayat Servis <?= $kend['no_polisi'] ?>"></i></a>
-                                                 <?php else : ?>
-                                                     <a style="display: none" onclick="deleteConfirm('#')" href="#" class="btn btn-sm btn-danger jedatombol disabled"><i class="fas fa-trash" title="Hapus Riwayat Servis <?= $kend['no_polisi'] ?>"></i></a>
-                                                     <a onclick="editConfirm('<?= site_url('pemakai/editriwayatservis?id=' . $value['id_rs'] . '&idkend=' . $value['id_kendaraan']) ?>')" href="#" class="btn btn-warning btn-sm jedatombol" title="Edit Riwayat Servis <?= $kend['no_polisi'] ?>"><i class="fas fa-pen"></i></a>
-                                                 <?php endif ?>
-                                             </td>
-                                             <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
-                                             <td class="text-center"><?= $value['lokasi'] ?></td>
-                                             <td><?= $value['keluhan'] ?></td>
-                                             <td><?= $value['perbaikan'] ?></td>
-                                             <td><?= $value['lain_lain'] ?></td>
-                                             <td class="text-left">
-                                                 <?= "Rp. " . number_format($value['total_biaya'], 2, ',', '.'); ?></td>
-                                             <td class="text-center">
-                                                 <img width="100%" src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>" data-toggle="modal" data-target="#servisModal<?php echo $no ?>">
-                                             </td>
-                                             <td class="text-center"><img width="100%" src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>" data-toggle="modal" data-target="#notaModal<?php echo $no ?>">
-                                             </td>
-                                             <td class="text-center" width="10%">
-                                                 <?php if ($value['status_srs'] == 'Wait') : ?>
-                                                     <p>Sedang Diverifikasi</p>
-                                                 <?php elseif ($value['status_srs'] == 'No') : ?>
-                                                     Ditolak<br><i style="color:red;font-size:12px">
-                                                         <?= $value['reject_reason'] ?>.
-                                                         Silakan melakukan input/edit data kembali.<br>Reject on
-                                                         <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                                                 <?php else : ?>
-                                                     Disetujui
-                                                     <br><i style="color:green;font-size:12px">Approved on
-                                                         <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                                                 <?php endif ?>
-                                             </td>
-                                         </tr>
+                                 <tr>
+                                     <td class="text-center"><?= $no; ?></td>
+                                     <td class="text-center">
+                                         <?php if ($value['status_srs'] == 'Wait') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen"
+                                                 title="Edit Riwayat Servis <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php elseif ($value['status_srs'] == 'Yes') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen"
+                                                 title="Edit Riwayat Servis <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php else : ?>
+                                         <a style="display: none" onclick="deleteConfirm('#')" href="#"
+                                             class="btn btn-sm btn-danger jedatombol disabled"><i class="fas fa-trash"
+                                                 title="Hapus Riwayat Servis <?= $kend['no_polisi'] ?>"></i></a>
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editriwayatservis?id=' . $value['id_rs'] . '&idkend=' . $value['id_kendaraan']) ?>')"
+                                             href="#" class="btn btn-warning btn-sm jedatombol"
+                                             title="Edit Riwayat Servis <?= $kend['no_polisi'] ?>"><i
+                                                 class="fas fa-pen"></i></a>
+                                         <?php endif ?>
+                                     </td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
+                                     <td class="text-center"><?= $value['lokasi'] ?></td>
+                                     <td><?= $value['keluhan'] ?></td>
+                                     <td><?= $value['perbaikan'] ?></td>
+                                     <td><?= $value['lain_lain'] ?></td>
+                                     <td class="text-left">
+                                         <?= "Rp. " . number_format($value['total_biaya'], 2, ',', '.'); ?></td>
+                                     <td class="text-center">
+                                         <img width="100%"
+                                             src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
+                                             data-toggle="modal" data-target="#servisModal<?php echo $no ?>">
+                                     </td>
+                                     <td class="text-center"><img width="100%"
+                                             src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
+                                             data-toggle="modal" data-target="#notaModal<?php echo $no ?>">
+                                     </td>
+                                     <td class="text-center" width="10%">
+                                         <?php if ($value['status_srs'] == 'Wait') : ?>
+                                         <p>Sedang Diverifikasi</p>
+                                         <?php elseif ($value['status_srs'] == 'No') : ?>
+                                         Ditolak<br><i style="color:red;font-size:12px">
+                                             <?= $value['reject_reason'] ?>.
+                                             Silakan melakukan input/edit data kembali.<br>Reject on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php else : ?>
+                                         Disetujui
+                                         <br><i style="color:green;font-size:12px">Approved on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php endif ?>
+                                     </td>
+                                 </tr>
                                  <?php $no++;
                                         endforeach;
                                     endif; ?>
@@ -172,43 +187,48 @@
     if ($rs != '') :
         $no = 1;
         foreach ($rs as $value) : ?>
-         <center>
-             <!-- Modal -->
-             <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                 <div class="modal-dialog" role="document">
-                     <div class="modal-content">
-                         <div class="modal-header">
-                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                         </div>
-                         <div class="modal-body">
-                             <center>
-                                 <img src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>" alt="Foto Servis" class="img-responsive" width="70%" height="auto">
-                             </center>
-                         </div>
-                         <div class="modal-footer">
-                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                         </div>
-                     </div>
+ <center>
+     <!-- Modal -->
+     <div class="modal fade" id="servisModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
+                             alt="Foto Servis" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                  </div>
              </div>
-             <div class="modal fade" id="notaModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                 <div class="modal-dialog" role="document">
-                     <div class="modal-content">
-                         <div class="modal-header">
-                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                         </div>
-                         <div class="modal-body">
-                             <center>
-                                 <img src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>" alt="Foto Nota" class="img-responsive" width="70%" height="auto">
-                             </center>
-                         </div>
-                         <div class="modal-footer">
-                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                         </div>
-                     </div>
+         </div>
+     </div>
+     <div class="modal fade" id="notaModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
+                             alt="Foto Nota" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                  </div>
              </div>
-         </center>
+         </div>
+     </div>
+ </center>
  <?php $no++;
         endforeach;
     endif ?>
@@ -216,7 +236,8 @@
  <!-- Modal Input -->
  <div class="modal fade" id="modalTambah" role="dialog">
      <div class="modal-dialog modal-xl">
-         <form method="post" action="<?= site_url('pemakai/prosestambahservis?id=' . $kend['idk'] . '') ?>" enctype="multipart/form-data">
+         <form method="post" action="<?= site_url('pemakai/prosestambahservis?id=' . $kend['idk'] . '') ?>"
+             enctype="multipart/form-data">
              <?php
                 echo form_hidden('tipe', $kend['tipe']);
                 echo form_hidden('no_pol', $kend['no_polisi']);
@@ -233,13 +254,15 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Tanggal Service</label>
-                                 <input type="text" class="form-control pilihtanggal" name="tgl" placeholder="Tanggal Servis" required>
+                                 <input type="text" class="form-control pilihtanggal" name="tgl"
+                                     placeholder="Tanggal Servis" required>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Nama Bengkel Service</label>
-                                 <input type="text" class="form-control" name="bengkel" placeholder="Nama Bengkel" required>
+                                 <input type="text" class="form-control" name="bengkel" placeholder="Nama Bengkel"
+                                     required>
                              </div>
                          </div>
                      </div>
@@ -247,25 +270,29 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Keluhan</label>
-                                 <textarea class="form-control" name="keluhan" placeholder="Keluhan Kendaraan" required></textarea>
+                                 <textarea class="form-control" name="keluhan" placeholder="Keluhan Kendaraan"
+                                     required></textarea>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Perbaikan</label>
-                                 <textarea class="form-control" name="perbaikan" placeholder="Perbaikan Kendaraan" required></textarea>
+                                 <textarea class="form-control" name="perbaikan" placeholder="Perbaikan Kendaraan"
+                                     required></textarea>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Lain Lain</label>
-                                 <textarea class="form-control" name="lain_lain" placeholder="Tambahan/Lain-Lain"></textarea>
+                                 <textarea class="form-control" name="lain_lain"
+                                     placeholder="Tambahan/Lain-Lain"></textarea>
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Total Biaya</label>
-                                 <input type="number" class="form-control" name="biaya" placeholder="Total Biaya" required>
+                                 <input type="number" class="form-control" name="biaya" placeholder="Total Biaya"
+                                     required>
                              </div>
                          </div>
                      </div>

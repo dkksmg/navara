@@ -31,7 +31,7 @@
                          <?php endif; ?>
                      </div>
                      <div class="card-body">
-                         <table class="table table-bordered table-striped example" width="100%" height="auto">
+                         <table class="table table-bordered table-striped example width=" 100%" height="auto">
                              <thead>
                                  <tr>
                                      <th class="text-center">No</th>

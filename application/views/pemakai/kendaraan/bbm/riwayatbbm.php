@@ -53,7 +53,8 @@
                              <tr>
                                  <th>CC</th>
                                  <th>:</th>
-                                 <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                 <th><?php if ($kend['besar_cc'] == '') :  ?> -
+                                     <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
                              </tr>
                              <tr>
                                  <th>Bahan Bakar</th>
@@ -88,7 +89,8 @@
                          <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
                      </div>
                      <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
                              Tambah Riwayat BBM
                          </button>
                      </div>
@@ -108,41 +110,53 @@
                                  <?php $no = 1;
                                     if ($rbbm != '') :
                                         foreach ($rbbm as $value) : ?>
-                                         <tr>
-                                             <td class="text-center"><?= $no; ?></td>
-                                             <td class="text-center">
-                                                 <?php if ($value['status_rbm'] == 'Wait') : ?>
-                                                     <a onclick="editConfirm('#')" href="#" class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen" title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"></i></a>
-                                                 <?php elseif ($value['status_rbm'] == 'Yes') : ?>
-                                                     <a onclick="editConfirm('#')" href="#" class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen" title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"></i></a>
-                                                 <?php else : ?>
-                                                     <a style="display: none" onclick="deleteConfirm('#')" href="#" class="btn btn-sm btn-danger jedatombol disabled"><i class="fas fa-trash" title="Hapus Riwayat BBM <?= $kend['no_polisi'] ?>"></i></a>
-                                                     <a onclick="editConfirm('<?= site_url('pemakai/editrbbm?id=' . ($value['id_bbm']) . '&idkend=' . ($value['id_kendaraan'])) ?>')" href="#" class="btn btn-warning btn-sm jedatombol" title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"><i class="fas fa-pen"></i></a>
-                                                 <?php endif ?>
-                                             </td>
-                                             <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
-                                             </td>
-                                             <td class="text-center">
-                                                 <?= "Rp. " . number_format($value['total_bbm'], 2, ',', '.'); ?>
-                                             </td>
-                                             <td class="text-center"><img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>" alt="Foto Struk BBM" data-toggle="modal" width="30%" data-target="#strukModal<?php echo $no ?>">
-                                             </td>
-                                             <td class="text-center" width="20%">
-                                                 <?php if ($value['status_rbm'] == 'Wait') : ?>
-                                                     <p>Sedang Diverifikasi</p>
-                                                 <?php elseif ($value['status_rbm'] == 'No') : ?>
-                                                     Ditolak<br><i style="color:red;font-size:12px">
-                                                         <?= $value['reject_reason'] ?>.
-                                                         Silakan melakukan input/edit data kembali.<br>Reject on
-                                                         <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                                                 <?php else : ?>
-                                                     Disetujui
-                                                     <br><i style="color:green;font-size:12px">Approved on
-                                                         <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                                                 <?php endif ?>
-                                             </td>
+                                 <tr>
+                                     <td class="text-center"><?= $no; ?></td>
+                                     <td class="text-center">
+                                         <?php if ($value['status_rbm'] == 'Wait') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen"
+                                                 title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php elseif ($value['status_rbm'] == 'Yes') : ?>
+                                         <a onclick="editConfirm('#')" href="#"
+                                             class="btn btn-sm btn-warning jedatombol disabled"><i class="fas fa-pen"
+                                                 title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"></i></a>
+                                         <?php else : ?>
+                                         <a style="display: none" onclick="deleteConfirm('#')" href="#"
+                                             class="btn btn-sm btn-danger jedatombol disabled"><i class="fas fa-trash"
+                                                 title="Hapus Riwayat BBM <?= $kend['no_polisi'] ?>"></i></a>
+                                         <a onclick="editConfirm('<?= site_url('pemakai/editrbbm?id=' . ($value['id_bbm']) . '&idkend=' . ($value['id_kendaraan'])) ?>')"
+                                             href="#" class="btn btn-warning btn-sm jedatombol"
+                                             title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"><i
+                                                 class="fas fa-pen"></i></a>
+                                         <?php endif ?>
+                                     </td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
+                                     </td>
+                                     <td class="text-center">
+                                         <?= "Rp. " . number_format($value['total_bbm'], 2, ',', '.'); ?>
+                                     </td>
+                                     <td class="text-center"><img
+                                             src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
+                                             alt="Foto Struk BBM" data-toggle="modal" width="30%"
+                                             data-target="#strukModal<?php echo $no ?>">
+                                     </td>
+                                     <td class="text-center" width="20%">
+                                         <?php if ($value['status_rbm'] == 'Wait') : ?>
+                                         <p>Sedang Diverifikasi</p>
+                                         <?php elseif ($value['status_rbm'] == 'No') : ?>
+                                         Ditolak<br><i style="color:red;font-size:12px">
+                                             <?= $value['reject_reason'] ?>.
+                                             Silakan melakukan input/edit data kembali.<br>Reject on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php else : ?>
+                                         Disetujui
+                                         <br><i style="color:green;font-size:12px">Approved on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php endif ?>
+                                     </td>
 
-                                         </tr>
+                                 </tr>
                                  <?php $no++;
                                         endforeach;
                                     endif ?>
@@ -161,25 +175,28 @@
     $no = 1;
     if ($rbbm != '') :
         foreach ($rbbm as $value) : ?>
-         <center>
-             <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                 <div class="modal-dialog" role="document">
-                     <div class="modal-content">
-                         <div class="modal-header">
-                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                         </div>
-                         <div class="modal-body">
-                             <center>
-                                 <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>" alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
-                             </center>
-                         </div>
-                         <div class="modal-footer">
-                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                         </div>
-                     </div>
+ <center>
+     <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
+                             alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                  </div>
              </div>
-         </center>
+         </div>
+     </div>
+ </center>
  <?php $no++;
         endforeach;
     endif ?>
@@ -205,13 +222,15 @@
                      <div class="col-md-6">
                          <div class="form-group">
                              <label>Tanggal</label>
-                             <input type="text" class="form-control pilihtanggal" name="tgl_bbm" value="<?= date('d-m-Y') ?>" required>
+                             <input type="text" class="form-control pilihtanggal" name="tgl_bbm"
+                                 value="<?= date('d-m-Y') ?>" required>
                          </div>
                      </div>
                      <div class="col-md-6">
                          <div class="form-group">
                              <label>Total Biaya BBM</label>
-                             <input type="number" class="form-control" name="harga_bbm" required placeholder="Masukkan Total Biaya BBM">
+                             <input type="number" class="form-control" name="harga_bbm" required
+                                 placeholder="Masukkan Total Biaya BBM">
                          </div>
                      </div>
                      <div class="col-md-6">

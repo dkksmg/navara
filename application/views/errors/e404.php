@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://raw.githubusercontent.com/thomaspark/bootswatch/v5/dist/simplex/bootstrap.css">
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
-    <title>Maaf, halaman tidak ditemukan.</title>
+    <title>Halaman tidak ditemukan</title>
 </head>
 
 <body>

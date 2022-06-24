@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <table class="table table-striped">
                             <tr>
-                                <th>ID Aset</th>
+                                <th width="30%">ID Aset</th>
                                 <th>:</th>
                                 <th><?= $kend['id_assets'] ?></th>
                             </tr>
@@ -49,7 +49,8 @@
                             <tr>
                                 <th>CC</th>
                                 <th>:</th>
-                                <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                <th><?php if ($kend['besar_cc'] == '') :  ?> -
+                                    <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
                             </tr>
                             <tr>
                                 <th>Bahan Bakar</th>

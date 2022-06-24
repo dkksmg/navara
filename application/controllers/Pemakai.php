@@ -44,11 +44,15 @@ class Pemakai extends CI_Controller
             $data['title'] = 'Riwayat Kondisi Kendaraan Dinas';
             $data['rk'] = $this->home_m->data_riwayatKondisi($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            // print_r($this->db->last_query());
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/kondisi/riwayatkondisi', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                // print_r($this->db->last_query());
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/kondisi/riwayatkondisi', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -209,9 +213,13 @@ class Pemakai extends CI_Controller
             $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
             $data['value'] = $this->home_m->data_kondisiById($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($idkend, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/kondisi/editriwayatkondisi', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/kondisi/editriwayatkondisi', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -551,6 +559,7 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $tahun = date('Y');
         $cek_id_kondisi = $this->home_m->cek_id_riwayat_servis($id);
+        // Cek id kendaraan user berdasarkan id user 
         $id_user = $this->session->userdata('id');
         $cek = $this->home_m->cekkendaraanUser($id_user);
 
@@ -567,10 +576,14 @@ class Pemakai extends CI_Controller
             $data['title'] = 'Riwayat Servis Kendaraan Dinas';
             $data['rs'] = $this->home_m->data_riwayatservis($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/riwayatservis', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/riwayatservis', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -659,6 +672,8 @@ class Pemakai extends CI_Controller
         $id_rs = $this->input->get('id');
         $id = $this->input->get('idkend');
         $tahun = date('Y');
+
+        // Cek id kendaraan user berdasarkan id user 
         $id_user = $this->session->userdata('id');
         $cek_edit = $this->home_m->cekkendaraanUserwithriwayatservis($id_user, $id_rs);
         $found = false;
@@ -673,9 +688,13 @@ class Pemakai extends CI_Controller
             $data['title'] = "Edit Riwayat Servis Kendaraan";
             $data['servis'] = $this->home_m->data_servisById($id_rs);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/editriwayatservis', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/editriwayatservis', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -800,9 +819,10 @@ class Pemakai extends CI_Controller
         $id = ($this->input->get('id'));
         $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_bbm($id);
+
+        // Cek id kendaraan user berdasarkan id user 
         $id_user = $this->session->userdata('id');
         $cek = $this->home_m->cekkendaraanUser($id_user);
-
         $found = false;
         foreach ($cek as $ck) {
 
@@ -816,10 +836,14 @@ class Pemakai extends CI_Controller
             $data['title'] = 'Riwayat BBM Kendaraan Dinas';
             $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/bbm/riwayatbbm', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/bbm/riwayatbbm', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -887,6 +911,8 @@ class Pemakai extends CI_Controller
         $id = ($this->input->get('idkend'));
         $id_bbm = ($this->input->get('id'));
         $tahun = date('Y');
+
+        // Cek id kendaraan user berdasarkan id user 
         $id_user = $this->session->userdata('id');
         $cek_edit = $this->home_m->cekkendaraanUserwithriwayatbbm($id_user, $id_bbm);
         $found = false;
@@ -901,10 +927,14 @@ class Pemakai extends CI_Controller
             $data['title'] = 'Edit Riwayat BBM';
             $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/bbm/editriwayatbbm', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/bbm/editriwayatbbm', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -986,9 +1016,10 @@ class Pemakai extends CI_Controller
     {
         $id = $this->input->get('id');
         $tahun = date('Y');
+
+        // Cek id kendaraan user berdasarkan id user 
         $id_user = $this->session->userdata('id');
         $cek = $this->home_m->cekkendaraanUser($id_user);
-
         $found = false;
         foreach ($cek as $ck) {
             // echo $ck['id_kendaraan'];
@@ -1002,10 +1033,14 @@ class Pemakai extends CI_Controller
             $data['rp'] = $this->home_m->data_riwayatpajak($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
             $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/pajak/riwayatpajak', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/pajak/riwayatpajak', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -1040,6 +1075,8 @@ class Pemakai extends CI_Controller
         $id_pjk = $this->input->get('id');
         $id = $this->input->get('idkend');
         $tahun = date('Y');
+
+        // Cek id kendaraan user berdasarkan id user 
         $id_user = $this->session->userdata('id');
         $cek_edit = $this->home_m->cekkendaraanUserwithriwayatpajak($id_user, $id_pjk);
         $found = false;
@@ -1055,9 +1092,13 @@ class Pemakai extends CI_Controller
             $data['value'] = $this->home_m->datapajakById($id_pjk);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
             $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/pajak/editriwayatpajak', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/pajak/editriwayatpajak', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -1100,12 +1141,12 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_pengajuan_servis($id);
+
+        // Cek id kendaraan user berdasarkan id user 
         $id_user = $this->session->userdata('id');
         $cek = $this->home_m->cekkendaraanUser($id_user);
-
         $found = false;
         foreach ($cek as $ck) {
-            // echo $ck['id_kendaraan'];
             if (in_array($id, $ck)) {
                 $found = true;
                 break;
@@ -1116,10 +1157,14 @@ class Pemakai extends CI_Controller
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakai($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
             $data['title'] = 'Form Pengajuan Servis Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/pengajuan/pengajuanservis', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/pengajuan/pengajuanservis', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -1162,9 +1207,13 @@ class Pemakai extends CI_Controller
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakaibyidpen($id_pen);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($idkend, $tahun);
             $data['title'] = 'Form Edit Pengajuan Servis Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/pengajuan/editpengajuanservis', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/pengajuan/editpengajuanservis', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }

@@ -49,7 +49,8 @@
                             <tr>
                                 <th>CC</th>
                                 <th>:</th>
-                                <th><?= strtoupper($pagu['besar_cc']) ?> CC</th>
+                                <th><?php if ($pagu['besar_cc'] == '') :  ?> -
+                                    <?php else : ?><?= strtoupper($pagu['besar_cc']) ?> CC <?php endif ?></th>
                             </tr>
                             <tr>
                                 <th>Bahan Bakar</th>
@@ -91,7 +92,9 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Total Anggaran Pagu <?= $pagu['jenis_pagu'] ?></label>
-                                    <input type="number" class="form-control" name="pagu" required placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>" value="<?= $pagu['pagu_awal'] ?>">
+                                    <input type="number" class="form-control" name="pagu" required
+                                        placeholder="Masukkan Total Pagu <?= $pagu['jenis_pagu'] ?>"
+                                        value="<?= $pagu['pagu_awal'] ?>">
                                 </div>
                             </div>
                         </div>

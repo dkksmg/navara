@@ -46,7 +46,8 @@
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($value['besar_cc']) ?> CC</th>
+                                    <th><?php if ($value['besar_cc'] == '') :  ?> -
+                                        <?php else : ?><?= strtoupper($value['besar_cc']) ?> CC <?php endif ?></th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
