@@ -80,6 +80,7 @@ class Auth extends CI_Controller
 						</button>
 					</div>'
                     );
+                    $this->session->set_flashdata('nip_user', $nip_user);
                     redirect('auth');
                 } else {
                     $this->session->set_flashdata(
@@ -91,6 +92,7 @@ class Auth extends CI_Controller
 						</button>
 					</div>'
                     );
+                    $this->session->set_flashdata('nip_user', $nip_user);
                     redirect('auth');
                 }
             } else {
@@ -103,6 +105,7 @@ class Auth extends CI_Controller
 					</button>
 				</div>'
                 );
+                $this->session->set_flashdata('nip_user', $nip_user);
                 redirect('auth');
             }
         }
@@ -121,7 +124,8 @@ class Auth extends CI_Controller
             'required' => 'Password wajib diisi',
         ]);
         if ($this->form_validation->run() == false) {
-            $this->load->view('auth/login');
+            $this->load->view('auth/loginAdmin');
+            // redirect('auth/admin');
         } else {
             $username = $this->input->post('username', true);
             $password = $this->input->post('password', true);
@@ -143,6 +147,18 @@ class Auth extends CI_Controller
                         $this->session->set_userdata($session_data);
                         $this->session->set_flashdata('success', 'Login berhasil. Selamat Datang ' . $hasil->name . '');
                         redirect('dashboard');
+                    } else {
+                        $this->session->set_flashdata(
+                            'message',
+                            '<div class="alert alert-danger alert-dismissible fade show">
+                            Maaf, akun tidak ditemukan. Silakan login kembali dengan akun yang sesuai.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>'
+                        );
+                        $this->session->set_flashdata('username', $username);
+                        redirect('auth/admin');
                     }
                 } else if (password_verify($password, $hasil->password) && $hasil->status == 'Tidak Aktif') {
                     $this->session->set_flashdata(
@@ -154,7 +170,8 @@ class Auth extends CI_Controller
 						</button>
 					</div>'
                     );
-                    redirect('auth');
+                    $this->session->set_flashdata('username', $username);
+                    redirect('auth/admin');
                 } else {
                     $this->session->set_flashdata(
                         'message',
@@ -165,7 +182,8 @@ class Auth extends CI_Controller
 						</button>
 					</div>'
                     );
-                    redirect('auth');
+                    $this->session->set_flashdata('username', $username);
+                    redirect('auth/admin');
                 }
             } else {
                 $this->session->set_flashdata(
@@ -177,7 +195,8 @@ class Auth extends CI_Controller
 					</button>
 				</div>'
                 );
-                redirect('auth');
+                $this->session->set_flashdata('username', $username);
+                redirect('auth/admin');
             }
         }
     }

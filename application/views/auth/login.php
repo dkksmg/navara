@@ -36,7 +36,8 @@
                 <div class="input-group mb-3">
                     <input type="number"
                         class="form-control <?php if (form_error('nip_user') == TRUE) : ?> is-invalid <?php endif ?>"
-                        placeholder="NIP" name="nip_user" value="<?= set_value('nip_user') ?>">
+                        placeholder="NIP" name="nip_user"
+                        value="<?php if ($this->session->flashdata('nip_user')) echo $this->session->flashdata('nip_user'); ?>">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>

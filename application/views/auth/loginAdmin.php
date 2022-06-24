@@ -36,7 +36,8 @@
                 <div class="input-group mb-3">
                     <input type="text"
                         class="form-control <?php if (form_error('username') == TRUE) : ?> is-invalid <?php endif ?>"
-                        placeholder="Username" name="username" value="<?= set_value('username') ?>">
+                        placeholder="Username" name="username"
+                        value="<?php if ($this->session->flashdata('username')) echo $this->session->flashdata('username'); ?>">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
