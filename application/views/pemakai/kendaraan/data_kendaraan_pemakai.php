@@ -107,27 +107,27 @@
                             </table>
                         </div>
                         <div class="card-footer">
-                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="alert('Pagu kendaraan dinas Anda tahun <?= date('Y') ?> masih kosong. Silakan hubungi Admin.')"
+                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="disableBtn()"
                                 <?php else : ?>href="<?= site_url('pemakai/riwayatkondisi?id=' . $kend['idk'] . '') ?>"
                                 <?php endif ?> class="btn btn-primary jedatombol"
                                 title="Riwayat Kondisi <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                                 Kondisi</a>
-                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="alert('Pagu kendaraan dinas Anda tahun <?= date('Y') ?> masih kosong. Silakan hubungi Admin.')"
+                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="disableBtn()"
                                 <?php else : ?> href="<?= site_url('pemakai/riwayatbbm?id=' . $kend['idk'] . '') ?>"
                                 <?php endif; ?> class="btn btn-secondary jedatombol"
                                 title="Riwayat BBM <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                                 BBM</a>
-                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="alert('Pagu kendaraan dinas Anda tahun <?= date('Y') ?> masih kosong. Silakan hubungi Admin.')"
+                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="disableBtn()"
                                 <?php else : ?> href="<?= site_url('pemakai/riwayatpajak?id=' . $kend['idk'] . '') ?>"
                                 <?php endif ?> class="btn btn-danger jedatombol"
                                 title="Riwayat Pajak <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                                 Pajak</a>
-                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="alert('Pagu kendaraan dinas Anda tahun <?= date('Y') ?> masih kosong. Silakan hubungi Admin.')"
+                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="disableBtn()"
                                 <?php else : ?> href="<?= site_url('pemakai/riwayatservis?id=' . $kend['idk'] . '') ?>"
                                 <?php endif; ?> class="btn btn-warning jedatombol"
                                 title="Riwayat Servis <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Riwayat
                                 Servis</a>
-                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="alert('Pagu kendaraan dinas Anda tahun <?= date('Y') ?> masih kosong. Silakan hubungi Admin.')"
+                            <a <?php if ($kend['pagu_awal'] == 0 or $kend['pagu_awal'] == null) : ?>onclick="disableBtn()"
                                 <?php else : ?> href="<?= site_url('pemakai/pengajuanservis?id=' . $kend['idk']) ?>"
                                 <?php endif; ?> class="btn btn-success jedatombol"
                                 title="Pengajuan Servis <?= strtoupper($kend['tipe']) . ' ' . $kend['no_polisi'] ?>">Pengajuan

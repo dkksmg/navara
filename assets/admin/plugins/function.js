@@ -33,3 +33,8 @@ function waitConfirm(url) {
   $("#btn-wait").attr("href", url);
   $("#waitModal").modal();
 }
+function disableBtn() {
+  const d = new Date();
+  let year = d.getFullYear();
+  alert("Pagu kendaraan dinas Anda tahun " + year + " masih kosong. Silakan hubungi Admin.");
+}
