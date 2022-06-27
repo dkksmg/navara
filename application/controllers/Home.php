@@ -1,4 +1,7 @@
 <?php
+
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Home extends CI_Controller
@@ -111,9 +114,9 @@ class Home extends CI_Controller
         if ($cek_id_kondisi != '') {
             $data = [];
             $data['kend'] = $this->home_m->kendaraanByid($id);
-            print_r($this->db->last_query());
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['rk'] = $this->home_m->data_riwayatKondisi($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $this->load->view('admin/template/header');
             $this->load->view('admin/kondisi/riwayatKondisi', $data);
             $this->load->view('admin/template/modal');
@@ -132,6 +135,8 @@ class Home extends CI_Controller
             $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
             $data['value'] = $this->home_m->data_kondisiById($id);
             $id_kend = $data['value']['id_kendaraan'];
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
             $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/kondisi/editriwayatkondisi', $data);
@@ -468,6 +473,7 @@ class Home extends CI_Controller
             $data['rp'] = $this->home_m->data_riwayatpemakai($id);
             $data['pemakai'] = $this->home_m->listdata_pemakai();
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['lu'] = $this->home_m->data_lokasiunit();
             $this->load->view('admin/template/header');
@@ -485,12 +491,14 @@ class Home extends CI_Controller
         $cek_id  = $this->home_m->cek_id_edit_riwayat_pemakai($id);
         if ($cek_id != '') {
             $data = [];
+            $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
             $data['value'] = $this->home_m->data_pemakaibyid($id);
-            $id_kend = $data['value']['id_kendaraan'];
-            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $data['pemakai'] = $this->home_m->listdata_pemakai();
             $data['lu'] = $this->home_m->data_lokasiunit();
-            $data['title'] = 'Edit Data Pemakai Kendaraan Dinas';
+            $id_kend = $data['value']['id_kendaraan'];
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/pemakai/editPemakai', $data);
             $this->load->view('admin/template/footer');
@@ -507,6 +515,7 @@ class Home extends CI_Controller
             $data = [];
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['rs'] = $this->home_m->data_riwayatservis($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/servis/riwayatServis', $data);
@@ -600,6 +609,8 @@ class Home extends CI_Controller
             $data['title'] = "Edit Riwayat Servis Kendaraan";
             $data['servis'] = $this->home_m->data_servisById($id);
             $id_kend = $data['servis']['id_kendaraan'];
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
             $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/servis/editriwayatservis', $data);
@@ -734,6 +745,7 @@ class Home extends CI_Controller
             $data['title'] = 'Riwayat BBM Kendaraan Dinas';
             $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $this->load->view('admin/template/header');
             $this->load->view('admin/bbm/riwayatBBM', $data);
@@ -753,6 +765,7 @@ class Home extends CI_Controller
             $data = [];
             $data['title'] = 'Edit Riwayat BBM';
             $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
             $data['kend'] = $this->home_m->kendaraanByid($id_kend);
             $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $this->load->view('admin/template/header');
@@ -897,6 +910,7 @@ class Home extends CI_Controller
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpajak($id);
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
             $this->load->view('admin/template/header');
@@ -936,6 +950,8 @@ class Home extends CI_Controller
             $data['rp'] = $this->home_m->data_riwayatpajak($id);
             $data['value'] = $this->home_m->datapajakById($id);
             $id_kend = $data['value']['id_kendaraan'];
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
             $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
             $this->load->view('admin/template/header');
@@ -1218,7 +1234,6 @@ class Home extends CI_Controller
             $data = [];
             $data['title'] = "Data Kendaraan Dinas";
             $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id);
-            // print_r($this->db->last_query());
             $data['kondisi'] = $this->home_m->datasummary_riwayatkondisibyid($id);
             $data['bbm'] = $this->home_m->datasummary_riwayatbbmbyid($id);
             $data['pajak'] = $this->home_m->datasummary_riwayatpajakbyid($id);
@@ -1238,6 +1253,7 @@ class Home extends CI_Controller
         if ($cek_id != '') {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_admin($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['title'] = 'Form Pengajuan Servis Kendaraan Dinas';
@@ -1258,6 +1274,8 @@ class Home extends CI_Controller
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakaibyidpen($id_pen);
             $id_kend = $data['rp']['id_kendaraan'];
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
             $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
             $data['title'] = 'Form Edit Pengajuan Servis Kendaraan Dinas';
             $this->load->view('admin/template/header');

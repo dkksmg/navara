@@ -12,73 +12,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header" style="background-color:#4a2f3a;">
-                            <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas</h3>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-striped">
-                                <tr>
-                                    <th width="30%">ID Aset</th>
-                                    <th>:</th>
-                                    <th><?= $value['id_assets'] ?></th>
-                                </tr>
-                                <tr>
-                                    <th>No. Polisi</th>
-                                    <th>:</th>
-                                    <th><?= strtoupper($value['no_polisi']) ?></th>
-                                </tr>
-                                <tr>
-                                    <th>Jenis</th>
-                                    <th>:</th>
-                                    <th><?= strtoupper($value['jenis']) ?></th>
-                                </tr>
-                                <tr>
-                                    <th>Merk</th>
-                                    <th>:</th>
-                                    <th><?= strtoupper($value['merk']) ?></th>
-                                </tr>
-                                <tr>
-                                    <th>Tipe</th>
-                                    <th>:</th>
-                                    <th><?= strtoupper($value['tipe']) ?></th>
-                                </tr>
-                                <tr>
-                                    <th>CC</th>
-                                    <th>:</th>
-                                    <th><?php if ($value['besar_cc'] == '') :  ?> -
-                                        <?php else : ?><?= strtoupper($value['besar_cc']) ?> CC <?php endif ?></th>
-                                </tr>
-                                <tr>
-                                    <th>Bahan Bakar</th>
-                                    <th>:</th>
-                                    <th><?= strtoupper($value['jenis_bb']) ?></th>
-                                </tr>
-                                <tr>
-                                    <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
-                                    <th>:</th>
-                                    <th>Rp. <?= isset($pagu) ? number_format($pagu['pagu_awal'], 2, ',', '.') : 0 ?>
-                                    </th>
-                                </tr>
-                                <?php
-                                if (isset($pagu)) {
-                                    $terpakai = $pagu['total_biaya_pajak'] + $pagu['total_biaya_servis'] + $pagu['total_biaya_bbm'];
-                                    $sisa = $pagu['pagu_awal'] - $terpakai;
-                                }
-                                ?>
-                                <tr>
-                                    <th>Pagu Terpakai</th>
-                                    <th>:</th>
-                                    <th>Rp. <?= isset($terpakai) ? number_format($terpakai, 2, ',', '.') : 0 ?></th>
-                                </tr>
-                                <tr>
-                                    <th>Sisa Pagu</th>
-                                    <th>:</th>
-                                    <th>Rp. <?= isset($sisa) ? number_format($sisa, 2, ',', '.') : 0 ?></th>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+                    <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
                 </div>
                 <div class="col-lg-12">
                     <div class="card">

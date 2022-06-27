@@ -36,10 +36,13 @@ class Admin extends CI_Controller
     {
         $id = $this->input->get('id');
         $cek_id = $this->home_m->cek_id_riwayat_pagu($id);
+        $tahun = date('Y');
         if ($cek_id != '') {
             $data = [];
+            $data['paguall'] = $this->admin_m->pagu_kendaraan($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['kend'] = $this->home_m->kendaraanByid($id);
-            $data['pagu'] = $this->admin_m->pagu_kendaraan($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
             $data['title_cek'] = 'Cek Sisa Pagu Kendaraan Dinas';
             if ($this->input->get()) {
@@ -83,7 +86,7 @@ class Admin extends CI_Controller
     {
 
         $id = $this->input->get('id');
-        $jenispagu = $this->input->post('jenis');
+        // $jenispagu = $this->input->post('jenis');
         $cektahun = $this->admin_m->cek_tahun_pagu($id, $this->input->post('tahun'));
         if ($cektahun != '') {
             $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
@@ -103,10 +106,15 @@ class Admin extends CI_Controller
     public function editpagu()
     {
         $id = $this->input->get('id');
+        $id_kend = $this->input->get('idkend');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_edit_riwayat_pagu($id);
         if ($cek_id != '') {
             $data = [];
-            $data['pagu'] = $this->admin_m->datapagu_kendaraanbyid($id);
+            $data['pagukend'] = $this->admin_m->datapagu_kendaraanbyid($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
             $data['title'] = 'Edit Pagu Anggaran Kendaraan Dinas';
             $this->load->view('admin/template/header');
             $this->load->view('admin/pagu/editpaguKendaraan', $data);

@@ -15,51 +15,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header" style="background-color:#4a2f3a;">
-                        <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas</h3>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <tr>
-                                <th width="30%">ID Aset</th>
-                                <th>:</th>
-                                <th><?= $kend['id_assets'] ?></th>
-                            </tr>
-                            <tr>
-                                <th>No. Polisi</th>
-                                <th>:</th>
-                                <th><?= strtoupper($kend['no_polisi']) ?></th>
-                            </tr>
-                            <tr>
-                                <th>Jenis</th>
-                                <th>:</th>
-                                <th><?= strtoupper($kend['jenis']) ?></th>
-                            </tr>
-                            <tr>
-                                <th>Merk</th>
-                                <th>:</th>
-                                <th><?= strtoupper($kend['merk']) ?></th>
-                            </tr>
-                            <tr>
-                                <th>Tipe</th>
-                                <th>:</th>
-                                <th><?= strtoupper($kend['tipe']) ?></th>
-                            </tr>
-                            <tr>
-                                <th>CC</th>
-                                <th>:</th>
-                                <th><?php if ($kend['besar_cc'] == '') :  ?> -
-                                    <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
-                            </tr>
-                            <tr>
-                                <th>Bahan Bakar</th>
-                                <th>:</th>
-                                <th><?= strtoupper($kend['jenis_bb']) ?></th>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+                <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
             </div>
             <div class="col-lg-12">
                 <div class="card">
@@ -84,8 +40,8 @@
                             <tbody>
                                 <?php
                                 $no = 1;
-                                if (isset($pagu)) :
-                                    foreach ($pagu as $row) :
+                                if (isset($paguall)) :
+                                    foreach ($paguall as $row) :
                                 ?>
                                 <tr>
                                     <td class="text-center"><?= $no ?></td>

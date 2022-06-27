@@ -406,8 +406,10 @@ class Home_m extends CI_Model
     }
     public function data_pemakaibyid($id = null)
     {
-        $this->db->join('kendaraan', 'riwayat_pemakai.id_kendaraan = kendaraan.idk');
-        $this->db->where('id_rp', $id);
+        $this->db
+            ->join('kendaraan', 'riwayat_pemakai.id_kendaraan = kendaraan.idk')
+            ->join('users as us', 'us.id = riwayat_pemakai.id_user', 'left')
+            ->where('id_rp', $id);
         $query = $this->db->get('riwayat_pemakai')->row_array();
         return $query;
     }
@@ -535,7 +537,9 @@ class Home_m extends CI_Model
     public function data_kondisiById($id)
     {
         $query = $this->db
-            ->join('kendaraan', 'riwayat_kondisi.id_kendaraan = kendaraan.idk')
+            ->join('kendaraan as kn', 'riwayat_kondisi.id_kendaraan = kn.idk')
+            ->join('riwayat_pemakai as rp', 'rp.id_kendaraan = kn.idk', 'left')
+            ->join('users as us', 'rp.id_user = us.id', 'left')
             ->get_where('riwayat_kondisi', ['id_rk' => $id])
             ->row_array();
         return $query;
@@ -578,8 +582,22 @@ class Home_m extends CI_Model
         $this->db
             ->where('idk', $id);
         $query = $this->db
+            ->get('kendaraan as kn');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function pemakaiKendById($id = null)
+    {
+        $query = $this->db
+            ->select('us.name,us.nip_user,rp.status,kn.merk,kn.jenis,kn.tipe,kn.no_polisi')
             ->join('riwayat_pemakai as rp', 'rp.id_kendaraan = kn.idk', 'left')
             ->join('users as us', 'rp.id_user = us.id', 'left')
+            ->where('idk', $id)
+            ->where('rp.status', 'aktif')
             ->get('kendaraan as kn');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
