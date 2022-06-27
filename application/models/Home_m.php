@@ -577,7 +577,10 @@ class Home_m extends CI_Model
     {
         $this->db
             ->where('idk', $id);
-        $query = $this->db->get('kendaraan as kn');
+        $query = $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_kendaraan = kn.idk', 'left')
+            ->join('users as us', 'rp.id_user = us.id', 'left')
+            ->get('kendaraan as kn');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;

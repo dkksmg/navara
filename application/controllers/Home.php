@@ -111,6 +111,7 @@ class Home extends CI_Controller
         if ($cek_id_kondisi != '') {
             $data = [];
             $data['kend'] = $this->home_m->kendaraanByid($id);
+            print_r($this->db->last_query());
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['rk'] = $this->home_m->data_riwayatKondisi($id);
             $this->load->view('admin/template/header');

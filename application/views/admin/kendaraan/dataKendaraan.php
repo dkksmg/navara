@@ -108,7 +108,7 @@
                                          <p> - <br><i style="color:red" class="fa-solid fa-circle-exclamation"
                                                  title="Data Masih Kosong. Silakan diperbarui"></i></p>
                                          <?php else : ?>
-                                         <?= strtoupper($kend['name']) ?>
+                                         <?= strtoupper($kend['name'] . '<br>(' . $kend['nip_user'] . ')') ?>
                                          <?php endif ?>
                                      </td>
                                      <td class="text-center">

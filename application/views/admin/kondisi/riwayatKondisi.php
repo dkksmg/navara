@@ -31,6 +31,14 @@
                                  <th><?= $kend['id_assets'] ?></th>
                              </tr>
                              <tr>
+                                 <th>Pemakai</th>
+                                 <th>:</th>
+                                 <th><?php if (empty($kend['name']) or empty($kend['nip_user'])) : ?> -
+                                     <?php else : ?>
+                                     <?= strtoupper($kend['name'] . ' (' . $kend['nip_user'] . ')') ?>
+                                     <?php endif ?></th>
+                             </tr>
+                             <tr>
                                  <th>No. Polisi</th>
                                  <th>:</th>
                                  <th><?= strtoupper($kend['no_polisi']) ?></th>
