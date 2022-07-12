@@ -49,6 +49,8 @@ class Admin extends CI_Controller
                 $tahun = ($this->input->get('tahun'));
                 $data['tahun'] = $tahun;
                 $data['rekap'] = $this->admin_m->cek_datapagu($id, $tahun);
+                // print_r($this->db->last_query());
+                // die();
                 $data['title_cek'] = 'Cek Sisa Pagu Kendaraan Dinas Tahun ' . $tahun . '';
             }
             $this->load->view('admin/template/header');

@@ -83,6 +83,8 @@
                                              SUV</option>
                                          <option <?= isset($kend) && $kend['jenis'] == 'MPV' ? "selected" : ""; ?>>
                                              MPV</option>
+                                         <option <?= isset($kend) && $kend['jenis'] == 'Pick Up' ? "selected" : ""; ?>>
+                                             Pick Up</option>
                                          <option
                                              <?= isset($kend) && $kend['jenis'] == 'Ambulance' ? "selected" : ""; ?>>
                                              Ambulance</option>

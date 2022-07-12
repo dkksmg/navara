@@ -188,7 +188,7 @@
                  <div class="modal-body">
                      <center>
                          <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
-                             alt="Foto Struk BBM" class="img-responsive" width="70%" height="auto">
+                             alt="Foto Struk BBM" class="img-responsive" width="80%" height="auto">
                      </center>
                  </div>
                  <div class="modal-footer">

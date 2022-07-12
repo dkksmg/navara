@@ -152,7 +152,7 @@ class Auth extends CI_Controller
                         $this->session->set_flashdata(
                             'message',
                             '<div class="alert alert-danger alert-dismissible fade show">
-                            Maaf, akun tidak ditemukan. Silakan login kembali dengan akun yang sesuai.
+                            Username & Password yang Anda masukkan tidak sesuai !
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

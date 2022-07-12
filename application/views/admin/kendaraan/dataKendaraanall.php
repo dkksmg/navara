@@ -25,7 +25,7 @@
                      </div>
                      <div class="card-header">
                          <?php if ($this->session->userdata('role') == 'Superadmin') : ?>
-                         <a href="<?= site_url('home/tambahKendaraanDinas') ?>" class="btn btn-sm btn-success">Tambah
+                         <a href="<?= site_url('home/tambahKendaraanDinasall') ?>" class="btn btn-sm btn-success">Tambah
                              Data
                              Kendaraan</a>
                          <?php endif; ?>

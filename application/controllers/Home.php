@@ -55,7 +55,24 @@ class Home extends CI_Controller
         if ($this->input->post()) {
             if ($this->home_m->tambahKendaraanDinas()) {
                 $this->session->set_flashdata('success', 'Tambah Kendaraan Berhasil');
-                redirect('home');
+                redirect('home/kendaraan_pemakai');
+            } else {
+                $this->session->set_flashdata('danger', 'Tambah Kendaraan gagal');
+            }
+        }
+        $this->load->view('admin/template/header');
+        $this->load->view('admin/kendaraan/tambahKendaraanDinas', $data);
+        $this->load->view('admin/template/footer');
+    }
+    public function tambahKendaraanDinasall()
+    {
+        check_level_admin();
+        $data = [];
+        $data['title'] = 'Tambah Kendaraan Dinas';
+        if ($this->input->post()) {
+            if ($this->home_m->tambahKendaraanDinas()) {
+                $this->session->set_flashdata('success', 'Tambah Kendaraan Berhasil');
+                redirect('home/all_kendaraan');
             } else {
                 $this->session->set_flashdata('danger', 'Tambah Kendaraan gagal');
             }
@@ -87,7 +104,7 @@ class Home extends CI_Controller
         if ($this->input->post()) {
             if ($this->home_m->editKendaraanDinas($idk)) {
                 $this->session->set_flashdata('success', 'Update Data Kendaraan Berhasil');
-                redirect('home');
+                redirect('home/kendaraan_pemakai');
             } else {
                 $this->session->set_flashdata('danger', 'Update Data Kendaraan gagal');
             }
