@@ -73,7 +73,7 @@
                  <div class="small-box bg-warning">
                      <div class="inner">
                          <h3><?= $totalpmkkend ?></h3>
-                         <p>Total Pemakai Kendaraan Dinas <?php if ($this->session->userdata('role') == 'Admin') : ?>di
+                         <p>Total Kendaraan Dinas Terpakai <?php if ($this->session->userdata('role') == 'Admin') : ?>di
                              Wilayah Anda<?php endif; ?></p>
                      </div>
                      <div class="icon">

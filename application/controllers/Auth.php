@@ -10,19 +10,19 @@ class Auth extends CI_Controller
         $this->load->model('auth_m');
     }
 
-    public function get_hash($username = null)
-    {
-        $this->db->select(" password ");
-        $this->db->limit(1);
-        $this->db->where('username', $username);
-        $query = $this->db->get('users');
-        if ($query->num_rows() > 0) {
-            foreach ($query->result_array() as $row) {
-                $hasil = $row['password'];
-            }
-            return $hasil;
-        }
-    }
+    // public function get_hash($username = null)
+    // {
+    //     $this->db->select(" password ");
+    //     $this->db->limit(1);
+    //     $this->db->where('username', $username);
+    //     $query = $this->db->get('users');
+    //     if ($query->num_rows() > 0) {
+    //         foreach ($query->result_array() as $row) {
+    //             $hasil = $row['password'];
+    //         }
+    //         return $hasil;
+    //     }
+    // }
 
     public function index()
     {
@@ -57,7 +57,6 @@ class Auth extends CI_Controller
             if ($user->num_rows() > 0) {
                 $hasil = $user->row();
                 if (password_verify($password, $hasil->password) && $hasil->status == 'Aktif') {
-
                     $session_data = array(
                         'id'        => $hasil->id,
                         'name'      => $hasil->name,
@@ -131,7 +130,9 @@ class Auth extends CI_Controller
             $username = $this->input->post('username', true);
             $password = $this->input->post('password', true);
 
-            $user = $this->db->get_where('users', ['username' => $username]);
+            $user = $this->db->get_where('users', ['BINARY (username) =' => $username]);
+            // print_r($this->db->last_query());
+            // // die();
             if ($user->num_rows() > 0) {
                 $hasil = $user->row();
                 if (password_verify($password, $hasil->password) && $hasil->status == 'Aktif') {

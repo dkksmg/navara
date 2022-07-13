@@ -72,7 +72,6 @@ class Admin extends CI_Controller
                 $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
                 redirect('admin/pagu?id=' . $id);
             } else {
-
                 $simpan = $this->admin_m->tambahpagu($id, $value, $this->input->post('pagu')[$key]);
                 if ($simpan) {
                     $this->session->set_flashdata('success', 'Tambah Pagu Anggaran Pemeliharaan Berhasil');
