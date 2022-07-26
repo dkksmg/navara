@@ -65,7 +65,7 @@
                             <th>CC</th>
                             <th>:</th>
                             <th><?php if ($kend['besar_cc'] == '') :  ?> -
-                                <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
+                                <?php else : ?><?= ($kend['besar_cc']) ?> CC <?php endif ?></th>
                         </tr>
                         <tr>
                             <th>Bahan Bakar</th>
@@ -123,21 +123,36 @@
                             </td>
                         </tr>
                     </table>
-                    <table border="0" width="100%">
+                    <table class="mt-5" border="0" width="100%">
                         <thead>
-                            <td width="500px"></td>
-                            <td width="50px"></td>
-                            <td width="50px"></td>
-                            <td width="50px"></td>
+                            <tr>
+                                <th width="40%" class="text-center">
+                                    Pengelola Sarana dan Prasarana
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th width="40%" class="text-center">Pengguna</th>
+                            </tr>
                         </thead>
                         <tbody>
+                            <tr height="150px">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                             <tr>
-                                <td colspan="5" class="text-right"><b>Tanda Tangan Pengguna</b></td>
+                                <td class="text-center">
+                                    <?php if ($pengajuan['id_admin'] == 1) : ?>
+                                    Vian
+                                    <?php else : ?>
+                                    <?= $admin['name']; ?>
+                                    <?php endif; ?>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center"><?= $pengajuan['name'] ?></td>
                             </tr>
-                            <tr height="200px">
-                                <td class="text-right" colspan="5"><?= $pengajuan['name'] ?></td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>

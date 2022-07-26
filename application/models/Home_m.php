@@ -1204,7 +1204,19 @@ class Home_m extends CI_Model
     public function data_riwayatpengajuanbyidrp($id = null)
     {
 
-        $this->db->join('users', 'users.id= riwayat_pengajuan_servis.id_user')->where('id_pengajuan', $id);
+        $this->db->join('users', 'users.id= riwayat_pengajuan_servis.id_user', 'left')->where('id_pengajuan', $id);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function pengajuan_admin($id = null)
+    {
+
+        $this->db->join('users', 'users.id= riwayat_pengajuan_servis.id_admin')->where('id_pengajuan', $id);
         $query = $this->db->get('riwayat_pengajuan_servis');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {

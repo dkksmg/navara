@@ -73,6 +73,10 @@
                                              class="btn btn-sm btn-success jedatombol"
                                              title="Setujui Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
                                              <i class="fa-solid fa-badge-check"></i></a>
+                                         <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
+                                             class="btn btn-sm btn-danger jedatombol"
+                                             title="Tolak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fa-solid fa-circle-xmark"></i></a>
                                          <a href="#"
                                              onclick="waitConfirm('<?= site_url('home/wait_pengajuan?id=' . $value['id_pengajuan'] . '') ?>')"
                                              class="btn btn-sm btn-dark jedatombol <?php if ($value['status_pengajuan'] == 'Wait') : ?> disabled <?php endif; ?>"

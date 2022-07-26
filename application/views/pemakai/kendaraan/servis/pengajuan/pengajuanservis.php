@@ -127,7 +127,7 @@
                                                  class="fa-solid fa-print"></i></a>
                                          <?php else : ?>
                                          <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
-                                             href="#" class="btn btn-sm btn-warning jedatombol"
+                                             href="#" class="btn btn-sm btn-warning jedatombol disabled"
                                              title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pencil"></i></a>
                                          <?php endif; ?>

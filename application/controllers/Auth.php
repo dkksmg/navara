@@ -131,8 +131,6 @@ class Auth extends CI_Controller
             $password = $this->input->post('password', true);
 
             $user = $this->db->get_where('users', ['BINARY (username) =' => $username]);
-            // print_r($this->db->last_query());
-            // // die();
             if ($user->num_rows() > 0) {
                 $hasil = $user->row();
                 if (password_verify($password, $hasil->password) && $hasil->status == 'Aktif') {

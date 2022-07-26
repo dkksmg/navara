@@ -1243,6 +1243,7 @@ class Pemakai extends CI_Controller
                 $data['title'] = "Cetak Pengajuan Servis Kendaraan Dinas";
                 $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id_kend);
                 $data['pengajuan'] = $this->home_m->data_riwayatpengajuanbyidrp($id_pengajuan);
+                $data['admin'] = $this->home_m->pengajuan_admin($id_pengajuan);
                 $this->load->view('pemakai/template/header_print');
                 $this->load->view('pemakai/kendaraan/servis/cetakpengajuan', $data);
                 $this->load->view('pemakai/template/footer_print');
