@@ -91,7 +91,7 @@
                                         <div class="form-group">
                                             <label>Foto Nota</label>
                                             <input type="file" class="form-control" name="nota" accept="image/*"
-                                                <?php if ($servis['foto_nota'] == null) : ?> required <?php endif ?>>
+                                                <?php if ($servis['foto_nota'] == null) : ?> <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
                                             <h5 class="card-title text-center mt-3 mb-3">Foto Nota</h5>
@@ -114,7 +114,7 @@
                                         <div class="form-group">
                                             <label>Foto Service</label>
                                             <input type="file" class="form-control" name="foto" accept="image/*"
-                                                <?php if ($servis['foto_servis'] == null) : ?> required <?php endif ?>>
+                                                <?php if ($servis['foto_servis'] == null) : ?> <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
                                             <h5 class="card-title text-center mt-3 mb-3">Foto Servis</h5>

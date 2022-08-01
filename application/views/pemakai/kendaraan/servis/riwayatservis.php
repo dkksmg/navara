@@ -145,13 +145,24 @@
                                      <td class="text-left">
                                          <?= "Rp. " . number_format($value['total_biaya'], 2, ',', '.'); ?></td>
                                      <td class="text-center">
+                                         <?php if (!empty($value['foto_servis'])) : ?>
                                          <img width="100%"
                                              src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
-                                             data-toggle="modal" data-target="#servisModal<?php echo $no ?>">
+                                             data-toggle="modal" data-target="#servisModal<?php echo $no ?>"
+                                             alt="Foto Servis">
+                                         <?php else : ?>
+                                         <p data-toggle="modal" data-target="#servisModal<?php echo $no ?>"> - </p>
+                                         <?php endif ?>
                                      </td>
-                                     <td class="text-center"><img width="100%"
+                                     <td class="text-center">
+                                         <?php if (!empty($value['foto_nota'])) : ?>
+                                         <img width="100%"
                                              src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
-                                             data-toggle="modal" data-target="#notaModal<?php echo $no ?>">
+                                             data-toggle="modal" data-target="#notaModal<?php echo $no ?>"
+                                             alt="Foto Nota">
+                                         <?php else : ?>
+                                         <p data-toggle="modal" data-target="#notaModal<?php echo $no ?>"> - </p>
+                                         <?php endif ?>
                                      </td>
                                      <td class="text-center" width="10%">
                                          <?php if ($value['status_srs'] == 'Wait') : ?>
@@ -300,13 +311,13 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Foto Nota</label>
-                                 <input type="file" class="form-control" name="nota" accept="image/*" required>
+                                 <input type="file" class="form-control" name="nota" accept="image/*">
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Foto Service</label>
-                                 <input type="file" class="form-control" name="foto" accept="image/*" required>
+                                 <input type="file" class="form-control" name="foto" accept="image/*">
                              </div>
                          </div>
                      </div>

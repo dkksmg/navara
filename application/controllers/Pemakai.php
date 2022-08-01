@@ -657,6 +657,39 @@ class Pemakai extends CI_Controller
                     $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
                     $data['post'] = $this->input->post();
                 }
+            }
+            // without foto service
+            else if (empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutservis($idk, $namanota);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            }
+            // without foto nota
+            else if (!empty($_FILES['foto']['name']) && empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutnota($idk, $namafoto);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            }
+            // without foto nota & foto service
+            else if (empty($_FILES['foto']['name']) or empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutimage($idk);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             } else {
                 if (isset($nama_dpn)) {
                     unlink('./assets/foto_servis/' . $namafoto);
@@ -770,13 +803,24 @@ class Pemakai extends CI_Controller
         } else if (empty($_FILES['foto']['name']) && empty($_FILES['nota']['name'])) {
             $namafoto = $this->input->post('old_servis');
             $namanota = $this->input->post('old_nota');
-            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
-            if ($simpan) {
-                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
-                redirect('pemakai/riwayatservis?id=' . $idk . '');
-            } else {
-                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
-                $data['post'] = $this->input->post();
+            if (!empty($namafoto) && !empty($namanota)) {
+                $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            } else if (empty($namafoto) && empty($namanota)) {
+                $simpan = $this->home_m->updateriwayatserviskendaraanwithoutimage($id_rs);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             }
         } else if (empty($_FILES['nota']['name'])) {
             $namanota = $this->input->post('old_nota');
@@ -857,8 +901,6 @@ class Pemakai extends CI_Controller
         $tipe = ($this->input->post('tipe'));
         $no_pol = ($this->input->post('no_pol'));
         $cek_rbm = $this->home_m->cek_data_rbm($id_kend);
-        // print_r($this->db->last_query());
-        // die();
         if ($cek_rbm['status_rbm'] == 'Wait') {
             $this->session->set_flashdata('danger', 'Anda sudah melakukan input Riwayat BBM. Silakan menunggu proses verifikasi oleh Admin');
             redirect('pemakai/riwayatbbm?id=' . $id_kend);
@@ -891,6 +933,15 @@ class Pemakai extends CI_Controller
                 $simpan = $this->home_m->tambahriwayatbbm($id_kend, $nama_struk_bbm);
                 if ($simpan) {
                     $this->session->set_flashdata('success', 'Tambah Riwayat BBM Kendaraan Berhasil.. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('pemakai/riwayatbbm?id=' . $id_bbm);
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            } else if (empty($_FILES['struk_bbm']['name'])) {
+                $simpan = $this->home_m->tambahriwayatbbmwithoutimage($id_kend);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat BBM Kendaraan Berhasil');
                     redirect('pemakai/riwayatbbm?id=' . $id_bbm);
                 } else {
                     $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal');
@@ -983,13 +1034,24 @@ class Pemakai extends CI_Controller
             }
         } else if (empty($_FILES['struk_bbm']['name'])) {
             $nama_struk_bbm = ($this->input->post('old_struk'));
-            $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
-            if ($simpan) {
-                $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
-                redirect('pemakai/riwayatbbm?id=' . $id_kend);
+            if (!empty($nama_struk_bbm)) {
+                $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
+                    redirect('pemakai/riwayatbbm?id=' . $id_kend);
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             } else {
-                $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
-                $data['post'] = $this->input->post();
+                $simpan = $this->home_m->updateriwayatbbmwithoutimage($id_bbm);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
+                    redirect('pemakai/riwayatbbm?id=' . $id_kend);
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             }
         } else {
             if (isset($nama_struk_bbm)) {

@@ -36,18 +36,22 @@
                          <table class="table table-bordered table-striped example" width="100%" height="auto">
                              <thead>
                                  <tr>
-                                     <th class="text-center">No</th>
-                                     <th class="text-center" width="10%">Aksi</th>
-                                     <th class="text-center">Tgl Service</th>
-                                     <th class="text-center">Bengkel Service</th>
-                                     <th class="text-center">Keluhan</th>
-                                     <th class="text-center">Perbaikan</th>
-                                     <th class="text-center">Lain-Lain</th>
-                                     <th class="text-center">Total Biaya</th>
-                                     <th class="text-center">Foto Service</th>
-                                     <th class="text-center">Foto Nota</th>
-                                     <th class="text-center">Status</th>
-                                     <th class="text-center">Last Update By</th>
+                                     <th class="text-center" rowspan="2">No</th>
+                                     <th class="text-center" colspan="2">Aksi</th>
+                                     <th class="text-center" rowspan="2">Tgl Service</th>
+                                     <th class="text-center" rowspan="2">Bengkel Service</th>
+                                     <th class="text-center" rowspan="2">Keluhan</th>
+                                     <th class="text-center" rowspan="2">Perbaikan</th>
+                                     <th class="text-center" rowspan="2">Lain-Lain</th>
+                                     <th class="text-center" rowspan="2">Total Biaya</th>
+                                     <th class="text-center" rowspan="2">Foto Service</th>
+                                     <th class="text-center" rowspan="2">Foto Nota</th>
+                                     <th class="text-center" rowspan="2">Status</th>
+                                     <th class="text-center" rowspan="2">Last Update By</th>
+                                 </tr>
+                                 <tr>
+                                     <th class="text-center"></th>
+                                     <th class="text-center"></th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -66,6 +70,8 @@
                                              href="#" class="btn btn-warning btn-sm jedatombol"
                                              title="Edit Riwayat Servis <?= $kend['no_polisi'] ?>"><i
                                                  class="fas fa-pen"></i></a>
+                                     </td>
+                                     <td class="text-center">
                                          <?php if ($value['status_srs'] == 'No' || $value['status_srs'] == 'Wait') : ?>
                                          <a href="#"
                                              onclick="approveConfirm('<?= site_url('home/approve_servis?id=' . $value['id_rs'] . '') ?>')"
@@ -101,13 +107,24 @@
                                      <td class="text-left">
                                          <?= "Rp. " . number_format($value['total_biaya'], 2, ',', '.'); ?></td>
                                      <td class="text-center">
+                                         <?php if (!empty($value['foto_servis'])) : ?>
                                          <img width="100%"
                                              src="<?= base_url('assets/upload/foto_servis/' . $value['foto_servis'] . '') ?>"
-                                             data-toggle="modal" data-target="#servisModal<?php echo $no ?>">
+                                             data-toggle="modal" data-target="#servisModal<?php echo $no ?>"
+                                             alt="Foto Servis">
+                                         <?php else : ?>
+                                         <p data-toggle="modal" data-target="#servisModal<?php echo $no ?>"> - </p>
+                                         <?php endif ?>
                                      </td>
-                                     <td class="text-center"><img width="100%"
+                                     <td class="text-center">
+                                         <?php if (!empty($value['foto_nota'])) : ?>
+                                         <img width="100%"
                                              src="<?= base_url('assets/upload/foto_nota/' . $value['foto_nota'] . '') ?>"
-                                             data-toggle="modal" data-target="#notaModal<?php echo $no ?>">
+                                             data-toggle="modal" data-target="#notaModal<?php echo $no ?>"
+                                             alt="Foto Nota">
+                                         <?php else : ?>
+                                         <p data-toggle="modal" data-target="#notaModal<?php echo $no ?>"> - </p>
+                                         <?php endif ?>
                                      </td>
                                      <td class="text-center" width="15%">
                                          <?php if ($value['status_srs'] == 'Wait') : ?>
@@ -303,13 +320,13 @@
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Foto Nota</label>
-                                 <input type="file" class="form-control" name="nota" accept="image/*" required>
+                                 <input type="file" class="form-control" name="nota" accept="image/*">
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Foto Service</label>
-                                 <input type="file" class="form-control" name="foto" accept="image/*" required>
+                                 <input type="file" class="form-control" name="foto" accept="image/*">
                              </div>
                          </div>
                      </div>

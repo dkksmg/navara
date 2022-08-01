@@ -925,6 +925,62 @@ class Home_m extends CI_Model
         $q = $this->db->insert('riwayat_servis', $data);
         return $q;
     }
+    public function tambahriwayatserviskendaraanwithoutnota($idk = null, $fotoservis = null)
+    {
+
+        $data['id_kendaraan'] = $idk;
+        $data['foto_servis']  = $fotoservis;
+        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $data['lokasi']             = $this->input->post('bengkel');
+        $data['keluhan']            = $this->input->post('keluhan');
+        $data['perbaikan']          = $this->input->post('perbaikan');
+        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_pemakai'] = $this->session->userdata('name');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
+
+        $q = $this->db->insert('riwayat_servis', $data);
+        return $q;
+    }
+    public function tambahriwayatserviskendaraanwithoutservis($idk = null, $nota = null)
+    {
+
+        $data['id_kendaraan'] = $idk;
+        $data['foto_nota']  = $nota;
+        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $data['lokasi']             = $this->input->post('bengkel');
+        $data['keluhan']            = $this->input->post('keluhan');
+        $data['perbaikan']          = $this->input->post('perbaikan');
+        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_pemakai'] = $this->session->userdata('name');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
+
+        $q = $this->db->insert('riwayat_servis', $data);
+        return $q;
+    }
+    public function tambahriwayatserviskendaraanwithoutimage($idk = null)
+    {
+
+        $data['id_kendaraan'] = $idk;
+        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $data['lokasi']             = $this->input->post('bengkel');
+        $data['keluhan']            = $this->input->post('keluhan');
+        $data['perbaikan']          = $this->input->post('perbaikan');
+        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_pemakai'] = $this->session->userdata('name');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
+
+        $q = $this->db->insert('riwayat_servis', $data);
+        return $q;
+    }
     public function updateriwayatserviskendaraan($fotoservis = null, $id_rs = null, $nota = null)
     {
         if ($this->session->userdata('role') == 'Pemakai') {
@@ -955,6 +1011,32 @@ class Home_m extends CI_Model
         $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
         return $q;
     }
+    public function updateriwayatserviskendaraanwithoutimage($id_rs = null)
+    {
+        if ($this->session->userdata('role') == 'Pemakai') {
+            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+            $data['lokasi']             = $this->input->post('bengkel');
+            $data['keluhan']            = $this->input->post('keluhan');
+            $data['perbaikan']          = $this->input->post('perbaikan');
+            $data['lain_lain']          = $this->input->post('lain_lain');
+            $data['total_biaya']        = $this->input->post('biaya');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+            $data['status_srs']         = 'Wait';
+        } else {
+            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+            $data['lokasi']             = $this->input->post('bengkel');
+            $data['keluhan']            = $this->input->post('keluhan');
+            $data['perbaikan']          = $this->input->post('perbaikan');
+            $data['lain_lain']          = $this->input->post('lain_lain');
+            $data['total_biaya']        = $this->input->post('biaya');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+        }
+
+        $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
+        return $q;
+    }
 
     public function tambahriwayatbbm($id = null, $nama_struk_bbm = null)
     {
@@ -972,12 +1054,39 @@ class Home_m extends CI_Model
         $q = $this->db->insert('riwayat_bbm', $data);
         return $q;
     }
+    public function tambahriwayatbbmwithoutimage($id = null)
+    {
+
+        $data['id_kendaraan'] = $id;
+        $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
+        $data['total_bbm'] = $this->input->post('harga_bbm');
+        $data['user_id'] = $this->session->userdata('id');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_rbm']         = 'Wait';
+
+
+        $q = $this->db->insert('riwayat_bbm', $data);
+        return $q;
+    }
     public function updateriwayatbbm($id_bbm = null, $nama_struk_bbm = null)
     {
 
         $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
         $data['total_bbm'] = $this->input->post('harga_bbm');
         $data['struk_bbm'] = $nama_struk_bbm;
+        $data['status_rbm']         = 'Wait';
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['user_id'] = $this->session->userdata('id');
+        $data['input_user'] = $this->session->userdata('id');
+        $q = $this->db->where('id_bbm', $id_bbm)->update('riwayat_bbm', $data);
+        return $q;
+    }
+    public function updateriwayatbbmwithoutimage($id_bbm = null)
+    {
+
+        $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
+        $data['total_bbm'] = $this->input->post('harga_bbm');
         $data['status_rbm']         = 'Wait';
         $data['last_time_update'] = date('Y-m-d H:i:s');
         $data['user_id'] = $this->session->userdata('id');

@@ -136,10 +136,15 @@
                                      <td class="text-center">
                                          <?= "Rp. " . number_format($value['total_bbm'], 2, ',', '.'); ?>
                                      </td>
-                                     <td class="text-center"><img
-                                             src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
+                                     <td class="text-center">
+                                         <?php if (!empty($value['struk_bbm'])) : ?>
+                                         <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
                                              alt="Foto Struk BBM" data-toggle="modal" width="30%"
                                              data-target="#strukModal<?php echo $no ?>">
+                                         <?php else : ?>
+                                         <p data-toggle="modal" width="30%" data-target="#strukModal<?php echo $no ?>">
+                                             - </p>
+                                         <?php endif ?>
                                      </td>
                                      <td class="text-center" width="20%">
                                          <?php if ($value['status_rbm'] == 'Wait') : ?>
@@ -236,7 +241,7 @@
                      <div class="col-md-6">
                          <div class="form-group">
                              <label>Struk BBM</label>
-                             <input type="file" class="form-control" name="struk_bbm" accept="image/*" required>
+                             <input type="file" class="form-control" name="struk_bbm" accept="image/*">
                          </div>
                      </div>
                  </div>

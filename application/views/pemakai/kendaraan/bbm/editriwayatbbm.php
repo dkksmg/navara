@@ -116,7 +116,7 @@
                                  <div class="form-group">
                                      <label>Struk BBM</label>
                                      <input type="file" class="form-control" name="struk_bbm" accept="image/*"
-                                         <?php if ($rbbm['struk_bbm'] == null) : ?> required <?php endif ?>>
+                                         <?php if ($rbbm['struk_bbm'] == null) : ?> <?php endif ?>>
                                  </div>
                              </div>
                              <div class="col-md-6">
