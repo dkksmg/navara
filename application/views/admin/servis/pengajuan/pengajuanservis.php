@@ -215,6 +215,13 @@
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
+                                 <label>Kilometer Kendaraan</label>
+                                 <input type="number" placeholder="Masukkan Kilometer Kendaraan" class="form-control"
+                                     name="km_service">
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
                                  <label>Keluhan</label>
                                  <textarea type="text" placeholder="Masukkan Keluhan Kendaraan Yang Anda Gunakan"
                                      class="form-control" name="keluhan_kendaraan"></textarea>
