@@ -29,10 +29,10 @@
                         <br><br>di tempat
                     </p>
 
-                    <p>Bersama dengan surat ini kami ajukan untuk melakukan servis kendaraan dinas dengan data dibawah
+                    <p>Bersama dengan surat ini kami ajukan untuk melakukan servis kendaraan Dinas Kesehatan Kota
+                        Semarang dengan data dibawah
                         ini :
                     </p>
-                    <br>
                     <h5><strong>Data Kendaraan</strong></h5>
                     <br>
                     <table class="table table-striped table-bordered" border="1">
@@ -64,8 +64,16 @@
                         <tr>
                             <th>CC</th>
                             <th>:</th>
-                            <th><?php if ($kend['besar_cc'] == '') :  ?> -
-                                <?php else : ?><?= ($kend['besar_cc']) ?> CC <?php endif ?></th>
+                            <td><?php if ($kend['besar_cc'] == '') :  ?> -
+                                <?php else : ?>
+                                <?= ($kend['besar_cc']) ?> CC
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Kilometer Kendaraan</th>
+                            <th>:</th>
+                            <td><?= ($pengajuan['km_service']) ?></td>
                         </tr>
                         <tr>
                             <th>Bahan Bakar</th>
@@ -75,7 +83,6 @@
                     </table>
                 </div>
                 <div class="col-lg-8" id="inner">
-                    <!-- <h5><strong>Summary Data</strong></h5> -->
                     <br>
                     <table class="table table-striped table-bordered" border="1">
                         <tr>
@@ -86,7 +93,13 @@
                         <tr>
                             <th>Tanggal Pengajuan Servis</th>
                             <th>:</th>
-                            <td><?= date('d-m-Y', strtotime($pengajuan['tgl_pengajuan'])) ?></td>
+                            <?php
+                            $tanggal = date('d', strtotime($pengajuan['tgl_pengajuan']));
+                            $nama_bulan = date('F', strtotime($pengajuan['tgl_pengajuan']));
+                            $bulan = nama_bulan($nama_bulan);
+                            $tahun = date('Y', strtotime($pengajuan['tgl_pengajuan']));
+                            ?>
+                            <td><?= $tanggal . ' ' . $bulan . ' ' . $tahun ?></td>
                         </tr>
                         <tr>
                             <th>Status Pengajuan Servis</th>
@@ -123,7 +136,7 @@
                             </td>
                         </tr>
                     </table>
-                    <table class="mt-5" border="0" width="100%">
+                    <table class="mt-3" border="0" width="100%">
                         <thead>
                             <tr>
                                 <th width="40%" class="text-center">
@@ -135,7 +148,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr height="150px">
+                            <tr height="120px">
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -144,9 +157,9 @@
                             <tr>
                                 <td class="text-center">
                                     <?php if ($pengajuan['id_admin'] == 1) : ?>
-                                    Vian
-                                    <?php else : ?>
                                     <?= $admin['name']; ?>
+                                    <?php else : ?>
+                                    Vian
                                     <?php endif; ?>
                                 </td>
                                 <td></td>

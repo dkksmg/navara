@@ -102,6 +102,7 @@
                                      <th class="text-center">Aksi</th>
                                      <th class="text-center">Tanggal Pengajuan</th>
                                      <th class="text-center">Bengkel Tujuan</th>
+                                     <th class="text-center">Kilometer Kendaraan</th>
                                      <th class="text-center">Keluhan</th>
                                      <th class="text-center">Servis</th>
                                      <th class="text-center">Lain-Lain</th>
@@ -135,8 +136,16 @@
                                      <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
                                      </td>
                                      <td class="text-center"><?= $value['bengkel_tujuan'] ?></td>
-                                     <td class="text-center"><?php if ($value['keluhan'] == '') : ?> -
-                                         <?php else : ?><?= $value['keluhan'] ?><?php endif ?></td>
+                                     <td class="text-center">
+                                         <?php if ($value['km_service'] == '') : ?> -
+                                         <?php else : ?><?= $value['km_service'] ?>
+                                         <?php endif ?>
+                                     </td>
+                                     <td class="text-center">
+                                         <?php if ($value['keluhan'] == '') : ?> -
+                                         <?php else : ?><?= $value['keluhan'] ?>
+                                         <?php endif ?>
+                                     </td>
                                      <td class="text-center"><?php if ($value['service'] == '') : ?> -
                                          <?php else : ?><?= $value['service'] ?><?php endif ?></td>
                                      <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
@@ -196,6 +205,13 @@
                                  <label>Nama Bengkel</label>
                                  <input type="text" placeholder="Masukkan Bengkel Tujuan" class="form-control"
                                      name="nama_bengkel" required>
+                             </div>
+                         </div>
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                 <label>Kilometer Kendaraan</label>
+                                 <input type="number" placeholder="Masukkan Kilometer Kendaraan" class="form-control"
+                                     name="km_service" required>
                              </div>
                          </div>
                          <div class="col-md-6">

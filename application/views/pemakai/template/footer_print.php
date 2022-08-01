@@ -10,7 +10,7 @@ footer {
 <footer>
     <!-- To the right -->
     <div class="footer-print">
-        <i style="font-size:12px"><b>Print on Navara : <?php date_default_timezone_set('Asia/Jakarta');
+        <i style="font-size:14px"><b>Print on Navara : <?php date_default_timezone_set('Asia/Jakarta');
                                                         echo date('d-m-Y H:i:s') ?></i></b>
     </div>
 </footer>

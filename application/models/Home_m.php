@@ -1267,6 +1267,7 @@ class Home_m extends CI_Model
             $data['tgl_pengajuan'] = date('Y-m-d');
             $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
             $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+            $data['km_service'] = $this->input->post('km_service');
             $data['service'] = $this->input->post('servis_kendaraan');
             $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
             $data['id_user'] = $this->session->userdata('id');
@@ -1278,6 +1279,7 @@ class Home_m extends CI_Model
             $data['tgl_pengajuan'] = date('Y-m-d');
             $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
             $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+            $data['km_service'] = $this->input->post('km_service');
             $data['service'] = $this->input->post('servis_kendaraan');
             $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
             $data['last_time_update'] = date('Y-m-d H:i:s');
@@ -1292,6 +1294,7 @@ class Home_m extends CI_Model
     {
         if ($this->session->userdata('role') == 'Pemakai') {
             $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+            $data['km_service'] = $this->input->post('km_service');
             $data['keluhan'] = $this->input->post('keluhan_kendaraan');
             $data['service'] = $this->input->post('servis_kendaraan');
             $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
@@ -1301,6 +1304,7 @@ class Home_m extends CI_Model
             $data['last_time_update'] = date('Y-m-d H:i:s');
         } else {
             $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+            $data['km_service'] = $this->input->post('km_service');
             $data['keluhan'] = $this->input->post('keluhan_kendaraan');
             $data['service'] = $this->input->post('servis_kendaraan');
             $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
