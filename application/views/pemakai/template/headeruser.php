@@ -73,7 +73,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <?php echo greetings() ?>,
-                            <strong><?php echo $this->session->userdata('name'); ?></strong>
+                            <strong><?php echo $this->session->userdata('name') . ' (' . $this->session->userdata('nip_user') . ') ' ?></strong>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <a href="<?php echo site_url(

@@ -139,6 +139,7 @@ class Auth extends CI_Controller
                         $session_data = array(
                             'id'        => $hasil->id,
                             'name'      => $hasil->name,
+                            'nip_user'      => $hasil->nip_user,
                             'username'  => $hasil->username,
                             'role'      => $hasil->role,
                             'wilayah'   => $hasil->wilayah,

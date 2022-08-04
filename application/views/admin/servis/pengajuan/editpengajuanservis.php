@@ -48,7 +48,7 @@
                                         <label>Kilometer Kendaraan</label>
                                         <input type="number" placeholder="Masukkan Kilometer Kendaraan"
                                             class="form-control" name="km_service"
-                                            value="<?php echo $rp['km_service'] ?>" required>
+                                            value="<?php echo $rp['km_service'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

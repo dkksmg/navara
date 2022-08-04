@@ -211,7 +211,7 @@
                              <div class="form-group">
                                  <label>Kilometer Kendaraan</label>
                                  <input type="number" placeholder="Masukkan Kilometer Kendaraan" class="form-control"
-                                     name="km_service" required>
+                                     name="km_service" >
                              </div>
                          </div>
                          <div class="col-md-6">

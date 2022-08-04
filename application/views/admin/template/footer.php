@@ -19,6 +19,7 @@
 
 <!-- jQuery -->
 <script src="<?= base_url('assets/admin/') ?>plugins/jquery/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.2.0/jquery.priceformat.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="<?= base_url('assets/admin/') ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Bootstrap 4 -->

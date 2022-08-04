@@ -102,9 +102,9 @@
                                      <th class="text-center" width="5%">Aksi</th>
                                      <th class="text-center">Tgl Service</th>
                                      <th class="text-center">Bengkel Service</th>
-                                     <th class="text-center">Keluhan</th>
-                                     <th class="text-center">Perbaikan</th>
-                                     <th class="text-center">Lain-Lain</th>
+                                     <th class="text-center">Service</th>
+                                     <th class="text-center">Sparepart</th>
+                                     <th class="text-center">Oli</th>
                                      <th class="text-center">Total Biaya</th>
                                      <th class="text-center">Foto Service</th>
                                      <th class="text-center">Foto Nota</th>
@@ -139,9 +139,33 @@
                                      </td>
                                      <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_servis'])) ?></td>
                                      <td class="text-center"><?= $value['lokasi'] ?></td>
-                                     <td><?= $value['keluhan'] ?></td>
-                                     <td><?= $value['perbaikan'] ?></td>
-                                     <td><?= $value['lain_lain'] ?></td>
+                                     <td class="text-center">
+                                         <?php if (is_numeric($value['keluhan'])) : ?>
+                                         <?= "Rp. " . number_format($value['keluhan'], 2, ',', '.'); ?>
+                                         <?php elseif (($value['keluhan']) == null) : ?>
+                                         <p> - </p>
+                                         <?php else : ?>
+                                         <?= $value['keluhan'] ?>
+                                         <?php endif; ?>
+                                     </td>
+                                     <td class="text-center">
+                                         <?php if (is_numeric($value['perbaikan'])) : ?>
+                                         <?= "Rp. " . number_format($value['perbaikan'], 2, ',', '.'); ?>
+                                         <?php elseif (($value['perbaikan']) == null) : ?>
+                                         <p> - </p>
+                                         <?php else : ?>
+                                         <?= $value['perbaikan'] ?>
+                                         <?php endif; ?>
+                                     </td>
+                                     <td class="text-center">
+                                         <?php if (is_numeric($value['lain_lain'])) : ?>
+                                         <?= "Rp. " . number_format($value['lain_lain'], 2, ',', '.'); ?>
+                                         <?php elseif (($value['lain_lain']) == null) : ?>
+                                         <p> - </p>
+                                         <?php else : ?>
+                                         <?= $value['lain_lain'] ?>
+                                         <?php endif; ?>
+                                     </td>
                                      <td class="text-left">
                                          <?= "Rp. " . number_format($value['total_biaya'], 2, ',', '.'); ?></td>
                                      <td class="text-center">
@@ -280,30 +304,30 @@
                      <div class="row">
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Keluhan</label>
-                                 <textarea class="form-control" name="keluhan" placeholder="Keluhan Kendaraan"
-                                     required></textarea>
+                                 <label>Service</label>
+                                 <input class="form-control" name="service" id="service" placeholder="Biaya Servis"
+                                     type="number" onkeyup="sum()" required />
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Perbaikan</label>
-                                 <textarea class="form-control" name="perbaikan" placeholder="Perbaikan Kendaraan"
-                                     required></textarea>
+                                 <label>Sparepart</label>
+                                 <input class="form-control" name="sparepart" id="sparepart"
+                                     placeholder="Biaya Sparepart" onkeyup="sum()" type="number" required />
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
-                                 <label>Lain Lain</label>
-                                 <textarea class="form-control" name="lain_lain"
-                                     placeholder="Tambahan/Lain-Lain"></textarea>
+                                 <label>Oli</label>
+                                 <input class="form-control" name="oli" id="oli" placeholder="Biaya Oli" onkeyup="sum()"
+                                     type="number" required />
                              </div>
                          </div>
                          <div class="col-md-6">
                              <div class="form-group">
                                  <label>Total Biaya</label>
-                                 <input type="number" class="form-control" name="biaya" placeholder="Total Biaya"
-                                     required>
+                                 <input type="number" class="form-control" id="result" name="biaya"
+                                     placeholder="Total Biaya" readonly>
                              </div>
                          </div>
                      </div>

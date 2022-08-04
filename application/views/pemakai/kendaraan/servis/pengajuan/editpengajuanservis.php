@@ -107,8 +107,8 @@
                                         <div class="form-group">
                                             <label>Kilometer Kendaraan</label>
                                             <textarea type="number" placeholder="Masukkan Kilometer Kendarran"
-                                                class="form-control" name="km_service"
-                                                required><?= ($rp['km_service']) ?></textarea>
+                                                class="form-control"
+                                                name="km_service"><?= ($rp['km_service']) ?></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

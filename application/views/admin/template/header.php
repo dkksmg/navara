@@ -92,7 +92,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <a href="<?= site_url('laporan/rekap_kondisi') ?>" class="dropdown-item">Rekap
                                     Kondisi</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="<?= site_url('laporan/rekap_servis') ?>" class="dropdown-item">Rekap Servis</a>
+                                <!-- <a href="<?= site_url('laporan/rekap_servis') ?>" class="dropdown-item">Rekap Servis</a> -->
                             </div>
                         </li>
                         <li class="nav-item <?= $this->uri->segment(2) == 'user' ? 'active' : '' ?>">
@@ -110,7 +110,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <?php echo greetings() ?>,
-                            <strong><?php echo $this->session->userdata('name'); ?></strong>
+                            <strong><?php echo $this->session->userdata('name') . ' (' . $this->session->userdata('nip_user') . ') ' ?></strong>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <a href="<?php echo site_url(

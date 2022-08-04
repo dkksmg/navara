@@ -913,9 +913,9 @@ class Home_m extends CI_Model
         $data['foto_nota']  = $nota;
         $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
         $data['lokasi']             = $this->input->post('bengkel');
-        $data['keluhan']            = $this->input->post('keluhan');
-        $data['perbaikan']          = $this->input->post('perbaikan');
-        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['keluhan']            = $this->input->post('service');
+        $data['perbaikan']          = $this->input->post('sparepart');
+        $data['lain_lain']          = $this->input->post('oli');
         $data['total_biaya']        = $this->input->post('biaya');
         $data['input_pemakai'] = $this->session->userdata('name');
         $data['input_user'] = $this->session->userdata('id');
@@ -932,9 +932,9 @@ class Home_m extends CI_Model
         $data['foto_servis']  = $fotoservis;
         $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
         $data['lokasi']             = $this->input->post('bengkel');
-        $data['keluhan']            = $this->input->post('keluhan');
-        $data['perbaikan']          = $this->input->post('perbaikan');
-        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['keluhan']            = $this->input->post('service');
+        $data['perbaikan']          = $this->input->post('sparepart');
+        $data['lain_lain']          = $this->input->post('oli');
         $data['total_biaya']        = $this->input->post('biaya');
         $data['input_pemakai'] = $this->session->userdata('name');
         $data['input_user'] = $this->session->userdata('id');
@@ -951,9 +951,9 @@ class Home_m extends CI_Model
         $data['foto_nota']  = $nota;
         $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
         $data['lokasi']             = $this->input->post('bengkel');
-        $data['keluhan']            = $this->input->post('keluhan');
-        $data['perbaikan']          = $this->input->post('perbaikan');
-        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['keluhan']            = $this->input->post('service');
+        $data['perbaikan']          = $this->input->post('sparepart');
+        $data['lain_lain']          = $this->input->post('oli');
         $data['total_biaya']        = $this->input->post('biaya');
         $data['input_pemakai'] = $this->session->userdata('name');
         $data['input_user'] = $this->session->userdata('id');
@@ -969,9 +969,9 @@ class Home_m extends CI_Model
         $data['id_kendaraan'] = $idk;
         $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
         $data['lokasi']             = $this->input->post('bengkel');
-        $data['keluhan']            = $this->input->post('keluhan');
-        $data['perbaikan']          = $this->input->post('perbaikan');
-        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['keluhan']            = $this->input->post('service');
+        $data['perbaikan']          = $this->input->post('sparepart');
+        $data['lain_lain']          = $this->input->post('oli');
         $data['total_biaya']        = $this->input->post('biaya');
         $data['input_pemakai'] = $this->session->userdata('name');
         $data['input_user'] = $this->session->userdata('id');
@@ -988,9 +988,9 @@ class Home_m extends CI_Model
             $data['foto_nota']  = $nota;
             $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
             $data['lokasi']             = $this->input->post('bengkel');
-            $data['keluhan']            = $this->input->post('keluhan');
-            $data['perbaikan']          = $this->input->post('perbaikan');
-            $data['lain_lain']          = $this->input->post('lain_lain');
+            $data['keluhan']            = $this->input->post('service');
+            $data['perbaikan']          = $this->input->post('sparepart');
+            $data['lain_lain']          = $this->input->post('oli');
             $data['total_biaya']        = $this->input->post('biaya');
             $data['input_user'] = $this->session->userdata('id');
             $data['last_time_update'] = date('Y-m-d H:i:s');
@@ -1000,9 +1000,9 @@ class Home_m extends CI_Model
             $data['foto_nota']  = $nota;
             $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
             $data['lokasi']             = $this->input->post('bengkel');
-            $data['keluhan']            = $this->input->post('keluhan');
-            $data['perbaikan']          = $this->input->post('perbaikan');
-            $data['lain_lain']          = $this->input->post('lain_lain');
+            $data['keluhan']            = $this->input->post('service');
+            $data['perbaikan']          = $this->input->post('sparepart');
+            $data['lain_lain']          = $this->input->post('oli');
             $data['total_biaya']        = $this->input->post('biaya');
             $data['input_user'] = $this->session->userdata('id');
             $data['last_time_update'] = date('Y-m-d H:i:s');
@@ -1016,9 +1016,9 @@ class Home_m extends CI_Model
         if ($this->session->userdata('role') == 'Pemakai') {
             $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
             $data['lokasi']             = $this->input->post('bengkel');
-            $data['keluhan']            = $this->input->post('keluhan');
-            $data['perbaikan']          = $this->input->post('perbaikan');
-            $data['lain_lain']          = $this->input->post('lain_lain');
+            $data['keluhan']            = $this->input->post('service');
+            $data['perbaikan']          = $this->input->post('sparepart');
+            $data['lain_lain']          = $this->input->post('oli');
             $data['total_biaya']        = $this->input->post('biaya');
             $data['input_user'] = $this->session->userdata('id');
             $data['last_time_update'] = date('Y-m-d H:i:s');
@@ -1026,9 +1026,9 @@ class Home_m extends CI_Model
         } else {
             $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
             $data['lokasi']             = $this->input->post('bengkel');
-            $data['keluhan']            = $this->input->post('keluhan');
-            $data['perbaikan']          = $this->input->post('perbaikan');
-            $data['lain_lain']          = $this->input->post('lain_lain');
+            $data['keluhan']            = $this->input->post('service');
+            $data['perbaikan']          = $this->input->post('sparepart');
+            $data['lain_lain']          = $this->input->post('oli');
             $data['total_biaya']        = $this->input->post('biaya');
             $data['input_user'] = $this->session->userdata('id');
             $data['last_time_update'] = date('Y-m-d H:i:s');
