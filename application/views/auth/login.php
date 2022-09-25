@@ -30,14 +30,15 @@
                 <p>Layanan servis kendaraan operasional dinas kesehatan</p>
             </div>
             <div class="card-body">
+                <!-- <p class="login-box-msg">Login Pemakai</p> -->
                 <?= $this->session->flashdata('message') ?>
-                <!-- <p class="login-box-msg">Login Admin</p> -->
-
-                <?php echo form_open('auth/check_login', 'class="form-signin"'); ?>
+                <?php echo form_open('auth/check_login_user', 'class="form-signin"'); ?>
                 <div class="input-group mb-3">
-                    <input type="text"
-                        class="form-control <?php if (form_error('username') == TRUE) : ?> is-invalid <?php endif ?>"
-                        placeholder="Username" name="username" value="<?= set_value('username') ?>">
+                    <input type="number"
+                        class="form-control <?php if (form_error('nip_user') == TRUE) : ?> is-invalid <?php endif ?>"
+                        placeholder="NIP" name="nip_user" <?php if ($this->session->flashdata('nip_user') == TRUE) : ?>
+                        value="<?= $this->session->flashdata('nip_user'); ?>" <?php else : ?>
+                        value="<?= set_value('nip_user'); ?>" <?php endif; ?>>
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -45,7 +46,7 @@
                     </div>
 
                 </div>
-                <?= form_error('username', '<small class="text-danger pl-3" style="margin-bottom:20px">', '</small>') ?>
+                <?= form_error('nip_user', '<small class="text-danger pl-3" style="margin-bottom:20px">', '</small>') ?>
                 <div class="input-group mb-3 mt-3">
                     <input type="password"
                         class="form-control <?php if (form_error('password') == TRUE) : ?> is-invalid <?php endif ?>"

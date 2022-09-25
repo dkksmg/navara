@@ -47,7 +47,8 @@
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                    <th><?php if ($kend['besar_cc'] == '') :  ?> -
+                                        <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
@@ -224,6 +225,5 @@
                     </div>
                 </div>
             </div>
-
+        </div>
     </section>
-</div>

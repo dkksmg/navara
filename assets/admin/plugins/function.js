@@ -33,3 +33,17 @@ function waitConfirm(url) {
   $("#btn-wait").attr("href", url);
   $("#waitModal").modal();
 }
+function disableBtn() {
+  const d = new Date();
+  let year = d.getFullYear();
+  alert("Pagu kendaraan dinas Anda tahun " + year + " masih kosong. Silakan hubungi Admin.");
+}
+function sum() {
+  var service = document.getElementById("service").value;
+  var sparepart = document.getElementById("sparepart").value;
+  var oli = document.getElementById("oli").value;
+  var result = parseFloat(service) + parseFloat(sparepart) + parseFloat(oli);
+  if (!isNaN(result)) {
+    document.getElementById("result").value = result;
+  }
+}

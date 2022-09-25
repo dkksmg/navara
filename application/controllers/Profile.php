@@ -70,10 +70,11 @@ class Profile extends CI_Controller
     $id_user = $this->input->get('id');
     if ($this->input->post()) {
       if ($this->profile_model->edituser($id_user)) {
-        $this->session->set_flashdata('success', 'Data Anda berhasil di perbaharui');
         if ($this->session->userdata('role') != 'Pemakai') {
+          $this->session->set_flashdata('success', 'Data Anda berhasil di perbaharui');
           redirect('home');
         } else {
+          $this->session->set_flashdata('success', 'Data Anda berhasil di perbaharui');
           redirect('pemakai');
         }
       } else {

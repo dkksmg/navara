@@ -47,7 +47,8 @@
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                    <th><?php if ($kend['besar_cc'] == '') :  ?> -
+                                        <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
@@ -112,7 +113,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nama Bengkel Service</label>
-                                            <input type="text" class="form-control" name="bengkel" required
+                                            <input type="text" class="form-control" name="bengkel" 
                                                 value="<?php echo $servis['lokasi'] ?>" placeholder="Nama Bengkel">
                                         </div>
                                     </div>
@@ -120,30 +121,34 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Keluhan</label>
-                                            <textarea class="form-control" name="keluhan" required
-                                                placeholder="Keluhan Kendaraan"><?php echo htmlspecialchars($servis['keluhan']) ?></textarea>
+                                            <label>Service</label>
+                                            <input class="form-control" name="service" value="<?= $servis['keluhan'] ?>"
+                                                id="service" placeholder="Biaya Servis" type="number" onkeyup="sum()"
+                                                required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Perbaikan</label>
-                                            <textarea class="form-control" name="perbaikan" required
-                                                placeholder="perbaikan Kendaraan"><?php echo htmlspecialchars($servis['perbaikan']) ?></textarea>
+                                            <label>Sparepart</label>
+                                            <input class="form-control" name="sparepart"
+                                                value="<?= $servis['perbaikan'] ?>" id="sparepart"
+                                                placeholder="Biaya Sparepart" onkeyup="sum()" type="number" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Lain Lain</label>
-                                            <textarea class="form-control" name="lain_lain"
-                                                placeholder="Tambahan/Lain-Lain"><?php echo htmlspecialchars($servis['lain_lain']) ?></textarea>
+                                            <label>Oli</label>
+                                            <input class="form-control" name="oli" value="<?= $servis['lain_lain'] ?>"
+                                                id="oli" placeholder="Biaya Oli" onkeyup="sum()" type="number"
+                                                required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Total Biaya</label>
-                                            <input type="number" class="form-control" name="biaya" required
-                                                value="<?php echo $servis['total_biaya'] ?>" placeholder="Total Biaya">
+                                            <input type="number" class="form-control" name="biaya"
+                                                value="<?php echo $servis['total_biaya'] ?>" placeholder="Total Biaya"
+                                                id="result" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -152,7 +157,7 @@
                                         <div class="form-group">
                                             <label>Foto Nota</label>
                                             <input type="file" class="form-control" name="nota" accept="image/*"
-                                                <?php if ($servis['foto_nota'] == null) : ?> required <?php endif ?>>
+                                                <?php if ($servis['foto_nota'] == null) : ?> <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
                                             <h5 class="card-title text-center mt-3 mb-3">Foto Nota</h5>
@@ -175,7 +180,7 @@
                                         <div class="form-group">
                                             <label>Foto Service</label>
                                             <input type="file" class="form-control" name="foto" accept="image/*"
-                                                <?php if ($servis['foto_servis'] == null) : ?> required <?php endif ?>>
+                                                <?php if ($servis['foto_servis'] == null) : ?> <?php endif ?>>
                                         </div>
                                         <div class="card" style="width: 18rem;">
                                             <h5 class="card-title text-center mt-3 mb-3">Foto Servis</h5>
@@ -199,5 +204,5 @@
                 </div>
             </div>
 
+        </div>
     </section>
-</div>

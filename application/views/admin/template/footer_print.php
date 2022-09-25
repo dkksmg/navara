@@ -41,8 +41,8 @@ $(function() {
         stateSave: true,
         "scrollX": true,
         "paging": true,
-        "pageLength": 50,
-        "lengthMenu": [10, 25, 50, 100, 150, 200, 300],
+        "pageLength": 10,
+        "lengthMenu": [5, 10, 25, 50, 100, 150, 200, 300],
 
     });
     $('.example2').DataTable({});

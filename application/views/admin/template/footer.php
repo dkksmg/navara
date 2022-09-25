@@ -1,64 +1,59 @@
-  <style type="text/css">
-footer {
-    clear: both;
-    position: relative;
-    height: 50px;
-    margin-top: 20px;
-}
-  </style>
-  <!-- Main Footer -->
-  <footer class="main-footer">
-      <!-- To the right -->
-      <div class="float-right d-none d-sm-inline">
-          CATDKK
-      </div>
-      <!-- Default to the left -->
-      <strong>Copyright &copy; 2021 - <script>
-          document.write(new Date().getFullYear())
-          </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
-              SEMARANG</a>.</strong> All rights reserved.
-  </footer>
-  </div>
-  <!-- ./wrapper -->
+<!-- Main Footer -->
+<footer style="margin-top: 100px;">
+    <div class="fixed-bottom main-footer">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+            CATDKK <strong>Ver. 1.1.0</strong>
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2021 - <script>
+            document.write(new Date().getFullYear())
+            </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
+                SEMARANG</a>.</strong> All rights reserved.
+    </div>
+</footer>
+</div>
+<!-- ./wrapper -->
 
-  <!-- REQUIRED SCRIPTS -->
+<!-- REQUIRED SCRIPTS -->
 
-  <!-- jQuery -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/jquery/jquery.min.js"></script>
-  <!-- jQuery UI 1.11.4 -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/jquery-ui/jquery-ui.min.js"></script>
-  <!-- Bootstrap 4 -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- InputMask -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/moment/moment.min.js"></script>
-  <!-- date-range-picker -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/daterangepicker/daterangepicker.js"></script>
-  <!-- DataTables  & Plugins -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables/jquery.dataTables.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/jszip/jszip.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/pdfmake/pdfmake.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/pdfmake/vfs_fonts.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.print.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-  <!-- SweetAlert2 -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- jQuery -->
+<script src="<?= base_url('assets/admin/') ?>plugins/jquery/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.2.0/jquery.priceformat.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="<?= base_url('assets/admin/') ?>plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="<?= base_url('assets/admin/') ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- InputMask -->
+<script src="<?= base_url('assets/admin/') ?>plugins/moment/moment.min.js"></script>
+<!-- date-range-picker -->
+<script src="<?= base_url('assets/admin/') ?>plugins/daterangepicker/daterangepicker.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/jszip/jszip.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/pdfmake/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="<?= base_url('assets/admin/') ?>plugins/sweetalert2/sweetalert2.min.js"></script>
 
-  <!-- jquery-validation -->
-  <script src="<?= base_url('assets/admin/') ?>plugins/jquery-validation/jquery.validate.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/jquery-validation/additional-methods.min.js"></script>
-  <script src="<?= base_url('assets/admin/') ?>plugins/function.js"></script>
+<!-- jquery-validation -->
+<script src="<?= base_url('assets/admin/') ?>plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/jquery-validation/additional-methods.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>plugins/function.js"></script>
 
-  <!-- AdminLTE App -->
-  <script src="<?= base_url('assets/admin/') ?>dist/js/adminlte.min.js"></script>
-  <!-- AdminLTE for demo purposes -->
-  <!-- <script src="<?= base_url('assets/admin/') ?>dist/js/demo.js"></script> -->
-  <script type="text/javascript">
+<!-- AdminLTE App -->
+<script src="<?= base_url('assets/admin/') ?>dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<!-- <script src="<?= base_url('assets/admin/') ?>dist/js/demo.js"></script> -->
+<script type="text/javascript">
 $(document).ready(function() {
     var Toast = Swal.mixin({
         toast: true,
@@ -84,21 +79,21 @@ $(document).ready(function() {
         })
     }
 });
-  </script>
-  <script>
+</script>
+<script>
 $(function() {
     $('.example').DataTable({
         stateSave: true,
         "scrollX": true,
         "paging": true,
-        "pageLength": 50,
-        "lengthMenu": [10, 25, 50, 100, 150, 200, 300],
+        "pageLength": 10,
+        "lengthMenu": [5, 10, 25, 50, 100, 150, 200, 300],
 
     });
     $('.example2').DataTable({});
 });
-  </script>
-  <script>
+</script>
+<script>
 $(document).ready(function() {
     $('.pilihtanggal').datepicker({
         dateFormat: 'dd-mm-yy',
@@ -107,8 +102,8 @@ $(document).ready(function() {
         yearRange: '1970:+20'
     });
 });
-  </script>
-  <script type="text/javascript">
+</script>
+<script type="text/javascript">
 var rupiah = document.getElementById('rupiah');
 rupiah.addEventListener('keyup', function(e) {
     // tambahkan 'Rp.' pada saat form di ketik
@@ -133,8 +128,8 @@ function formatRupiah(angka, prefix) {
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
     return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 }
-  </script>
-  <script>
+</script>
+<script>
 $(".container-foto").css({
     'position': 'absolute',
     'top': '0px',
@@ -192,7 +187,7 @@ $(".gallery img").click(function() {
 $("#close").click(function() {
     $(".container-foto").fadeOut("slow");
 })
-  </script>
-  </body>
+</script>
+</body>
 
-  </html>
+</html>

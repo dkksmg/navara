@@ -36,16 +36,21 @@ class Admin extends CI_Controller
     {
         $id = $this->input->get('id');
         $cek_id = $this->home_m->cek_id_riwayat_pagu($id);
+        $tahun = date('Y');
         if ($cek_id != '') {
             $data = [];
+            $data['paguall'] = $this->admin_m->pagu_kendaraan($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
             $data['kend'] = $this->home_m->kendaraanByid($id);
-            $data['pagu'] = $this->admin_m->pagu_kendaraan($id);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
             $data['title_cek'] = 'Cek Sisa Pagu Kendaraan Dinas';
             if ($this->input->get()) {
                 $tahun = ($this->input->get('tahun'));
                 $data['tahun'] = $tahun;
                 $data['rekap'] = $this->admin_m->cek_datapagu($id, $tahun);
+                // print_r($this->db->last_query());
+                // die();
                 $data['title_cek'] = 'Cek Sisa Pagu Kendaraan Dinas Tahun ' . $tahun . '';
             }
             $this->load->view('admin/template/header');
@@ -67,7 +72,6 @@ class Admin extends CI_Controller
                 $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
                 redirect('admin/pagu?id=' . $id);
             } else {
-
                 $simpan = $this->admin_m->tambahpagu($id, $value, $this->input->post('pagu')[$key]);
                 if ($simpan) {
                     $this->session->set_flashdata('success', 'Tambah Pagu Anggaran Pemeliharaan Berhasil');
@@ -83,7 +87,7 @@ class Admin extends CI_Controller
     {
 
         $id = $this->input->get('id');
-        $jenispagu = $this->input->post('jenis');
+        // $jenispagu = $this->input->post('jenis');
         $cektahun = $this->admin_m->cek_tahun_pagu($id, $this->input->post('tahun'));
         if ($cektahun != '') {
             $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
@@ -103,13 +107,18 @@ class Admin extends CI_Controller
     public function editpagu()
     {
         $id = $this->input->get('id');
+        $id_kend = $this->input->get('idkend');
+        $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_edit_riwayat_pagu($id);
         if ($cek_id != '') {
             $data = [];
-            $data['pagu'] = $this->admin_m->datapagu_kendaraanbyid($id);
+            $data['pagukend'] = $this->admin_m->datapagu_kendaraanbyid($id);
+            $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
+            $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
+            $data['kend'] = $this->home_m->kendaraanByid($id_kend);
             $data['title'] = 'Edit Pagu Anggaran Kendaraan Dinas';
             $this->load->view('admin/template/header');
-            $this->load->view('admin/pagu/editpagukendaraan', $data);
+            $this->load->view('admin/pagu/editpaguKendaraan', $data);
             $this->load->view('admin/template/modal');
             $this->load->view('admin/template/footer');
         } else {
@@ -119,15 +128,20 @@ class Admin extends CI_Controller
     public function proseseditpagu()
     {
         $id = $this->input->get('id');
-        if ($this->input->post()) :
-            if ($this->admin_m->updatepagu($id)) :
+        $idkend = $this->input->get('idkend');
+        if ($this->input->post()) {
+
+            if ($this->admin_m->updatepagu($id)) {
+                // print_r($this->db->last_query());
+                // die();
                 $this->session->set_flashdata('success', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Berhasil');
-                redirect('admin/pagu?id=' . $id);
-            else :
+                redirect('admin/pagu?id=' . $idkend);
+            } else {
+
                 $this->session->set_flashdata('danger', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Gagal');
-                redirect('admin/pagu?id=' . $id);
-            endif;
-        endif;
+                redirect('admin/pagu?id=' . $idkend);
+            }
+        }
     }
     public function hapuspagu()
     {

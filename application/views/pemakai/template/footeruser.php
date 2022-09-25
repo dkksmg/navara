@@ -1,22 +1,16 @@
-<style type="text/css">
-footer {
-    clear: both;
-    position: relative;
-    height: 50px;
-    margin-top: 20px;
-}
-</style>
 <!-- Main Footer -->
-<footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-        CATDKK
+<footer style="margin-top: 100px;">
+    <div class="fixed-bottom main-footer">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+            CATDKK <strong>Ver. 1.1.0</strong>
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2021 - <script>
+            document.write(new Date().getFullYear())
+            </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
+                SEMARANG</a>.</strong> All rights reserved.
     </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2021 - <script>
-        document.write(new Date().getFullYear())
-        </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
-            SEMARANG</a>.</strong> All rights reserved.
 </footer>
 </div>
 <!-- ./wrapper -->
@@ -91,8 +85,8 @@ $(function() {
         stateSave: true,
         "scrollX": true,
         "paging": true,
-        "pageLength": 50,
-        "lengthMenu": [10, 25, 50, 100, 150, 200, 300],
+        "pageLength": 10,
+        "lengthMenu": [5, 10, 25, 50, 100, 150, 200, 300],
 
     });
     $('.example2').DataTable({});

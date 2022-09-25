@@ -113,15 +113,19 @@ class Admin_m extends CI_Model
     public function cek_datapagu($id = null, $tahun = null)
     {
         $query = $this->db->query("SELECT * FROM `pagu_service` 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)='$tahun', riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rp ON `rp`.`id_kendaraan`=`pagu_service`.`id_kend` 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)='$tahun', riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)='$tahun', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON `rb`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)='$tahun' AND riwayat_pajak.status_pjk='Yes', riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rp ON `rp`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)='$tahun' AND riwayat_servis.status_srs='Yes', riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)='$tahun' AND riwayat_bbm.status_rbm='Yes', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON `rb`.`id_kendaraan`=`pagu_service`.`id_kend` 
         WHERE pagu_service.id_kend='$id' AND pagu_service.tahun='$tahun'")->result_array();
         return $query;
     }
     public function user()
     {
-        $this->db->where('role !=', 'superadmin');
+        $this->db
+            ->order_by('users.role', 'DESC')
+            ->order_by('users.wilayah', 'DESC')
+            ->order_by('users.name', 'ASC')
+            ->where('role !=', 'superadmin');
         $query = $this->db->get('users');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -160,7 +164,7 @@ class Admin_m extends CI_Model
     public function updatepagu($id = null)
     {
         $data['pagu_awal']  = $this->input->post('pagu');
-        $data['jenis_pagu']  = $this->input->post('jenis');
+        // $data['jenis_pagu']  = $this->input->post('jenis');
         $q = $this->db->where('id_ps', $id)->update('pagu_service', $data);
         return $q;
     }

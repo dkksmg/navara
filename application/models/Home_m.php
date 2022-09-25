@@ -12,7 +12,8 @@ class Home_m extends CI_Model
 
     public function data_kendaraan()
     {
-        if ($this->session->userdata('role') == 'Admin') :
+        if ($this->session->userdata('role') == 'Admin') {
+
             $data['user'] = $this->db
                 ->get_where('users', [
                     'id' => $this->session->userdata('id'),
@@ -28,7 +29,46 @@ class Home_m extends CI_Model
                 // ->or_where('riwayat_pemakai.status is null')
                 ->group_end()
                 ->get('kendaraan');
-        else :
+        } else {
+            $query = $this->db
+                ->order_by('rp.lokasi_unit', 'DESC')
+                ->order_by('kn.idk', 'DESC')
+                ->join('riwayat_pemakai as rp', 'kn.idk = rp.id_kendaraan', 'left')
+                ->join('users as us', 'us.id = rp.id_user', 'left')
+                ->where('kn.status', 'aktif')
+                ->group_start()
+                ->where(array('rp.status' => 'aktif'))
+                ->or_where('rp.status is null')
+                ->group_end()
+                ->get('kendaraan as kn');
+        }
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function data_kendaraan_all()
+    {
+        if ($this->session->userdata('role') == 'Admin') {
+
+            $data['user'] = $this->db
+                ->get_where('users', [
+                    'id' => $this->session->userdata('id'),
+                ])
+                ->row_array();
+            $lokasi = $data['user']['wilayah'];
+            $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+                ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
+                ->join('users as us', 'us.id = riwayat_pemakai.id_user', 'left')
+                ->order_by('idk', 'asc')
+                ->group_start()
+                ->where(array('riwayat_pemakai.status' => 'aktif', 'riwayat_pemakai.lokasi_unit' => $lokasi))
+                // ->or_where('riwayat_pemakai.status is null')
+                ->group_end()
+                ->get('kendaraan');
+        } else {
             $query = $this->db
                 // ->order_by('rp.is_pejabat', 'DESC')
                 ->order_by('kn.idk', 'ASC')
@@ -40,7 +80,7 @@ class Home_m extends CI_Model
                 ->or_where('rp.status is null')
                 ->group_end()
                 ->get('kendaraan as kn');
-        endif;
+        }
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -77,13 +117,16 @@ class Home_m extends CI_Model
     public function data_servis($tahun = null)
     {
         $this->db
+            // ->order_by('rp.is_pejabat', 'DESC')
+            // ->order_by('cast(ps.pagu_awal as int)', 'DESC')
+            // ->order_by('kn.merk', 'ASC')
+            // ->order_by('kn.tipe', 'ASC')
+            // ->order_by('kn.no_polisi', 'ASC')
             ->order_by('rp.is_pejabat', 'DESC')
-            ->order_by('cast(ps.pagu_awal as int)', 'DESC')
-            ->order_by('kn.jenis', 'DESC')
-            ->order_by('kn.merk', 'ASC')
-            ->order_by('kn.tipe', 'DESC')
-            ->order_by('kn.no_polisi', 'ASC')
+            ->order_by('kn.jenis', 'ASC')
             // ->order_by('us.name', 'DESC')
+            ->order_by('kn.idk')
+            ->select('kn.jenis,kn.merk,kn.tipe,kn.no_polisi,us.name,ps.pagu_awal')
             ->join('pagu_service as ps', 'ps.id_kend = kn.idk', 'left')
             ->join('riwayat_pemakai as rp', 'rp.id_kendaraan=kn.idk', 'left')
             ->join('users as us', 'us.id=rp.id_user', 'left')
@@ -94,6 +137,394 @@ class Home_m extends CI_Model
             ->or_where('rp.status is null')
             ->group_end();
         $query = $this->db->get('kendaraan as kn');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_jan($tahun = null)
+    {
+        $query = $this->db
+            ->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+                LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+                LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+                LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+                LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="1" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+                LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="1" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+                LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="1" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_jan($tahun = null)
+    {
+        $query = $this->db
+            ->query('SELECT total_sparepart as total_sp_jan,total_oli as total_ol_jan,total_servis as total_sv_jan,total_bbm as total_bm_jan,total_pajak as total_pj_jan FROM `kendaraan` as `kn` 
+                LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+                LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+                LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+                LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="1" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+                LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="1" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+                LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="1" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_feb($tahun = null)
+    {
+        $query = $this->db
+            ->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="2" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="2" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="2" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_feb($tahun = null)
+    {
+        $query = $this->db
+            ->query('SELECT total_sparepart as total_sp_feb,total_oli as total_ol_feb,total_servis as total_sv_feb,total_bbm as total_bm_feb,total_pajak as total_pj_feb FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="2" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="2" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="2" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_mar($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="3" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="3" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="3" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_mar($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_mar,total_oli as total_ol_mar,total_servis as total_sv_mar,total_bbm as total_bm_mar,total_pajak as total_pj_mar FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="3" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="3" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="3" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_apr($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="4" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="4" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="4" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_apr($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_apr,total_oli as total_ol_apr,total_servis as total_sv_apr,total_bbm as total_bm_apr,total_pajak as total_pj_apr FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="4" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="4" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="4" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_mei($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="5" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="5" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="5" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_mei($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_mei,total_oli as total_ol_mei,total_servis as total_sv_mei,total_bbm as total_bm_mei,total_pajak as total_pj_mei FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="5" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="5" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="5" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_jun($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="6" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="6" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="6" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_jun($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_jun,total_oli as total_ol_jun,total_servis as total_sv_jun,total_bbm as total_bm_jun,total_pajak as total_pj_jun FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="6" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="6" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="6" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_jul($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="7" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="7" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="7" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_jul($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_jul,total_oli as total_ol_jul,total_servis as total_sv_jul,total_bbm as total_bm_jul,total_pajak as total_pj_jul FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="7" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="7" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="7" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_ags($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="8" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="8" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="8" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_ags($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_ags,total_oli as total_ol_ags,total_servis as total_sv_ags,total_bbm as total_bm_ags,total_pajak as total_pj_ags FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="8" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="8" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="8" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_sept($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="9" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="9" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="9" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_sept($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_sept,total_oli as total_ol_sept,total_servis as total_sv_sept,total_bbm as total_bm_sept,total_pajak as total_pj_sept FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="9" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="9" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="9" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_okt($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="10" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="10" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="10" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_okt($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_okt,total_oli as total_ol_okt,total_servis as total_sv_okt,total_bbm as total_bm_okt,total_pajak as total_pj_okt FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="10" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="10" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="10" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_nov($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="11" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="11" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="11" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_nov($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_nov,total_oli as total_ol_nov,total_servis as total_sv_nov,total_bbm as total_bm_nov,total_pajak as total_pj_nov FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="11" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="11" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="11" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function servis_bbm_des($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="12" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="12" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="12" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function laporan_des($tahun = null)
+    {
+        $query = $this->db->query('SELECT total_sparepart as total_sp_des,total_oli as total_ol_des,total_servis as total_sv_des,total_bbm as total_bm_des,total_pajak as total_pj_des FROM `kendaraan` as `kn` 
+        LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+        LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+        LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+        LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)="12" and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+        LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)="12" and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+        LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)="12" and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -363,7 +794,7 @@ class Home_m extends CI_Model
     public function listdata_pemakai()
     {
 
-        $this->db->select('id,name,nip_user,wilayah,role,status')->order_by('id', 'DESC')->where('role', 'Pemakai');
+        $this->db->select('id,name,nip_user,wilayah,role,status')->order_by('name', 'ASC')->order_by('id', 'DESC')->where('role', 'Pemakai');
         $query = $this->db->get('users');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -385,8 +816,10 @@ class Home_m extends CI_Model
     }
     public function data_pemakaibyid($id = null)
     {
-        $this->db->join('kendaraan', 'riwayat_pemakai.id_kendaraan = kendaraan.idk');
-        $this->db->where('id_rp', $id);
+        $this->db
+            ->join('kendaraan', 'riwayat_pemakai.id_kendaraan = kendaraan.idk')
+            ->join('users as us', 'us.id = riwayat_pemakai.id_user', 'left')
+            ->where('id_rp', $id);
         $query = $this->db->get('riwayat_pemakai')->row_array();
         return $query;
     }
@@ -396,6 +829,12 @@ class Home_m extends CI_Model
         $data['status'] = "tidak_aktif";
         $this->db->Where('id_rp', $id);
         $q = $this->db->update('riwayat_pemakai', $data);
+        return $q;
+    }
+    public function hapus_pemakai($id = null)
+    {
+        $this->db->where('id_rp', $id);
+        $q = $this->db->delete('riwayat_pemakai');
         return $q;
     }
     public function aktifkanpemakai($id = null)
@@ -508,7 +947,9 @@ class Home_m extends CI_Model
     public function data_kondisiById($id)
     {
         $query = $this->db
-            ->join('kendaraan', 'riwayat_kondisi.id_kendaraan = kendaraan.idk')
+            ->join('kendaraan as kn', 'riwayat_kondisi.id_kendaraan = kn.idk')
+            ->join('riwayat_pemakai as rp', 'rp.id_kendaraan = kn.idk', 'left')
+            ->join('users as us', 'rp.id_user = us.id', 'left')
             ->get_where('riwayat_kondisi', ['id_rk' => $id])
             ->row_array();
         return $query;
@@ -550,7 +991,24 @@ class Home_m extends CI_Model
     {
         $this->db
             ->where('idk', $id);
-        $query = $this->db->get('kendaraan as kn');
+        $query = $this->db
+            ->get('kendaraan as kn');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function pemakaiKendById($id = null)
+    {
+        $query = $this->db
+            ->select('us.name,us.nip_user,rp.status,kn.merk,kn.jenis,kn.tipe,kn.no_polisi')
+            ->join('riwayat_pemakai as rp', 'rp.id_kendaraan = kn.idk', 'left')
+            ->join('users as us', 'rp.id_user = us.id', 'left')
+            ->where('idk', $id)
+            ->where('rp.status', 'aktif')
+            ->get('kendaraan as kn');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil = $row;
@@ -561,9 +1019,9 @@ class Home_m extends CI_Model
     public function pagukendaraanById($id = null, $tahun = null)
     {
         $query = $this->db->query('SELECT * FROM pagu_service as ps 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ' AND riwayat_bbm.status_rbm="Yes", riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ' AND riwayat_servis.status_srs="Yes",riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(riwayat_pajak.tahun=' . $tahun . ' AND riwayat_pajak.status_pjk="Yes",riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
         WHERE ps.id_kend = ' . $id . ' AND ps.tahun = ' . $tahun . '')->row_array();
         return $query;
     }
@@ -571,9 +1029,9 @@ class Home_m extends CI_Model
     {
         $query = $this->db->query('SELECT * FROM kendaraan as kn 
         LEFT JOIN pagu_service as ps ON ps.id_kend=kn.idk 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ' AND riwayat_bbm.status_rbm="Yes", riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ' AND riwayat_servis.status_srs="Yes",riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(riwayat_pajak.tahun=' . $tahun . ' AND riwayat_pajak.status_pjk="Yes",riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
         WHERE kn.idk = ' . $id . ' AND ps.tahun = ' . $tahun . '')->row_array();
         return $query;
     }
@@ -581,9 +1039,9 @@ class Home_m extends CI_Model
     {
         $query = $this->db->query('SELECT * FROM kendaraan as kn 
         LEFT JOIN pagu_service as ps ON ps.id_kend=kn.idk 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ' AND riwayat_bbm.status_rbm="Yes", riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ' AND riwayat_servis.status_srs="Yes",riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(riwayat_pajak.tahun=' . $tahun . ' AND riwayat_pajak.status_pjk="Yes",riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
         WHERE kn.idk = ' . $id . ' AND ps.tahun = ' . $tahun . '')->row_array();
         return $query;
     }
@@ -607,19 +1065,19 @@ class Home_m extends CI_Model
         $query = $this->db->query('SELECT * FROM users as us 
         JOIN riwayat_pemakai as rp ON rp.id_user = us.id 
         JOIN kendaraan as kd ON kd.idk = rp.id_kendaraan 
-        JOIN pagu_service as ps ON ps.id_kend = kd.idk 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ',riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)=' . $tahun . ',riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
-        WHERE us.id = ' . $id . ' AND ps.tahun = ' . $tahun . ' AND rp.status = "aktif"')->result_array();
+        LEFT JOIN pagu_service as ps ON ps.id_kend = kd.idk 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)=' . $tahun . ' AND riwayat_bbm.status_rbm="Yes" , riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON rb.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)=' . $tahun . ' AND riwayat_servis.status_srs="Yes",riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON rs.id_kendaraan=ps.id_kend
+        LEFT JOIN (SELECT id_kendaraan, sum(if(riwayat_pajak.tahun=' . $tahun . ' AND riwayat_pajak.status_pjk="Yes",riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rpk ON rpk.id_kendaraan=ps.id_kend
+        WHERE us.id = ' . $id . ' AND (CASE WHEN ps.tahun is null THEN ps.tahun is null ELSE ps.tahun=' . $tahun . ' END) AND rp.status = "aktif"')->result_array();
         return $query;
     }
     public function cek_datapagu($id = null, $tahun = null)
     {
         $query = $this->db->query("SELECT * FROM `pagu_service` 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_pajak.tgl_pencatatan)='$tahun', riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rp ON `rp`.`id_kendaraan`=`pagu_service`.`id_kend` 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)='$tahun', riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` 
-        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)='$tahun', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON `rb`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(riwayat_pajak.tahun='$tahun' AND riwayat_pajak.status_pjk='Yes', riwayat_pajak.total_pajak,0)) as total_biaya_pajak FROM riwayat_pajak group by id_kendaraan ) rp ON `rp`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_servis.tgl_servis)='$tahun' AND riwayat_servis.status_srs='Yes', riwayat_servis.total_biaya,0)) as total_biaya_servis FROM riwayat_servis group by id_kendaraan ) rs ON `rs`.`id_kendaraan`=`pagu_service`.`id_kend` 
+        LEFT JOIN (SELECT id_kendaraan, sum(if(YEAR(riwayat_bbm.tgl_pencatatan)='$tahun' AND riwayat_bbm.status_rbm='Yes', riwayat_bbm.total_bbm,0)) as total_biaya_bbm FROM riwayat_bbm group by id_kendaraan ) rb ON `rb`.`id_kendaraan`=`pagu_service`.`id_kend` 
         WHERE pagu_service.id_kend='$id' AND pagu_service.tahun='$tahun'")->result_array();
         return $query;
     }
@@ -629,6 +1087,66 @@ class Home_m extends CI_Model
             ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
             ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
             ->where('us.id', $id)
+            ->where('rp.status', 'aktif')->get('users as us')->result_array();
+        return $query;
+    }
+    public function cekkendaraanUserwithriwayatkondisi($id_user = null, $id = null)
+    {
+        $query = $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
+            ->join('riwayat_kondisi as rk', ' rk.id_kendaraan=rp.id_kendaraan')
+            ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
+            ->where('rk.status_rk', 'No')
+            ->where('rk.id_rk', $id)
+            ->where('us.id', $id_user)
+            ->where('rp.status', 'aktif')->get('users as us')->result_array();
+        return $query;
+    }
+    public function cekkendaraanUserwithriwayatbbm($id_user = null, $id = null)
+    {
+        $query = $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
+            ->join('riwayat_bbm as rbm', ' rbm.id_kendaraan=rp.id_kendaraan')
+            ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
+            ->where('rbm.status_rbm', 'No')
+            ->where('rbm.id_bbm', $id)
+            ->where('us.id', $id_user)
+            ->where('rp.status', 'aktif')->get('users as us')->result_array();
+        return $query;
+    }
+    public function cekkendaraanUserwithriwayatpajak($id_user = null, $id = null)
+    {
+        $query = $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
+            ->join('riwayat_pajak as pjk', ' pjk.id_kendaraan=rp.id_kendaraan')
+            ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
+            ->where('pjk.status_pjk', 'No')
+            ->where('pjk.id_pjk', $id)
+            ->where('us.id', $id_user)
+            ->where('rp.status', 'aktif')->get('users as us')->result_array();
+        return $query;
+    }
+    public function cekkendaraanUserwithriwayatservis($id_user = null, $id = null)
+    {
+        $query = $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
+            ->join('riwayat_servis as rs', ' rs.id_kendaraan=rp.id_kendaraan')
+            ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
+            ->where('rs.status_srs', 'No')
+            ->where('rs.id_rs', $id)
+            ->where('us.id', $id_user)
+            ->where('rp.status', 'aktif')->get('users as us')->result_array();
+        return $query;
+    }
+    public function cekkendaraanUserwithpengajuanservis($id_user = null, $id = null)
+    {
+        $query = $this->db
+            ->join('riwayat_pemakai as rp', 'rp.id_user = us.id')
+            ->join('riwayat_pengajuan_servis as rps', ' rps.id_kendaraan=rp.id_kendaraan')
+            ->join('kendaraan as kd', 'kd.idk = rp.id_kendaraan')
+            ->where('rps.status_pengajuan', 'No')
+            ->where('rps.id_pengajuan', $id)
+            ->where('us.id', $id_user)
             ->where('rp.status', 'aktif')->get('users as us')->result_array();
         return $query;
     }
@@ -786,9 +1304,65 @@ class Home_m extends CI_Model
         $data['foto_nota']  = $nota;
         $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
         $data['lokasi']             = $this->input->post('bengkel');
-        $data['keluhan']            = $this->input->post('keluhan');
-        $data['perbaikan']          = $this->input->post('perbaikan');
-        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['service']            = $this->input->post('service');
+        $data['sparepart']          = $this->input->post('sparepart');
+        $data['oli']          = $this->input->post('oli');
+        $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_pemakai'] = $this->session->userdata('name');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
+
+        $q = $this->db->insert('riwayat_servis', $data);
+        return $q;
+    }
+    public function tambahriwayatserviskendaraanwithoutnota($idk = null, $fotoservis = null)
+    {
+
+        $data['id_kendaraan'] = $idk;
+        $data['foto_servis']  = $fotoservis;
+        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $data['lokasi']             = $this->input->post('bengkel');
+        $data['service']            = $this->input->post('service');
+        $data['sparepart']          = $this->input->post('sparepart');
+        $data['oli']          = $this->input->post('oli');
+        $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_pemakai'] = $this->session->userdata('name');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
+
+        $q = $this->db->insert('riwayat_servis', $data);
+        return $q;
+    }
+    public function tambahriwayatserviskendaraanwithoutservis($idk = null, $nota = null)
+    {
+
+        $data['id_kendaraan'] = $idk;
+        $data['foto_nota']  = $nota;
+        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $data['lokasi']             = $this->input->post('bengkel');
+        $data['service']            = $this->input->post('service');
+        $data['sparepart']          = $this->input->post('sparepart');
+        $data['oli']          = $this->input->post('oli');
+        $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_pemakai'] = $this->session->userdata('name');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
+
+        $q = $this->db->insert('riwayat_servis', $data);
+        return $q;
+    }
+    public function tambahriwayatserviskendaraanwithoutimage($idk = null)
+    {
+
+        $data['id_kendaraan'] = $idk;
+        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $data['lokasi']             = $this->input->post('bengkel');
+        $data['service']            = $this->input->post('service');
+        $data['sparepart']          = $this->input->post('sparepart');
+        $data['oli']          = $this->input->post('oli');
         $data['total_biaya']        = $this->input->post('biaya');
         $data['input_pemakai'] = $this->session->userdata('name');
         $data['input_user'] = $this->session->userdata('id');
@@ -800,18 +1374,56 @@ class Home_m extends CI_Model
     }
     public function updateriwayatserviskendaraan($fotoservis = null, $id_rs = null, $nota = null)
     {
-        $data['foto_servis']  = $fotoservis;
-        $data['foto_nota']  = $nota;
+        if ($this->session->userdata('role') == 'Pemakai') {
+            $data['foto_servis']  = $fotoservis;
+            $data['foto_nota']  = $nota;
+            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+            $data['lokasi']             = $this->input->post('bengkel');
+            $data['service']            = $this->input->post('service');
+            $data['sparepart']          = $this->input->post('sparepart');
+            $data['oli']          = $this->input->post('oli');
+            $data['total_biaya']        = $this->input->post('biaya');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+            $data['status_srs']         = 'Wait';
+        } else {
+            $data['foto_servis']  = $fotoservis;
+            $data['foto_nota']  = $nota;
+            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+            $data['lokasi']             = $this->input->post('bengkel');
+            $data['service']            = $this->input->post('service');
+            $data['sparepart']          = $this->input->post('sparepart');
+            $data['oli']          = $this->input->post('oli');
+            $data['total_biaya']        = $this->input->post('biaya');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+        }
 
-        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $data['lokasi']             = $this->input->post('bengkel');
-        $data['keluhan']            = $this->input->post('keluhan');
-        $data['perbaikan']          = $this->input->post('perbaikan');
-        $data['lain_lain']          = $this->input->post('lain_lain');
-        $data['total_biaya']        = $this->input->post('biaya');
-        $data['input_user'] = $this->session->userdata('id');
-        $data['last_time_update'] = date('Y-m-d H:i:s');
-        $data['status_srs']         = 'Wait';
+        $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
+        return $q;
+    }
+    public function updateriwayatserviskendaraanwithoutimage($id_rs = null)
+    {
+        if ($this->session->userdata('role') == 'Pemakai') {
+            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+            $data['lokasi']             = $this->input->post('bengkel');
+            $data['service']            = $this->input->post('service');
+            $data['sparepart']          = $this->input->post('sparepart');
+            $data['oli']          = $this->input->post('oli');
+            $data['total_biaya']        = $this->input->post('biaya');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+            $data['status_srs']         = 'Wait';
+        } else {
+            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+            $data['lokasi']             = $this->input->post('bengkel');
+            $data['service']            = $this->input->post('service');
+            $data['sparepart']          = $this->input->post('sparepart');
+            $data['oli']          = $this->input->post('oli');
+            $data['total_biaya']        = $this->input->post('biaya');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+        }
 
         $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
         return $q;
@@ -833,12 +1445,39 @@ class Home_m extends CI_Model
         $q = $this->db->insert('riwayat_bbm', $data);
         return $q;
     }
+    public function tambahriwayatbbmwithoutimage($id = null)
+    {
+
+        $data['id_kendaraan'] = $id;
+        $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
+        $data['total_bbm'] = $this->input->post('harga_bbm');
+        $data['user_id'] = $this->session->userdata('id');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_rbm']         = 'Wait';
+
+
+        $q = $this->db->insert('riwayat_bbm', $data);
+        return $q;
+    }
     public function updateriwayatbbm($id_bbm = null, $nama_struk_bbm = null)
     {
 
         $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
         $data['total_bbm'] = $this->input->post('harga_bbm');
         $data['struk_bbm'] = $nama_struk_bbm;
+        $data['status_rbm']         = 'Wait';
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['user_id'] = $this->session->userdata('id');
+        $data['input_user'] = $this->session->userdata('id');
+        $q = $this->db->where('id_bbm', $id_bbm)->update('riwayat_bbm', $data);
+        return $q;
+    }
+    public function updateriwayatbbmwithoutimage($id_bbm = null)
+    {
+
+        $data['tgl_pencatatan'] = date('Y-m-d', strtotime($this->input->post('tgl_bbm')));
+        $data['total_bbm'] = $this->input->post('harga_bbm');
         $data['status_rbm']         = 'Wait';
         $data['last_time_update'] = date('Y-m-d H:i:s');
         $data['user_id'] = $this->session->userdata('id');
@@ -863,6 +1502,7 @@ class Home_m extends CI_Model
     public function updateriwayatpajak($id_pjk = null)
     {
         $data['total_pajak'] = $this->input->post('total_pajak');
+        $data['tahun'] = $this->input->post('tahun_pajak');
         $data['user_id'] = $this->session->userdata('id');
         $data['last_time_update'] = date('Y-m-d H:i:s');
         $data['input_user'] = $this->session->userdata('id');
@@ -1013,36 +1653,74 @@ class Home_m extends CI_Model
     }
     public function tambahpengajuanservis($idkend = null)
     {
-        $data['id_kendaraan'] = $idkend;
-        $data['tgl_pengajuan'] = date('Y-m-d');
-        $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
-        $data['keluhan'] = $this->input->post('keluhan_kendaraan');
-        $data['service'] = $this->input->post('servis_kendaraan');
-        $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
-        $data['id_user'] = $this->session->userdata('id');
-        $data['last_time_update'] = date('Y-m-d H:i:s');
-        $data['input_user'] = $this->session->userdata('id');
-        $data['status_pengajuan'] = 'Wait';
+        if ($this->session->userdata('role') == 'Pemakai') {
+            $data['id_kendaraan'] = $idkend;
+            $data['tgl_pengajuan'] = date('Y-m-d');
+            $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+            $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+            $data['km_service'] = $this->input->post('km_service');
+            $data['service'] = $this->input->post('servis_kendaraan');
+            $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
+            $data['id_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['status_pengajuan'] = 'Wait';
+        } else {
+            $data['id_kendaraan'] = $idkend;
+            $data['tgl_pengajuan'] = date('Y-m-d');
+            $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+            $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+            $data['km_service'] = $this->input->post('km_service');
+            $data['service'] = $this->input->post('servis_kendaraan');
+            $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['status_pengajuan'] = 'Wait';
+        }
         // $data['id_admin'] = '1'; //set default id admin ketika tambah pengajuan servis
-
         $q = $this->db->insert('riwayat_pengajuan_servis', $data);
         return $q;
     }
     public function editpengajuanservis($id_pen = null)
     {
-        $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
-        $data['keluhan'] = $this->input->post('keluhan_kendaraan');
-        $data['service'] = $this->input->post('servis_kendaraan');
-        $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
-        $data['id_user'] = $this->session->userdata('id');
-
+        if ($this->session->userdata('role') == 'Pemakai') {
+            $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+            $data['km_service'] = $this->input->post('km_service');
+            $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+            $data['service'] = $this->input->post('servis_kendaraan');
+            $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
+            $data['id_user'] = $this->session->userdata('id');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['status_pengajuan'] = 'Wait';
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+        } else {
+            $data['bengkel_tujuan'] = $this->input->post('nama_bengkel');
+            $data['km_service'] = $this->input->post('km_service');
+            $data['keluhan'] = $this->input->post('keluhan_kendaraan');
+            $data['service'] = $this->input->post('servis_kendaraan');
+            $data['lain_lain'] = $this->input->post('lain_lain_kendaraan');
+            $data['input_user'] = $this->session->userdata('id');
+            $data['last_time_update'] = date('Y-m-d H:i:s');
+        }
         $q = $this->db->where('id_pengajuan', $id_pen)->update('riwayat_pengajuan_servis', $data);
         return $q;
     }
     public function data_riwayatpengajuanbyidrp($id = null)
     {
 
-        $this->db->join('users', 'users.id= riwayat_pengajuan_servis.id_user')->where('id_pengajuan', $id);
+        $this->db->join('users', 'users.id= riwayat_pengajuan_servis.id_user', 'left')->where('id_pengajuan', $id);
+        $query = $this->db->get('riwayat_pengajuan_servis');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+    public function pengajuan_admin($id = null)
+    {
+
+        $this->db->join('users', 'users.id= riwayat_pengajuan_servis.id_admin')->where('id_pengajuan', $id);
         $query = $this->db->get('riwayat_pengajuan_servis');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {

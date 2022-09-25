@@ -3,7 +3,8 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-auto">
-                <img class="logodisp" src="<?php echo base_url() ?>assets/logo/pemkot.png" type="image/png" />
+                <img class="logodisp" src="<?php echo base_url() ?>assets/logo/pemkot.png" type="image/png" width="auto"
+                    height="auto" />
             </div>
             <div class="col-md-8 ml-5">
                 <p class="header">
@@ -24,18 +25,19 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8" id="inner">
-                    <p style="text-align:left">Yth. Bengkel <b><?= $pengajuan['bengkel_tujuan'] ?></b> <br><br>di tempat
+                    <p style="text-align:left;font-size:14px;">Yth. Bengkel <b><?= $pengajuan['bengkel_tujuan'] ?></b>
+                        <br><br>di tempat
                     </p>
 
-                    <p>Bersama dengan surat ini kami ajukan untuk melakukan servis kendaraan dinas dengan data dibawah
+                    <p>Bersama dengan surat ini kami ajukan untuk melakukan servis kendaraan Dinas Kesehatan Kota
+                        Semarang dengan data dibawah
                         ini :
                     </p>
-                    <br>
                     <h5><strong>Data Kendaraan</strong></h5>
                     <br>
                     <table class="table table-striped table-bordered" border="1">
                         <tr>
-                            <th width="40%">ID Aset</th>
+                            <th width="30%">ID Aset</th>
                             <th>:</th>
                             <td><?= $kend['id_assets'] ?></td>
                         </tr>
@@ -62,7 +64,16 @@
                         <tr>
                             <th>CC</th>
                             <th>:</th>
-                            <td><?= strtoupper($kend['besar_cc']) ?> CC</td>
+                            <td><?php if ($kend['besar_cc'] == '') :  ?> -
+                                <?php else : ?>
+                                <?= ($kend['besar_cc']) ?> CC
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Kilometer Kendaraan</th>
+                            <th>:</th>
+                            <td><?= ($pengajuan['km_service']) ?></td>
                         </tr>
                         <tr>
                             <th>Bahan Bakar</th>
@@ -72,18 +83,23 @@
                     </table>
                 </div>
                 <div class="col-lg-8" id="inner">
-                    <!-- <h5><strong>Summary Data</strong></h5> -->
                     <br>
                     <table class="table table-striped table-bordered" border="1">
                         <tr>
-                            <th width="40%">Nama Pengguna Kendaraan</th>
+                            <th width="30%">Nama Pengguna Kendaraan</th>
                             <th>:</th>
                             <td><?= $pengajuan['name'] . ' (' . $pengajuan['nip_user'] . ')' ?></td>
                         </tr>
                         <tr>
                             <th>Tanggal Pengajuan Servis</th>
                             <th>:</th>
-                            <td><?= date('d-m-Y', strtotime($pengajuan['tgl_pengajuan'])) ?></td>
+                            <?php
+                            $tanggal = date('d', strtotime($pengajuan['tgl_pengajuan']));
+                            $nama_bulan = date('F', strtotime($pengajuan['tgl_pengajuan']));
+                            $bulan = nama_bulan($nama_bulan);
+                            $tahun = date('Y', strtotime($pengajuan['tgl_pengajuan']));
+                            ?>
+                            <td><?= $tanggal . ' ' . $bulan . ' ' . $tahun ?></td>
                         </tr>
                         <tr>
                             <th>Status Pengajuan Servis</th>
@@ -120,22 +136,36 @@
                             </td>
                         </tr>
                     </table>
-                    <br>
-                    <table border="0" width="100%">
+                    <table class="mt-3" border="0" width="100%">
                         <thead>
-                            <td width="500px"></td>
-                            <td width="50px"></td>
-                            <td width="50px"></td>
-                            <td width="50px"></td>
+                            <tr>
+                                <th width="40%" class="text-center">
+                                    Pengelola Sarana dan Prasarana
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th width="40%" class="text-center">Pengguna</th>
+                            </tr>
                         </thead>
                         <tbody>
+                            <tr height="120px">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                             <tr>
-                                <td colspan="5" class="text-right"><b>Tanda Tangan Pengguna</b></td>
+                                <td class="text-center">
+                                    <?php if ($pengajuan['id_admin'] == 1) : ?>
+                                    <?= $admin['name']; ?>
+                                    <?php else : ?>
+                                    Vian
+                                    <?php endif; ?>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center"><?= $pengajuan['name'] ?></td>
                             </tr>
-                            <tr height="200px">
-                                <td class="text-right" colspan="5"><?= $pengajuan['name'] ?></td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>

@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 
 <head>
@@ -77,7 +73,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <?php echo greetings() ?>,
-                            <strong><?php echo $this->session->userdata('name'); ?></strong>
+                            <strong><?php echo $this->session->userdata('name') . ' (' . $this->session->userdata('nip_user') . ') ' ?></strong>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <a href="<?php echo site_url(
@@ -86,7 +82,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <i class="fa-solid fa-user-tie mr-2"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="<?= site_url('auth/logout') ?>" class="dropdown-item dropdown-footer">KELUAR</a>
+                            <a href="<?= site_url('auth/logout_user') ?>"
+                                class="dropdown-item dropdown-footer">KELUAR</a>
                         </div>
                     </li>
                 </ul>

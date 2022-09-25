@@ -47,7 +47,8 @@
                                 <tr>
                                     <th>CC</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['besar_cc']) ?> CC</th>
+                                    <th><?php if ($kend['besar_cc'] == '') :  ?> -
+                                        <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
                                 </tr>
                                 <tr>
                                     <th>Bahan Bakar</th>
@@ -100,6 +101,14 @@
                                             <input type="text" placeholder="Masukkan Bengkel Tujuan"
                                                 class="form-control" name="nama_bengkel"
                                                 value="<?php echo $rp['bengkel_tujuan'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Kilometer Kendaraan</label>
+                                            <textarea type="number" placeholder="Masukkan Kilometer Kendarran"
+                                                class="form-control"
+                                                name="km_service"><?= ($rp['km_service']) ?></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

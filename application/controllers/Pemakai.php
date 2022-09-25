@@ -16,6 +16,7 @@ class Pemakai extends CI_Controller
         $tahun = date('Y');
         $data = [];
         $data['kends'] = $this->home_m->kendaraanUser($id, $tahun);
+        // print_r($this->db->last_query());
         $data['pagu'] = $this->home_m->cek_datapagu($id, $tahun);
         $this->load->view('pemakai/template/headeruser');
         $this->load->view('pemakai/kendaraan/data_kendaraan_pemakai', $data);
@@ -26,21 +27,16 @@ class Pemakai extends CI_Controller
     {
         $id = $this->input->get('id');
         $tahun = date('Y');
-        $id_user = $this->session->userdata('id');
         // $cek_id_kondisi = $this->home_m->cek_id_riwayat_kondisi($id);
+        $id_user = $this->session->userdata('id');
         $cek = $this->home_m->cekkendaraanUser($id_user);
-        // print_r($this->db->last_query());
-
         $found = false;
         foreach ($cek as $ck) {
-            // echo $ck['id_kendaraan'];
             if (in_array($id, $ck)) {
                 $found = true;
                 break;
             }
         }
-        // echo $found === true ? "Match found" : "Match not found";
-        // die();
 
 
         if ($found === true) {
@@ -48,11 +44,15 @@ class Pemakai extends CI_Controller
             $data['title'] = 'Riwayat Kondisi Kendaraan Dinas';
             $data['rk'] = $this->home_m->data_riwayatKondisi($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            // print_r($this->db->last_query());
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/kondisi/riwayatkondisi', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                // print_r($this->db->last_query());
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/kondisi/riwayatkondisi', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -199,15 +199,27 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $idkend = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id  = $this->home_m->cek_id_edit_riwayat_kondisi($id);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatkondisi($id_user, $id);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($idkend, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Edit Riwayat Kondisi Kendaraan';
             $data['value'] = $this->home_m->data_kondisiById($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($idkend, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/kondisi/editriwayatkondisi', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/kondisi/editriwayatkondisi', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -547,15 +559,31 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $tahun = date('Y');
         $cek_id_kondisi = $this->home_m->cek_id_riwayat_servis($id);
-        if ($cek_id_kondisi != '') {
+        // Cek id kendaraan user berdasarkan id user 
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+
+        $found = false;
+        foreach ($cek as $ck) {
+            // echo $ck['id_kendaraan'];
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Riwayat Servis Kendaraan Dinas';
             $data['rs'] = $this->home_m->data_riwayatservis($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/riwayatservis', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/riwayatservis', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -571,6 +599,105 @@ class Pemakai extends CI_Controller
         if ($ceksrs['status_srs'] == 'Wait') {
             $this->session->set_flashdata('danger', 'Anda sudah melakukan input Riwayat Servis. Silakan menunggu proses verifikasi oleh Admin');
             redirect('pemakai/riwayatservis?id=' . $idk);
+        } else if (empty($ceksrs['status_srs'])) {
+            if (!empty($_FILES['foto']['name'])) {
+                $config['upload_path'] = './assets/upload/foto_servis/'; //path folder
+                $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+                // $config['overwrite'] = TRUE;
+                $config['remove_spaces'] = TRUE;
+                $config['file_name'] = 'foto_servis_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+                $this->load->library('upload', $config, 'foto');
+                $this->foto->initialize($config);
+                $this->foto->do_upload('foto');
+                $foto = $this->foto->data();
+                //compress file
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
+                $config['create_thumb'] = FALSE;
+                $config['maintain_ratio'] = TRUE;
+                $config['quality'] = '50%';
+                $config['width'] = 600;
+                $config['height'] = 400;
+                $config['new_image'] = './assets/upload/foto_servis/' . $foto['file_name'];
+                $this->load->library('image_lib', $config, 'resizefoto');
+                $res = $this->resizefoto->resize();
+                $namafoto = $foto['file_name'];
+            }
+            if (!empty($_FILES['nota']['name'])) {
+                $config['upload_path'] = './assets/upload/foto_nota/'; //path folder
+                $config['allowed_types'] = 'jpg|png|jpeg|jfif'; //type yang dapat diakses bisa anda sesuaikan
+                // $config['overwrite'] = TRUE;
+                $config['remove_spaces'] = TRUE;
+                $config['file_name'] = 'foto_nota_' . $tipe . '_' . $no_pol . '_' . $tgl . '_' . uniqid();
+
+                $this->load->library('upload', $config, 'nota');
+                $this->nota->initialize($config);
+                $this->nota->do_upload('nota');
+                $nota = $this->nota->data();
+                //compress file
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
+                $config['create_thumb'] = FALSE;
+                $config['maintain_ratio'] = TRUE;
+                $config['quality'] = '50%';
+                $config['width'] = 600;
+                $config['height'] = 400;
+                $config['new_image'] = './assets/upload/foto_nota/' . $nota['file_name'];
+                $this->load->library('image_lib', $config, 'resizenota');
+                $res = $this->resizenota->resize();
+                $namanota = $nota['file_name'];
+            }
+            if (!empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraan($namafoto, $idk, $namanota);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('home/riwayat_servis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            }
+            // without foto service
+            else if (empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutservis($idk, $namanota);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('home/riwayat_servis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            }
+            // without foto nota
+            else if (!empty($_FILES['foto']['name']) && empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutnota($idk, $namafoto);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('home/riwayat_servis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            }
+            // without foto nota & foto service
+            else if (empty($_FILES['foto']['name']) or empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutimage($idk);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('home/riwayat_servis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            } else {
+                if (isset($nama_dpn)) {
+                    unlink('./assets/foto_servis/' . $namafoto);
+                }
+                $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal, Silahkan lengkapi kelengkapan data anda');
+                redirect('home/riwayat_servis?id=' . $idk . '');
+                $data['post'] = $this->input->post();
+            }
         } else {
             if (!empty($_FILES['foto']['name'])) {
                 $config['upload_path'] = './assets/upload/foto_servis/'; //path folder
@@ -629,6 +756,39 @@ class Pemakai extends CI_Controller
                     $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
                     $data['post'] = $this->input->post();
                 }
+            }
+            // without foto service
+            else if (empty($_FILES['foto']['name']) && !empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutservis($idk, $namanota);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            }
+            // without foto nota
+            else if (!empty($_FILES['foto']['name']) && empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutnota($idk, $namafoto);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            }
+            // without foto nota & foto service
+            else if (empty($_FILES['foto']['name']) or empty($_FILES['nota']['name'])) {
+                $simpan = $this->home_m->tambahriwayatserviskendaraanwithoutimage($idk);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat Service Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             } else {
                 if (isset($nama_dpn)) {
                     unlink('./assets/foto_servis/' . $namafoto);
@@ -644,15 +804,29 @@ class Pemakai extends CI_Controller
         $id_rs = $this->input->get('id');
         $id = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_servis($id_rs);
-        if ($cek_id != '') {
+
+        // Cek id kendaraan user berdasarkan id user 
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatservis($id_user, $id_rs);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = "Edit Riwayat Servis Kendaraan";
             $data['servis'] = $this->home_m->data_servisById($id_rs);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/editriwayatservis', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/editriwayatservis', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -728,13 +902,24 @@ class Pemakai extends CI_Controller
         } else if (empty($_FILES['foto']['name']) && empty($_FILES['nota']['name'])) {
             $namafoto = $this->input->post('old_servis');
             $namanota = $this->input->post('old_nota');
-            $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
-            if ($simpan) {
-                $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
-                redirect('pemakai/riwayatservis?id=' . $idk . '');
-            } else {
-                $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
-                $data['post'] = $this->input->post();
+            if (!empty($namafoto) && !empty($namanota)) {
+                $simpan = $this->home_m->updateriwayatserviskendaraan($namafoto, $id_rs, $namanota);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
+            } else if (empty($namafoto) && empty($namanota)) {
+                $simpan = $this->home_m->updateriwayatserviskendaraanwithoutimage($id_rs);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat Service Kendaraan Berhasil');
+                    redirect('pemakai/riwayatservis?id=' . $idk . '');
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat Service Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             }
         } else if (empty($_FILES['nota']['name'])) {
             $namanota = $this->input->post('old_nota');
@@ -777,15 +962,31 @@ class Pemakai extends CI_Controller
         $id = ($this->input->get('id'));
         $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_bbm($id);
-        if ($cek_id != '') {
+
+        // Cek id kendaraan user berdasarkan id user 
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+        $found = false;
+        foreach ($cek as $ck) {
+
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Riwayat BBM Kendaraan Dinas';
             $data['rbbm'] = $this->home_m->data_riwayatbbm($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/bbm/riwayatbbm', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/bbm/riwayatbbm', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -799,8 +1000,6 @@ class Pemakai extends CI_Controller
         $tipe = ($this->input->post('tipe'));
         $no_pol = ($this->input->post('no_pol'));
         $cek_rbm = $this->home_m->cek_data_rbm($id_kend);
-        // print_r($this->db->last_query());
-        // die();
         if ($cek_rbm['status_rbm'] == 'Wait') {
             $this->session->set_flashdata('danger', 'Anda sudah melakukan input Riwayat BBM. Silakan menunggu proses verifikasi oleh Admin');
             redirect('pemakai/riwayatbbm?id=' . $id_kend);
@@ -838,6 +1037,15 @@ class Pemakai extends CI_Controller
                     $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal');
                     $data['post'] = $this->input->post();
                 }
+            } else if (empty($_FILES['struk_bbm']['name'])) {
+                $simpan = $this->home_m->tambahriwayatbbmwithoutimage($id_kend);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Tambah Riwayat BBM Kendaraan Berhasil');
+                    redirect('pemakai/riwayatbbm?id=' . $id_bbm);
+                } else {
+                    $this->session->set_flashdata('danger', 'Tambah Riwayat BBM Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             } else {
                 if (isset($nama_struk_bbm)) {
                     unlink('./assets/upload/struk_bbm/' . $nama_struk_bbm);
@@ -853,16 +1061,30 @@ class Pemakai extends CI_Controller
         $id = ($this->input->get('idkend'));
         $id_bbm = ($this->input->get('id'));
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_bbm($id_bbm, $id);
-        if ($cek_id != '') {
+
+        // Cek id kendaraan user berdasarkan id user 
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatbbm($id_user, $id_bbm);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['title'] = 'Edit Riwayat BBM';
             $data['rbbm'] = $this->home_m->data_riwayatbbm_byid($id_bbm);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/bbm/editriwayatbbm', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/bbm/editriwayatbbm', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -911,13 +1133,24 @@ class Pemakai extends CI_Controller
             }
         } else if (empty($_FILES['struk_bbm']['name'])) {
             $nama_struk_bbm = ($this->input->post('old_struk'));
-            $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
-            if ($simpan) {
-                $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
-                redirect('pemakai/riwayatbbm?id=' . $id_kend);
+            if (!empty($nama_struk_bbm)) {
+                $simpan = $this->home_m->updateriwayatbbm($id_bbm, $nama_struk_bbm);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
+                    redirect('pemakai/riwayatbbm?id=' . $id_kend);
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             } else {
-                $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
-                $data['post'] = $this->input->post();
+                $simpan = $this->home_m->updateriwayatbbmwithoutimage($id_bbm);
+                if ($simpan) {
+                    $this->session->set_flashdata('success', 'Edit Riwayat BBM Kendaraan Berhasil');
+                    redirect('pemakai/riwayatbbm?id=' . $id_kend);
+                } else {
+                    $this->session->set_flashdata('danger', 'Edit Riwayat BBM Kendaraan gagal');
+                    $data['post'] = $this->input->post();
+                }
             }
         } else {
             if (isset($nama_struk_bbm)) {
@@ -944,16 +1177,31 @@ class Pemakai extends CI_Controller
     {
         $id = $this->input->get('id');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_riwayat_pajak($id);
-        if ($cek_id != '') {
+
+        // Cek id kendaraan user berdasarkan id user 
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+        $found = false;
+        foreach ($cek as $ck) {
+            // echo $ck['id_kendaraan'];
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpajak($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
             $data['title'] = 'Riwayat Pajak Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/pajak/riwayatpajak', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/pajak/riwayatpajak', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -973,7 +1221,7 @@ class Pemakai extends CI_Controller
                     redirect('pemakai/riwayatpajak?id=' . $idkend . '');
                 } else {
                     if ($this->home_m->tambahriwayatpajak($idkend)) {
-                        $this->session->set_flashdata('success', 'Tambah Riwayat Pajak Kendaraan Berhasil.. Silakan menunggu proses verifikasi oleh Admin');
+                        $this->session->set_flashdata('success', 'Tambah Riwayat Pajak Kendaraan Berhasil. Silakan menunggu proses verifikasi oleh Admin');
                         redirect('pemakai/riwayatpajak?id=' . $idkend . '');
                     } else {
                         $this->session->set_flashdata('danger', 'Tambah Riwayat Pajak Kendaraan gagal');
@@ -988,16 +1236,30 @@ class Pemakai extends CI_Controller
         $id_pjk = $this->input->get('id');
         $id = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_pajak($id_pjk);
-        if ($cek_id != '') {
+
+        // Cek id kendaraan user berdasarkan id user 
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithriwayatpajak($id_user, $id_pjk);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpajak($id_pjk);
             $data['value'] = $this->home_m->datapajakById($id_pjk);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
             $data['title'] = 'Edit Riwayat Pajak Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/pajak/editriwayatpajak', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/pajak/editriwayatpajak', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -1040,15 +1302,30 @@ class Pemakai extends CI_Controller
         $id = $this->input->get('id');
         $tahun = date('Y');
         $cek_id = $this->home_m->cek_id_riwayat_pengajuan_servis($id);
-        if ($cek_id != '') {
+
+        // Cek id kendaraan user berdasarkan id user 
+        $id_user = $this->session->userdata('id');
+        $cek = $this->home_m->cekkendaraanUser($id_user);
+        $found = false;
+        foreach ($cek as $ck) {
+            if (in_array($id, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakai($id);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($id, $tahun);
             $data['title'] = 'Form Pengajuan Servis Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/pengajuan/pengajuanservis', $data);
-            $this->load->view('pemakai/template/modal');
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/pengajuan/pengajuanservis', $data);
+                $this->load->view('pemakai/template/modal');
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -1077,15 +1354,27 @@ class Pemakai extends CI_Controller
         $id_pen = $this->input->get('id');
         $idkend = $this->input->get('idkend');
         $tahun = date('Y');
-        $cek_id = $this->home_m->cek_id_edit_riwayat_pengajuan_servis($id_pen);
-        if ($cek_id != '') {
+        $id_user = $this->session->userdata('id');
+        $cek_edit = $this->home_m->cekkendaraanUserwithpengajuanservis($id_user, $id_pen);
+        $found = false;
+        foreach ($cek_edit as $ck) {
+            if (in_array($idkend, $ck)) {
+                $found = true;
+                break;
+            }
+        }
+        if ($found == true) {
             $data = [];
             $data['rp'] = $this->home_m->data_riwayatpengajuanservis_pemakaibyidpen($id_pen);
             $data['kend'] = $this->home_m->kendaraanByidwithpagu($idkend, $tahun);
             $data['title'] = 'Form Edit Pengajuan Servis Kendaraan Dinas';
-            $this->load->view('pemakai/template/headeruser');
-            $this->load->view('pemakai/kendaraan/servis/pengajuan/editpengajuanservis', $data);
-            $this->load->view('pemakai/template/footeruser');
+            if (empty($data['kend']['pagu_awal'])) {
+                show_404();
+            } else {
+                $this->load->view('pemakai/template/headeruser');
+                $this->load->view('pemakai/kendaraan/servis/pengajuan/editpengajuanservis', $data);
+                $this->load->view('pemakai/template/footeruser');
+            }
         } else {
             show_404();
         }
@@ -1112,9 +1401,10 @@ class Pemakai extends CI_Controller
         if ($cek_id != '') {
             if ($cek_id['status_pengajuan'] == 'Yes') {
                 $data = [];
-                $data['title'] = "Pengajuan Servis Kendaraan Dinas";
+                $data['title'] = "Cetak Pengajuan Servis Kendaraan Dinas";
                 $data['kend'] = $this->home_m->datasummary_kendaraanbyid($id_kend);
                 $data['pengajuan'] = $this->home_m->data_riwayatpengajuanbyidrp($id_pengajuan);
+                $data['admin'] = $this->home_m->pengajuan_admin($id_pengajuan);
                 $this->load->view('pemakai/template/header_print');
                 $this->load->view('pemakai/kendaraan/servis/cetakpengajuan', $data);
                 $this->load->view('pemakai/template/footer_print');

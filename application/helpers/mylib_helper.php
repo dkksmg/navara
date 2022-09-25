@@ -123,3 +123,34 @@ function decrypt_url($string)
     $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
     return $output;
 }
+function nama_bulan($nama_bulan)
+{
+    switch ($nama_bulan) {
+        case 'January':
+            return 'Januari';
+        case 'February':
+            return 'Februari';
+        case 'March':
+            return 'Maret';
+        case 'April':
+            return 'April';
+        case 'May':
+            return 'Mei';
+        case 'June':
+            return 'Juni';
+        case 'July':
+            return 'Juli';
+        case 'August':
+            return 'Agustus';
+        case 'September':
+            return 'September';
+        case 'October':
+            return 'Oktober';
+        case 'November':
+            return 'November';
+        case 'December':
+            return 'Desember';
+        default:
+            return 'bulan tidak valid';
+    }
+}

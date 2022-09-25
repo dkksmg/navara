@@ -48,12 +48,17 @@ class Dashboard_m extends CI_Model
     {
         if ($this->session->userdata('role') == 'Superadmin') {
             $this->db->select('count(*) as jml ');
-            $q = $this->db->where('riwayat_pemakai.status', 'aktif')->get('riwayat_pemakai');
+            $q = $this->db
+                ->join('kendaraan', 'riwayat_pemakai.id_kendaraan = kendaraan.idk')
+                ->where('riwayat_pemakai.status', 'aktif')
+                ->get('riwayat_pemakai');
             return (int)$q->result_array()[0]['jml'];
         } else {
             $cek_wilayah = $this->session->userdata('wilayah');
             $this->db->select('count(*) as jml ');
-            $q = $this->db->where('riwayat_pemakai.status', 'aktif')->where('riwayat_pemakai.lokasi_unit', $cek_wilayah)->get('riwayat_pemakai');
+            $q = $this->db
+                ->join('kendaraan', 'riwayat_pemakai.id_kendaraan = kendaraan.idk')
+                ->where('riwayat_pemakai.status', 'aktif')->where('riwayat_pemakai.lokasi_unit', $cek_wilayah)->get('riwayat_pemakai');
             return (int)$q->result_array()[0]['jml'];
         }
     }

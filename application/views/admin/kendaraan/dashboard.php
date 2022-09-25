@@ -73,7 +73,7 @@
                  <div class="small-box bg-warning">
                      <div class="inner">
                          <h3><?= $totalpmkkend ?></h3>
-                         <p>Total Pemakai Kendaraan Dinas <?php if ($this->session->userdata('role') == 'Admin') : ?>di
+                         <p>Total Kendaraan Dinas Terpakai <?php if ($this->session->userdata('role') == 'Admin') : ?>di
                              Wilayah Anda<?php endif; ?></p>
                      </div>
                      <div class="icon">
@@ -82,19 +82,6 @@
                  </div>
              </div>
              <?php if ($this->session->userdata('role') == 'Superadmin') : ?>
-             <div class="col-lg-3 col-6">
-                 <!-- small box -->
-                 <div class="small-box bg-secondary">
-                     <div class="inner">
-                         <h3><?= $totaladmin ?></h3>
-
-                         <p>Total User <b>Admin</b></p>
-                     </div>
-                     <div class="icon">
-                         <i class="ion ion-bag"></i>
-                     </div>
-                 </div>
-             </div>
              <div class="col-lg-3 col-6">
                  <!-- small box -->
                  <div class="small-box bg-secondary">
