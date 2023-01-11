@@ -16,6 +16,7 @@
 
  <!-- Main content -->
  <div class="content">
+<<<<<<< HEAD
    <div class="container">
      <div class="row">
        <div class="col-lg-12">
@@ -50,6 +51,42 @@
                </thead>
                <tbody>
                  <?php
+=======
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-12">
+                 <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
+             </div>
+             <div class="col-lg-12">
+                 <div class="card">
+                     <div class="card-header" style="background-color:#4a2f3a;">
+                         <h3 style="font-weight:bold;color:white;">Riwayat Kondisi</h3>
+                     </div>
+                     <div class="card-header">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
+                             Tambah Riwayat Kondisi
+                         </button>
+                     </div>
+                     <div class="card-body">
+                         <table class="table table-bordered table-striped example">
+                             <thead>
+                                 <tr>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center" width="10%">Aksi</th>
+                                     <th class="text-center">Tgl Pencatatan</th>
+                                     <th class="text-center">Kondisi</th>
+                                     <th class="text-center">Foto Tampak Depan</th>
+                                     <th class="text-center">Foto Tampak Belakang</th>
+                                     <th class="text-center">Foto Tampak Kanan</th>
+                                     <th class="text-center">Foto Tampak Kiri</th>
+                                     <th class="text-center">Status</th>
+                                     <th class="text-center">Last Update By</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <?php
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
                                     if ($rk != '') :
                                         $no = 1;
                                         foreach ($rk as $value) : ?>

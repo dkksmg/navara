@@ -12,6 +12,7 @@
   </div>
 </div>
 <div class="content">
+<<<<<<< HEAD
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
@@ -39,6 +40,35 @@
               </thead>
               <tbody>
                 <?php
+=======
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
+            </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header" style="background-color:#4a2f3a;">
+                        <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
+                    </div>
+                    <div class="card-header">
+                        <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                            data-target="#modal-xl">
+                            Tambah Pagu Anggaran Pemeliharaan
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped example" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Aksi</th>
+                                    <th class="text-center">Tahun</th>
+                                    <th class="text-center">Pagu</th>
+                            </thead>
+                            <tbody>
+                                <?php
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
                                 $no = 1;
                                 if (isset($paguall)) :
                                     foreach ($paguall as $row) :

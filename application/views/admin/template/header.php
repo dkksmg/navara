@@ -64,6 +64,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <span class="navbar-toggler-icon"></span>
         </button>
 
+<<<<<<< HEAD
         <div class="collapse navbar-collapse order-3" id="navbarCollapse">
           <!-- Left navbar links -->
           <ul class="navbar-nav">
@@ -104,12 +105,55 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <a href="<?= site_url('admin/user') ?>" class="nav-link">User</a>
             </li>
             <!-- <li class="nav-item <?= $this->uri->segment(1) == 'servis' ? 'active' : '' ?>">
+=======
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- Left navbar links -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item <?= $this->uri->segment(1) == 'dashboard' ? 'active' : '' ?>">
+                            <a href="<?= site_url('dashboard') ?>" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item <?= $this->uri->segment(1) == 'pemakai_kendaraan'  ? 'active' : '' ?>">
+                            <a href="<?= site_url('pemakai_kendaraan') ?>" class="nav-link">Pemakai</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link <?= $this->uri->segment(1) == 'home' ? 'active' : '' ?>"
+                                data-toggle="dropdown" href="#">
+                                Kendaraan
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                <a href="<?= site_url('home/kendaraan_pemakai') ?>" class="dropdown-item">Semua
+                                    Kendaraan
+                                    dengan pemakai</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="<?= site_url('home/all_kendaraan') ?>" class="dropdown-item">Semua
+                                    Kendaraan</a>
+                            </div>
+                        </li>
+                        <?php if ($this->session->userdata('role') != 'Admin') : ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link <?= $this->uri->segment(1) == 'laporan' ? 'active' : '' ?>"
+                                data-toggle="dropdown" href="#">
+                                Laporan
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                <a href="<?= site_url('laporan/rekap_kondisi') ?>" class="dropdown-item">Rekap
+                                    Kondisi</a>
+                                <div class="dropdown-divider"></div>
+                                <!-- <a href="<?= site_url('laporan/rekap_servis') ?>" class="dropdown-item">Rekap Servis</a> -->
+                            </div>
+                        </li>
+                        <li class="nav-item <?= $this->uri->segment(2) == 'user' ? 'active' : '' ?>">
+                            <a href="<?= site_url('admin/user') ?>" class="nav-link">User</a>
+                        </li>
+                        <!-- <li class="nav-item <?= $this->uri->segment(1) == 'servis' ? 'active' : '' ?>">
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
                             <a href="<?= site_url('servis') ?>" class="nav-link">Detail Service</a>
                         </li> -->
             <?php endif ?>
           </ul>
         </div>
 
+<<<<<<< HEAD
         <!-- Right navbar links -->
         <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
           <li class="nav-item dropdown">
@@ -125,6 +169,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </a>
               <div class="dropdown-divider"></div>
               <a href="<?= site_url('auth/logout_admin') ?>" class="dropdown-item dropdown-footer">KELUAR</a>
+=======
+                <!-- Right navbar links -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                            <?php echo greetings() ?>,
+                            <strong><?php echo $this->session->userdata('name') . ' (' . $this->session->userdata('nip_user') . ') ' ?></strong>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <a href="<?php echo site_url(
+                                            'profile'
+                                        ); ?>" class="dropdown-item">
+                                <i class="fa-solid fa-user-tie mr-2"></i> Profile
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="<?= site_url('auth/logout_admin') ?>"
+                                class="dropdown-item dropdown-footer">KELUAR</a>
+                        </div>
+                    </li>
+                </ul>
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
             </div>
           </li>
         </ul>

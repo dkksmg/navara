@@ -12,7 +12,7 @@ class Home_m extends CI_Model
 
     public function data_kendaraan()
     {
-        if ($this->session->userdata('role') == 'Admin') {
+        if ($this->session->userdata('role') == 'Admin') :
             $data['user'] = $this->db
                 ->get_where('users', [
                     'id' => $this->session->userdata('id'),
@@ -29,48 +29,7 @@ class Home_m extends CI_Model
                 // ->or_where('riwayat_pemakai.status is null')
                 ->group_end()
                 ->get('kendaraan');
-        } else {
-            $query = $this->db
-                ->order_by('rp.lokasi_unit', 'DESC')
-                ->order_by('kn.idk', 'DESC')
-                ->join('riwayat_pemakai as rp', 'kn.idk = rp.id_kendaraan', 'left')
-                ->join('users as us', 'us.id = rp.id_user', 'left')
-                ->where('kn.status', 'aktif')
-                ->group_start()
-                ->where(array('rp.status' => 'aktif'))
-                // ->or_where('rp.status', 'tidak_aktif')
-                ->or_where('rp.status is null')
-                ->group_end()
-                ->get('kendaraan as kn');
-        }
-        if ($query->num_rows() > 0) {
-            foreach ($query->result_array() as $row) {
-                $hasil[] = $row;
-            }
-            return $hasil;
-        }
-    }
-    public function data_kendaraan_all()
-    {
-        if ($this->session->userdata('role') == 'Admin') {
-
-            $data['user'] = $this->db
-                ->get_where('users', [
-                    'id' => $this->session->userdata('id'),
-                ])
-                ->row_array();
-            $lokasi = $data['user']['wilayah'];
-            $query = $this->db
-                ->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
-                ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
-                ->join('users as us', 'us.id = riwayat_pemakai.id_user', 'left')
-                ->order_by('idk', 'asc')
-                ->group_start()
-                ->where(array('riwayat_pemakai.status' => 'aktif', 'riwayat_pemakai.lokasi_unit' => $lokasi))
-                // ->or_where('riwayat_pemakai.status is null')
-                ->group_end()
-                ->get('kendaraan');
-        } else {
+        else :
             $query = $this->db
                 // ->order_by('rp.is_pejabat', 'DESC')
                 ->order_by('kn.idk', 'ASC')
@@ -855,13 +814,7 @@ class Home_m extends CI_Model
         $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
     }
-    public function hapus_pemakai($id = null)
-    {
-        $this->db->where('id_rp', $id);
-        $q = $this->db->delete('riwayat_pemakai');
-        return $q;
-    }
-    public function aktifkanpemakai($id, $id_kend_last)
+    public function aktifkanpemakai($id = null)
     {
 
         $data['status'] = "aktif";
@@ -1330,65 +1283,9 @@ class Home_m extends CI_Model
         $data['foto_nota']  = $nota;
         $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
         $data['lokasi']             = $this->input->post('bengkel');
-        $data['service']            = $this->input->post('service');
-        $data['sparepart']          = $this->input->post('sparepart');
-        $data['oli']          = $this->input->post('oli');
-        $data['total_biaya']        = $this->input->post('biaya');
-        $data['input_pemakai'] = $this->session->userdata('name');
-        $data['input_user'] = $this->session->userdata('id');
-        $data['last_time_update'] = date('Y-m-d H:i:s');
-        $data['status_srs']         = 'Wait';
-
-        $q = $this->db->insert('riwayat_servis', $data);
-        return $q;
-    }
-    public function tambahriwayatserviskendaraanwithoutnota($idk = null, $fotoservis = null)
-    {
-
-        $data['id_kendaraan'] = $idk;
-        $data['foto_servis']  = $fotoservis;
-        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $data['lokasi']             = $this->input->post('bengkel');
-        $data['service']            = $this->input->post('service');
-        $data['sparepart']          = $this->input->post('sparepart');
-        $data['oli']          = $this->input->post('oli');
-        $data['total_biaya']        = $this->input->post('biaya');
-        $data['input_pemakai'] = $this->session->userdata('name');
-        $data['input_user'] = $this->session->userdata('id');
-        $data['last_time_update'] = date('Y-m-d H:i:s');
-        $data['status_srs']         = 'Wait';
-
-        $q = $this->db->insert('riwayat_servis', $data);
-        return $q;
-    }
-    public function tambahriwayatserviskendaraanwithoutservis($idk = null, $nota = null)
-    {
-
-        $data['id_kendaraan'] = $idk;
-        $data['foto_nota']  = $nota;
-        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $data['lokasi']             = $this->input->post('bengkel');
-        $data['service']            = $this->input->post('service');
-        $data['sparepart']          = $this->input->post('sparepart');
-        $data['oli']          = $this->input->post('oli');
-        $data['total_biaya']        = $this->input->post('biaya');
-        $data['input_pemakai'] = $this->session->userdata('name');
-        $data['input_user'] = $this->session->userdata('id');
-        $data['last_time_update'] = date('Y-m-d H:i:s');
-        $data['status_srs']         = 'Wait';
-
-        $q = $this->db->insert('riwayat_servis', $data);
-        return $q;
-    }
-    public function tambahriwayatserviskendaraanwithoutimage($idk = null)
-    {
-
-        $data['id_kendaraan'] = $idk;
-        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $data['lokasi']             = $this->input->post('bengkel');
-        $data['service']            = $this->input->post('service');
-        $data['sparepart']          = $this->input->post('sparepart');
-        $data['oli']          = $this->input->post('oli');
+        $data['keluhan']            = $this->input->post('keluhan');
+        $data['perbaikan']          = $this->input->post('perbaikan');
+        $data['lain_lain']          = $this->input->post('lain_lain');
         $data['total_biaya']        = $this->input->post('biaya');
         $data['input_pemakai'] = $this->session->userdata('name');
         $data['input_user'] = $this->session->userdata('id');
@@ -1400,56 +1297,18 @@ class Home_m extends CI_Model
     }
     public function updateriwayatserviskendaraan($fotoservis = null, $id_rs = null, $nota = null)
     {
-        if ($this->session->userdata('role') == 'Pemakai') {
-            $data['foto_servis']  = $fotoservis;
-            $data['foto_nota']  = $nota;
-            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-            $data['lokasi']             = $this->input->post('bengkel');
-            $data['service']            = $this->input->post('service');
-            $data['sparepart']          = $this->input->post('sparepart');
-            $data['oli']          = $this->input->post('oli');
-            $data['total_biaya']        = $this->input->post('biaya');
-            $data['input_user'] = $this->session->userdata('id');
-            $data['last_time_update'] = date('Y-m-d H:i:s');
-            $data['status_srs']         = 'Wait';
-        } else {
-            $data['foto_servis']  = $fotoservis;
-            $data['foto_nota']  = $nota;
-            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-            $data['lokasi']             = $this->input->post('bengkel');
-            $data['service']            = $this->input->post('service');
-            $data['sparepart']          = $this->input->post('sparepart');
-            $data['oli']          = $this->input->post('oli');
-            $data['total_biaya']        = $this->input->post('biaya');
-            $data['input_user'] = $this->session->userdata('id');
-            $data['last_time_update'] = date('Y-m-d H:i:s');
-        }
+        $data['foto_servis']  = $fotoservis;
+        $data['foto_nota']  = $nota;
 
-        $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
-        return $q;
-    }
-    public function updateriwayatserviskendaraanwithoutimage($id_rs = null)
-    {
-        if ($this->session->userdata('role') == 'Pemakai') {
-            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-            $data['lokasi']             = $this->input->post('bengkel');
-            $data['service']            = $this->input->post('service');
-            $data['sparepart']          = $this->input->post('sparepart');
-            $data['oli']          = $this->input->post('oli');
-            $data['total_biaya']        = $this->input->post('biaya');
-            $data['input_user'] = $this->session->userdata('id');
-            $data['last_time_update'] = date('Y-m-d H:i:s');
-            $data['status_srs']         = 'Wait';
-        } else {
-            $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
-            $data['lokasi']             = $this->input->post('bengkel');
-            $data['service']            = $this->input->post('service');
-            $data['sparepart']          = $this->input->post('sparepart');
-            $data['oli']          = $this->input->post('oli');
-            $data['total_biaya']        = $this->input->post('biaya');
-            $data['input_user'] = $this->session->userdata('id');
-            $data['last_time_update'] = date('Y-m-d H:i:s');
-        }
+        $data['tgl_servis']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $data['lokasi']             = $this->input->post('bengkel');
+        $data['keluhan']            = $this->input->post('keluhan');
+        $data['perbaikan']          = $this->input->post('perbaikan');
+        $data['lain_lain']          = $this->input->post('lain_lain');
+        $data['total_biaya']        = $this->input->post('biaya');
+        $data['input_user'] = $this->session->userdata('id');
+        $data['last_time_update'] = date('Y-m-d H:i:s');
+        $data['status_srs']         = 'Wait';
 
         $q = $this->db->where('id_rs', $id_rs)->update('riwayat_servis', $data);
         return $q;

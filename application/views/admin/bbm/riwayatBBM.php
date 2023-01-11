@@ -16,6 +16,7 @@
 
  <!-- Main content -->
  <div class="content">
+<<<<<<< HEAD
    <div class="container">
      <div class="row">
        <div class="col-lg-12">
@@ -124,6 +125,121 @@
                      <i
                        style="color:black;font-size:12px"><b><?= date('d-m-Y H:i:s', strtotime($value['last_time_update'])) ?></b></i>
                    </td>
+=======
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-12">
+                 <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
+             </div>
+             <div class="col-lg-12">
+                 <div class="card">
+                     <div class="card-header" style="background-color:#4a2f3a;">
+                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
+                     </div>
+                     <div class="card-header">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
+                             Tambah Riwayat BBM
+                         </button>
+                     </div>
+                     <div class="card-body">
+                         <table class="table table-bordered table-striped example" width="auto" height="auto">
+                             <thead>
+                                 <tr>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center">Aksi</th>
+                                     <th class="text-center">Tanggal</th>
+                                     <th class="text-center">Total Harga BBM</th>
+                                     <th class="text-center">Foto Struk BBM</th>
+                                     <th class="text-center">Status</th>
+                                     <th class="text-center">Last Update By</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <?php $no = 1;
+                                    if ($rbbm != '') :
+                                        foreach ($rbbm as $value) : ?>
+                                 <tr>
+                                     <td class="text-center"><?= $no; ?></td>
+                                     <td class="text-center">
+                                         <a onclick="deleteConfirm('<?= site_url('home/hapusrbbm?id=' . ($value['id_bbm']) . '&idkend=' . ($value['id_kendaraan'])) ?>')"
+                                             href="#" class="btn btn-danger btn-sm jedatombol"
+                                             title="Hapus Riwayat BBM <?= $kend['no_polisi'] ?>"><i
+                                                 class="fas fa-trash"></i></a>
+                                         <a onclick="editConfirm('<?= site_url('home/editrbbm?id=' . ($value['id_bbm']) . '&idkend=' . ($value['id_kendaraan'])) ?>')"
+                                             href="#" class="btn btn-warning btn-sm jedatombol"
+                                             title="Edit Riwayat BBM <?= $kend['no_polisi'] ?>"><i
+                                                 class="fas fa-pen"></i></a>
+                                         <?php if ($value['status_rbm'] == 'No' || $value['status_rbm'] == 'Wait') : ?>
+                                         <a href="#"
+                                             onclick="approveConfirm('<?= site_url('home/approve_riwayatbbm?id=' . $value['id_bbm'] . '') ?>')"
+                                             class="btn btn-sm btn-success jedatombol"
+                                             title="Setujui Riwayat BBM <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                                             <i class="fa-solid fa-badge-check"></i></a>
+                                         <a href="#"
+                                             onclick="waitConfirm('<?= site_url('home/wait_riwayatbbm?id=' . $value['id_bbm'] . '') ?>')"
+                                             class="btn btn-sm btn-dark jedatombol <?php if ($value['status_rbm'] == 'Wait') : ?> disabled <?php endif; ?>"
+                                             title="Set Wait Riwayat BBM <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                                             <i class="fa-solid fa-circle-pause"></i></a>
+                                         <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
+                                             class="btn btn-sm btn-danger jedatombol <?php if ($value['status_rbm'] == 'No') : ?> disabled <?php endif; ?>"
+                                             title="Tolak Riwayat BBM <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fa-solid fa-circle-xmark"></i></a>
+                                         <?php else : ?>
+                                         <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
+                                             class="btn btn-sm btn-danger jedatombol"
+                                             title="Tolak Riwayat BBM <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                                                 class="fa-solid fa-circle-xmark"></i></a>
+                                         <a href="#"
+                                             onclick="waitConfirm('<?= site_url('home/wait_riwayatbbm?id=' . $value['id_bbm'] . '') ?>')"
+                                             class="btn btn-sm btn-dark jedatombol"
+                                             title="Set Wait Riwayat BBM <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                                             <i class="fa-solid fa-circle-pause"></i></a>
+                                         <?php endif; ?>
+                                     </td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pencatatan'])); ?>
+                                     </td>
+                                     <td class="text-center">
+                                         <?= "Rp. " . number_format((float)$value['total_bbm'], 2, ',', '.'); ?>
+                                     </td>
+                                     <td class="text-center">
+                                         <?php if (!empty($value['struk_bbm'])) : ?>
+                                         <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
+                                             alt="Foto Struk BBM" data-toggle="modal" width="30%"
+                                             data-target="#strukModal<?php echo $no ?>">
+                                         <?php else : ?>
+                                         <p data-toggle="modal" width="30%" data-target="#strukModal<?php echo $no ?>">
+                                             - </p>
+                                         <?php endif ?>
+                                     </td>
+                                     <td class="text-center" width="15%">
+                                         <?php if ($value['status_rbm'] == 'Wait') : ?>
+                                         Perlu dicek <br><i style="color:red"
+                                             class="fa-solid fa-triangle-exclamation"></i>
+                                         <?php elseif ($value['status_rbm'] == 'No') : ?>
+                                         Ditolak <i class=" fa-solid fa-circle-info"
+                                             title="<?= $value['reject_reason'] ?>">
+                                         </i><br><i style="color:red;font-size:12px">
+                                             Pengguna dapat menginput data kembali. <br>Reject on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php else : ?>
+                                         <?php if ($value['role'] == 'Superadmin' || $value['role'] == 'Admin') : ?>
+                                         Disetujui Oleh <?= $value['name'] ?>
+                                         <br><i style="color:green;font-size:12px">Approved on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php else : ?>
+                                         Disetujui
+                                         <br><i style="color:green;font-size:12px">Approved on
+                                             <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                                         <?php endif ?>
+                                         <?php endif ?>
+                                     </td>
+                                     <td class="text-center">
+                                         <?= $value['name'] ?><br>
+                                         <i
+                                             style="color:black;font-size:12px"><b><?= date('d-m-Y H:i:s', strtotime($value['last_time_update'])) ?></b></i>
+                                     </td>
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
 
                  </tr>
                  <?php $no++;
@@ -174,6 +290,7 @@
        </div>
        <?= form_close() ?>
      </div>
+<<<<<<< HEAD
    </div>
    <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
      <div class="modal-dialog" role="document">
@@ -181,6 +298,26 @@
          <div class="modal-header">
            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                aria-hidden="true">&times;</span></button>
+=======
+     <div class="modal fade" id="strukModal<?php echo $no ?>" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                             aria-hidden="true">&times;</span></button>
+                 </div>
+                 <div class="modal-body">
+                     <center>
+                         <img src="<?= base_url('assets/upload/struk_bbm/' . $value['struk_bbm'] . '') ?>"
+                             alt="Foto Struk BBM" class="img-responsive" width="80%" height="auto">
+                     </center>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
          </div>
          <div class="modal-body">
            <center>
@@ -223,12 +360,38 @@
                <input type="text" class="form-control pilihtanggal" name="tgl_bbm" value="<?= date('d-m-Y') ?>"
                  required>
              </div>
+<<<<<<< HEAD
            </div>
            <div class="col-md-6">
              <div class="form-group">
                <label>Total Biaya BBM</label>
                <input type="number" class="form-control" name="harga_bbm" required
                  placeholder="Masukkan Total Biaya BBM">
+=======
+             <div class="modal-body">
+                 <div class="row">
+                     <div class="col-md-6">
+                         <div class="form-group">
+                             <label>Tanggal</label>
+                             <input type="text" class="form-control pilihtanggal" name="tgl_bbm"
+                                 value="<?= date('d-m-Y') ?>" required>
+                         </div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="form-group">
+                             <label>Total Biaya BBM</label>
+                             <input type="number" class="form-control" name="harga_bbm" required
+                                 placeholder="Masukkan Total Biaya BBM">
+                         </div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="form-group">
+                             <label>Struk BBM</label>
+                             <input type="file" class="form-control" name="struk_bbm" accept="image/*">
+                         </div>
+                     </div>
+                 </div>
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
              </div>
            </div>
            <div class="col-md-6">

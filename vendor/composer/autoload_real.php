@@ -22,7 +22,11 @@ class ComposerAutoloaderInit7f7304259da1dca97edf2c2614c1a82d
             return self::$loader;
         }
 
+<<<<<<< HEAD
         spl_autoload_register(array('ComposerAutoloaderInit7f7304259da1dca97edf2c2614c1a82d', 'loadClassLoader'), true, true);
+=======
+        spl_autoload_register(array('ComposerAutoloaderInit3e252aab39ba2817ec31288f4d10bb49', 'loadClassLoader'), true, true);
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
         self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(__DIR__));
         spl_autoload_unregister(array('ComposerAutoloaderInit7f7304259da1dca97edf2c2614c1a82d', 'loadClassLoader'));
 

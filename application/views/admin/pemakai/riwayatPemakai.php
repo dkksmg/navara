@@ -16,6 +16,7 @@
 
  <!-- Main content -->
  <div class="content">
+<<<<<<< HEAD
    <div class="container">
      <div class="row">
        <div class="col-lg-12">
@@ -91,6 +92,83 @@
                </tbody>
              </table>
            </div>
+=======
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-12">
+                 <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
+             </div>
+             <div class="col-lg-12">
+                 <div class="card">
+                     <div class="card-header" style="background-color:#4a2f3a;">
+                         <h3 style="font-weight:bold;color:white;">Riwayat Pemakai</h3>
+                     </div>
+                     <div class="card-header">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
+                             Tambah Pemakai
+                         </button>
+                     </div>
+                     <div class="card-body">
+                         <table class="table table-bordered table-striped example" width="100%">
+                             <thead>
+                                 <tr>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center" width="10%">Aksi</th>
+                                     <th class="text-center">Nama Pemakai</th>
+                                     <th class="text-center">NIP</th>
+                                     <th class="text-center">Lokasi Unit</th>
+                                     <th class="text-center">Status</th>
+                                     <th class="text-center">Tanggal Awal</th>
+                                     <th class="text-center">Tanggal Akhir</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <?php if ($rp != '') : ?>
+                                 <?php $no = 1;
+                                        foreach ($rp as $value) : ?>
+                                 <tr>
+                                     <td class="text-center"><?= $no ?></td>
+                                     <td class="text-center">
+                                         <?php if ($value['status'] == 'aktif') : ?>
+                                         <a href="<?= site_url('home/nonaktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
+                                             class="btn btn-sm btn-secondary jedatombol"><i
+                                                 class="fa-solid fa-octagon-xmark"
+                                                 title="Nonaktifkan Pemakai <?= $value['name'] ?>"></i></a>
+                                         <?php else : ?>
+                                         <a href="<?= site_url('home/aktifkanpemakai?id=' . $value['id_rp'] . '') ?>"
+                                             class="btn btn-sm btn-success jedatombol"><i
+                                                 class="fa-solid fa-badge-check"
+                                                 title="Aktifkan Pemakai <?= $value['name'] ?>"></i></a>
+                                         <?php endif ?>
+                                         <a onclick="editConfirm('<?= site_url('home/edit_pemakai?id=' . $value['id_rp'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-warning jedatombol"><i class="fas fa-pen"
+                                                 title="Edit Data Pemakai <?= $value['name'] ?>"></i></a>
+                                         <a onclick="deleteConfirm('<?= site_url('home/delete_pemakai?id=' . $value['id_rp'] . '') ?>')"
+                                             href="#" class="btn btn-sm btn-danger jedatombol"><i class="fas fa-trash"
+                                                 title="Hapus Data Pemakai <?= $value['name'] ?>"></i></a>
+                                     </td>
+                                     <td class="text-center"><?= $value['name'] ?></td>
+                                     <td class="text-center"><?= $value['nip_user'] ?></td>
+                                     <td class="text-center"><?= $value['lokasi_unit'] ?></td>
+                                     <td class="text-center"><?php if ($value['status'] == "tidak_aktif") : ?>
+                                         Tidak Aktif
+                                         <?php else : ?>
+                                         Aktif
+                                         <?php endif ?>
+                                     </td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
+                                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
+                                 </tr>
+                                 <?php $no++;
+                                        endforeach   ?>
+                                 <?php endif ?>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
          </div>
        </div>
      </div>

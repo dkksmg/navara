@@ -16,6 +16,7 @@
 
  <!-- Main content -->
  <div class="content">
+<<<<<<< HEAD
    <div class="container">
      <div class="row">
        <div class="col-lg-12">
@@ -47,6 +48,39 @@
                </thead>
                <tbody>
                  <?php $no = 1;
+=======
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-12">
+                 <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
+             </div>
+             <div class="col-lg-12">
+                 <div class="card">
+                     <div class="card-header" style="background-color:#4a2f3a;">
+                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
+                     </div>
+                     <div class="card-header">
+                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                             data-target="#modal-xl">
+                             Tambah Riwayat Pajak
+                         </button>
+                     </div>
+                     <div class="card-body">
+                         <table class="table table-bordered table-striped example" width="100%;">
+                             <thead>
+                                 <tr>
+                                     <th class="text-center">No</th>
+                                     <th class="text-center" width="10%">Aksi</th>
+                                     <th class="text-center">Tanggal Pencatatan</th>
+                                     <th class="text-center">Tahun</th>
+                                     <th class="text-center">Total Pajak</th>
+                                     <th class="text-center">Status</th>
+                                     <th class="text-center">Last Update By</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <?php $no = 1;
+>>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
                                     if ($rp != '') {
                                         foreach ($rp as $value) { ?>
                  <tr>
