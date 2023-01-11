@@ -178,8 +178,11 @@ class Admin extends CI_Controller
     public function delete_user()
     {
         $id = $this->input->get('id');
+        $deletePemakai = $this->db
+            ->where('id_user', $id)
+            ->delete('riwayat_pemakai');
         $delete = $this->db->where('id', $id)->delete('users');
-        if ($delete) {
+        if ($delete && $deletePemakai) {
             $this->session->set_flashdata('success', 'Hapus User Berhasil');
             redirect('admin/user');
         } else {

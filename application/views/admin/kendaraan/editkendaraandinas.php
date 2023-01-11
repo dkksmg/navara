@@ -88,6 +88,12 @@
                        Pick Up</option>
                      <option <?= isset($kend) && $kend['jenis'] == 'Ambulance' ? "selected" : ""; ?>>
                        Ambulance</option>
+                     <option <?= isset($kend) && $kend['jenis'] == 'Ambulance Keliling' ? "selected" : ""; ?>>
+                       Ambulance Keliling</option>
+                     <option <?= isset($kend) && $kend['jenis'] == 'Ambulance Hebat' ? "selected" : ""; ?>>
+                       Ambulance Hebat</option>
+                     <option <?= isset($kend) && $kend['jenis'] == 'Ambulance Siaga' ? "selected" : ""; ?>>
+                       Ambulance Siaga</option>
                      <option <?= isset($kend) && $kend['jenis'] == 'Sepeda Motor' ? "selected" : ""; ?>>
                        Sepeda Motor</option>
                    </select>

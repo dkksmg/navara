@@ -50,7 +50,7 @@
                <tbody>
                  <?php if ($rp != '') : ?>
                  <?php $no = 1;
-                                        foreach ($rp as $value) : ?>
+                    foreach ($rp as $value) : ?>
                  <tr>
                    <td class="text-center"><?= $no ?></td>
                    <td class="text-center">
@@ -73,17 +73,20 @@
                    <td class="text-center"><?= $value['name'] ?></td>
                    <td class="text-center"><?= $value['nip_user'] ?></td>
                    <td class="text-center"><?= $value['lokasi_unit'] ?></td>
-                   <td class="text-center"><?php if ($value['status'] == "tidak_aktif") : ?>
+                   <td class="text-center">
+                     <?php if ($value['status'] == "tidak_aktif") : ?>
                      Tidak Aktif
-                     <?php else : ?>
+                     <?php elseif ($value['status'] == "aktif") : ?>
                      Aktif
+                     <?php else : ?>
+                     <?= $value['status']; ?>
                      <?php endif ?>
                    </td>
                    <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_awal'])) ?></td>
                    <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_akhir'])) ?></td>
                  </tr>
                  <?php $no++;
-                                        endforeach   ?>
+                    endforeach   ?>
                  <?php endif ?>
                </tbody>
              </table>
@@ -132,10 +135,10 @@
                  <select class="form-control" name="lokunit">
                    <option readonly>-- Pilih Lokasi Unit --</option>
                    <?php if ($lu != '') {
-                                            foreach ($lu as $value) { ?>
+                      foreach ($lu as $value) { ?>
                    <option><?= $value['lokasi_unit'] ?></option>
                    <?php }
-                                        } ?>
+                    } ?>
                  </select>
                </div>
              </div>

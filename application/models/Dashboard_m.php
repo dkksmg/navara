@@ -26,10 +26,33 @@ class Dashboard_m extends CI_Model
         $q = $this->db->where('kendaraan.jenis', 'Ambulance')->get('kendaraan');
         return (int)$q->result_array()[0]['jml'];
     }
+    public function totalkendaraan_abmkl()
+    {
+        $this->db->select('count(*) as jml ');
+        $q = $this->db->where('kendaraan.jenis', 'Ambulance Keliling')->get('kendaraan');
+        return (int)$q->result_array()[0]['jml'];
+    }
+    public function totalkendaraan_abmhbt()
+    {
+        $this->db->select('count(*) as jml ');
+        $q = $this->db->where('kendaraan.jenis', 'Ambulance Hebat')->get('kendaraan');
+        return (int)$q->result_array()[0]['jml'];
+    }
+    public function totalkendaraan_abmsg()
+    {
+        $this->db->select('count(*) as jml ');
+        $q = $this->db->where('kendaraan.jenis', 'Ambulance Siaga')->get('kendaraan');
+        return (int)$q->result_array()[0]['jml'];
+    }
     public function totalkendaraan_mbl()
     {
         $this->db->select('count(*) as jml ');
-        $q = $this->db->where('kendaraan.jenis !=', 'Ambulance')->where('kendaraan.jenis !=', 'Sepeda Motor')->get('kendaraan');
+        $q = $this->db
+            ->where('kendaraan.jenis !=', 'Ambulance')
+            ->where('kendaraan.jenis !=', 'Ambulance Keliling')
+            ->where('kendaraan.jenis !=', 'Ambulance Siaga')
+            ->where('kendaraan.jenis !=', 'Ambulance Hebat')
+            ->where('kendaraan.jenis !=', 'Sepeda Motor')->get('kendaraan');
         return (int)$q->result_array()[0]['jml'];
     }
     public function totaluseradmin()

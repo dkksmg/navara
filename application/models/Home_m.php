@@ -13,14 +13,14 @@ class Home_m extends CI_Model
     public function data_kendaraan()
     {
         if ($this->session->userdata('role') == 'Admin') {
-
             $data['user'] = $this->db
                 ->get_where('users', [
                     'id' => $this->session->userdata('id'),
                 ])
                 ->row_array();
             $lokasi = $data['user']['wilayah'];
-            $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+            $query = $this->db
+                ->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
                 ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
                 ->join('users as us', 'us.id = riwayat_pemakai.id_user', 'left')
                 ->order_by('idk', 'asc')
@@ -38,6 +38,7 @@ class Home_m extends CI_Model
                 ->where('kn.status', 'aktif')
                 ->group_start()
                 ->where(array('rp.status' => 'aktif'))
+                // ->or_where('rp.status', 'tidak_aktif')
                 ->or_where('rp.status is null')
                 ->group_end()
                 ->get('kendaraan as kn');
@@ -59,7 +60,8 @@ class Home_m extends CI_Model
                 ])
                 ->row_array();
             $lokasi = $data['user']['wilayah'];
-            $query = $this->db->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
+            $query = $this->db
+                ->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
                 ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
                 ->join('users as us', 'us.id = riwayat_pemakai.id_user', 'left')
                 ->order_by('idk', 'asc')
@@ -77,6 +79,7 @@ class Home_m extends CI_Model
                 ->where('kn.status', 'aktif')
                 ->group_start()
                 ->where(array('rp.status' => 'aktif'))
+                // ->or_where('rp.status', 'tidak_aktif')
                 ->or_where('rp.status is null')
                 ->group_end()
                 ->get('kendaraan as kn');
@@ -137,6 +140,24 @@ class Home_m extends CI_Model
             ->or_where('rp.status is null')
             ->group_end();
         $query = $this->db->get('kendaraan as kn');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+
+    public function servis_bbm_bulanan($tahun = null, $bulan = null)
+    {
+        $query = $this->db
+            ->query('SELECT total_sparepart,total_oli,total_servis,total_bbm,total_pajak FROM `kendaraan` as `kn` 
+                LEFT JOIN `pagu_service` as `ps` ON `ps`.`id_kend` = `kn`.`idk`                
+                LEFT JOIN `riwayat_pemakai` as `rp` ON `rp`.`id_kendaraan`=`kn`.`idk` 
+                LEFT JOIN `users` as `us` ON `us`.`id`=`rp`.`id_user` 
+                LEFT JOIN (SELECT srs.id_kendaraan, YEAR(srs.tgl_servis) as tahun_servis, MONTHNAME(srs.tgl_servis) as bulan_servis,sum(srs.service) as total_servis,sum(srs.sparepart) as total_sparepart,sum(srs.oli) as total_oli FROM riwayat_servis as srs where srs.status_srs="Yes" and month(srs.tgl_servis)=' . $bulan . ' and year(srs.tgl_servis)=' . $tahun . ' group by srs.id_kendaraan,YEAR(srs.tgl_servis), MONTH(srs.tgl_servis))srs ON srs.id_kendaraan = kn.idk      
+                LEFT JOIN (SELECT rbm.id_kendaraan,MONTHNAME(rbm.tgl_pencatatan) as bulan_catat_bbm,year(rbm.tgl_pencatatan) as tahun_catat_bbm, sum(rbm.total_bbm) as total_bbm from riwayat_bbm as rbm where rbm.status_rbm="Yes" and month(rbm.tgl_pencatatan)=' . $bulan . ' and year(rbm.tgl_pencatatan)=' . $tahun . ' group by rbm.id_kendaraan,YEAR(rbm.tgl_pencatatan), MONTH(rbm.tgl_pencatatan))rbm ON rbm.id_kendaraan = kn.idk 
+                LEFT JOIN (SELECT pjk.id_kendaraan,MONTHNAME(pjk.tgl_pencatatan) as bulan_catat_pajak,year(pjk.tgl_pencatatan) as tahun_catat_pajak, sum(pjk.total_pajak) as total_pajak from riwayat_pajak as pjk where pjk.status_pjk="Yes" and month(pjk.tgl_pencatatan)=' . $bulan . ' and year(pjk.tgl_pencatatan)=' . $tahun . ' group by pjk.id_kendaraan,YEAR(pjk.tgl_pencatatan), MONTH(pjk.tgl_pencatatan))pjk ON pjk.id_kendaraan = kn.idk WHERE `kn`.`status` = "aktif" AND `ps`.`tahun` = ' . $tahun . ' AND ( `rp`.`status` = "aktif" OR `rp`.`status` is null ) ORDER BY `rp`.`is_pejabat` DESC, `kn`.`jenis` ASC, `kn`.`idk`;');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $hasil[] = $row;
@@ -805,7 +826,9 @@ class Home_m extends CI_Model
     }
     public function data_riwayatpemakai($id = null)
     {
-        $this->db->join('users as us', 'rp.id_user=us.id')->select('rp.id_rp,rp.id_kendaraan,rp.id_user,rp.lokasi_unit,rp.tgl_awal,rp.tgl_akhir,rp.status, us.id, us.name, us.nip_user')->where('rp.id_kendaraan', $id);
+        $this->db
+            ->join('users as us', 'rp.id_user=us.id')
+            ->select('rp.id_rp,rp.id_kendaraan,rp.id_user,rp.lokasi_unit,rp.tgl_awal,rp.tgl_akhir,rp.status, us.id, us.name, us.nip_user')->where('rp.id_kend_last', $id);
         $query = $this->db->get('riwayat_pemakai as rp');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -827,6 +850,7 @@ class Home_m extends CI_Model
     {
 
         $data['status'] = "tidak_aktif";
+        $data['id_kendaraan'] = null;
         $this->db->Where('id_rp', $id);
         $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
@@ -837,10 +861,11 @@ class Home_m extends CI_Model
         $q = $this->db->delete('riwayat_pemakai');
         return $q;
     }
-    public function aktifkanpemakai($id = null)
+    public function aktifkanpemakai($id, $id_kend_last)
     {
 
         $data['status'] = "aktif";
+        $data['id_kendaraan'] = $id_kend_last;
         $this->db->Where('id_rp', $id);
         $q = $this->db->update('riwayat_pemakai', $data);
         return $q;
@@ -1271,6 +1296,7 @@ class Home_m extends CI_Model
     {
 
         $data['id_kendaraan']   = $idk;
+        $data['id_kend_last']   = $idk;
         $data['status']         = "aktif";
         $data['id_user'] = $this->input->post('nama');
         // $data['nama_pemakai']   = $this->input->post('nama');

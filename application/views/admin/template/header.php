@@ -37,6 +37,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
   .jedatombol {
     margin: 2px;
   }
+
+  thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+  }
   </style>
 </head>
 
@@ -113,8 +119,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
               <a href="<?php echo site_url(
-                                            'profile'
-                                        ); ?>" class="dropdown-item">
+                          'profile'
+                        ); ?>" class="dropdown-item">
                 <i class="fa-solid fa-user-tie mr-2"></i> Profile
               </a>
               <div class="dropdown-divider"></div>

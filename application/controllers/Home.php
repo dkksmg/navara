@@ -1360,17 +1360,20 @@ class Home extends CI_Controller
         $id = $this->input->get('id');
         $kend = $this->home_m->data_riwayatpemakaibyidrp($id);
         $id_kend = $kend['id_kendaraan'];
+        $id_kend_last = $kend['id_kend_last'];
+        // var_dump($id_kend_last);
+        // die();
         $cekpemakai = $this->home_m->data_riwayatpemakaibynopolandstatus($id_kend);
         if ($cekpemakai != '') {
             $this->session->set_flashdata('danger', 'Aktifkan Pemakai gagal, Kendaaraan sudah terpakai');
             redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
         } else {
-            if ($this->home_m->aktifkanpemakai($id, $id_kend)) {
+            if ($this->home_m->aktifkanpemakai($id, $id_kend_last)) {
                 $this->session->set_flashdata('success', 'Aktifkan Pemakai Berhasil');
-                redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
+                redirect('home/riwayat_pemakai?id=' . $id_kend_last . '');
             } else {
                 $this->session->set_flashdata('warning', 'Aktifkan Pemakai gagal');
-                redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
+                redirect('home/riwayat_pemakai?id=' . $id_kend_last . '');
             }
         }
     }
@@ -1380,10 +1383,10 @@ class Home extends CI_Controller
         $kend = $this->home_m->data_riwayatpemakaibyidrp($id);
         if ($this->home_m->nonaktifkanpemakai($id)) {
             $this->session->set_flashdata('success', 'Nonaktifkan Pemakai Berhasil');
-            redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
+            redirect('home/riwayat_pemakai?id=' . $kend['id_kend_last'] . '');
         } else {
             $this->session->set_flashdata('warning', 'Nonaktifkan Pemakai gagal');
-            redirect('home/riwayat_pemakai?id=' . $kend['id_kendaraan'] . '');
+            redirect('home/riwayat_pemakai?id=' . $kend['id_kend_last'] . '');
         }
     }
     public function delete_pemakai()
@@ -1393,10 +1396,10 @@ class Home extends CI_Controller
         $id_kend = $kend['id_kendaraan'];
         if ($this->home_m->hapus_pemakai($id)) {
             $this->session->set_flashdata('success', 'Hapus Data Pemakai Berhasil');
-            redirect('home/riwayat_pemakai?id=' . $id_kend . '');
+            redirect('home/riwayat_pemakai?id=' . $kend['id_kend_last'] . '');
         } else {
             $this->session->set_flashdata('danger', 'Hapus Data Pemakai gagal');
-            redirect('home/riwayat_pemakai?id=' . $id_kend . '');
+            redirect('home/riwayat_pemakai?id=' . $kend['id_kend_last'] . '');
         }
     }
     public function print_data_kendaraan()
