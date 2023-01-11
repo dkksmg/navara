@@ -55,20 +55,11 @@ class Pemakai_kendaraan_model extends CI_Model
     } else {
 
       $query = $this->db
-<<<<<<< HEAD
         ->join('riwayat_pemakai as rp', 'kn.idk = rp.id_kendaraan', 'inner')
         ->join('users as us', 'us.id = rp.id_user', 'inner')
         ->order_by('rp.lokasi_unit', 'desc')
         ->order_by('us.name', 'asc')
         ->order_by('kn.idk', 'desc')
-=======
-        ->join('riwayat_pemakai', 'riwayat_pemakai.id_kendaraan = kendaraan.idk', 'left')
-        ->join('users', 'users.id=riwayat_pemakai.id_user', 'left')
-        ->join('ref_lokasi_unit', 'riwayat_pemakai.lokasi_unit = ref_lokasi_unit.lokasi_unit', 'inner')
-        ->order_by('riwayat_pemakai.lokasi_unit', 'desc')
-        ->order_by('users.name', 'asc')
-        ->order_by('idk', 'desc')
->>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
         ->group_start()
         ->where('rp.status', 'aktif')
         // ->or_where('rp.status is null')
