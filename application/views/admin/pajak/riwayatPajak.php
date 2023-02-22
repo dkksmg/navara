@@ -16,7 +16,6 @@
 
  <!-- Main content -->
  <div class="content">
-<<<<<<< HEAD
    <div class="container">
      <div class="row">
        <div class="col-lg-12">
@@ -28,134 +27,106 @@
            <div class="card-header" style="background-color:#4a2f3a;">
              <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
            </div>
-           <div class="card-header">
-             <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
-               Tambah Riwayat Pajak
-             </button>
-           </div>
-           <div class="card-body">
-             <table class="table table-bordered table-striped example" width="100%;">
-               <thead>
-                 <tr>
-                   <th class="text-center">No</th>
-                   <th class="text-center" width="10%">Aksi</th>
-                   <th class="text-center">Tanggal Pencatatan</th>
-                   <th class="text-center">Tahun</th>
-                   <th class="text-center">Total Pajak</th>
-                   <th class="text-center">Status</th>
-                   <th class="text-center">Last Update By</th>
-                 </tr>
-               </thead>
-               <tbody>
-                 <?php $no = 1;
-=======
-     <div class="container">
-         <div class="row">
-             <div class="col-lg-12">
-                 <?= $this->load->view('admin/template/data_kend_layout', '', TRUE); ?>
+           
+           <!-- <div class="collapse" id="idcollapse"> -->
+             <div class="card-header">
+               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                 Tambah Riwayat Pajak
+               </button>
              </div>
-             <div class="col-lg-12">
-                 <div class="card">
-                     <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
-                     </div>
-                     <div class="card-header">
-                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                             data-target="#modal-xl">
-                             Tambah Riwayat Pajak
-                         </button>
-                     </div>
-                     <div class="card-body">
-                         <table class="table table-bordered table-striped example" width="100%;">
-                             <thead>
-                                 <tr>
-                                     <th class="text-center">No</th>
-                                     <th class="text-center" width="10%">Aksi</th>
-                                     <th class="text-center">Tanggal Pencatatan</th>
-                                     <th class="text-center">Tahun</th>
-                                     <th class="text-center">Total Pajak</th>
-                                     <th class="text-center">Status</th>
-                                     <th class="text-center">Last Update By</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                                 <?php $no = 1;
->>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
-                                    if ($rp != '') {
-                                        foreach ($rp as $value) { ?>
-                 <tr>
-                   <td class="text-center"><?= $no; ?></td>
-                   <td class="text-center">
-                     <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . ($value['id_pjk']) . '') ?>')"
-                       href="#" class="btn btn-danger btn-sm jedatombol"
-                       title="Hapus Riwayat Pajak <?= $kend['no_polisi'] ?>"><i class="fas fa-trash"></i></a>
-                     <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                       href="#" class="btn btn-warning btn-sm jedatombol"
-                       title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i class="fas fa-pen"></i></a>
-                     <?php if ($value['status_pjk'] == 'No' || $value['status_pjk'] == 'Wait') : ?>
-                     <a href="#"
-                       onclick="approveConfirm('<?= site_url('home/approve_riwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                       class="btn btn-sm btn-success jedatombol"
-                       title="Setujui Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
-                       <i class="fa-solid fa-badge-check"></i></a>
-                     <a href="#"
-                       onclick="waitConfirm('<?= site_url('home/wait_riwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                       class="btn btn-sm btn-dark jedatombol <?php if ($value['status_pjk'] == 'Wait') : ?> disabled <?php endif; ?>"
-                       title="Set Wait Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
-                       <i class="fa-solid fa-circle-pause"></i></a>
-                     <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
-                       class="btn btn-sm btn-danger jedatombol <?php if ($value['status_pjk'] == 'No') : ?> disabled <?php endif; ?>"
-                       title="Tolak Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
-                         class="fa-solid fa-circle-xmark"></i></a>
-                     <?php else : ?>
-                     <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
-                       class="btn btn-sm btn-danger jedatombol"
-                       title="Tolak Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
-                         class="fa-solid fa-circle-xmark"></i></a>
-                     <a href="#"
-                       onclick="waitConfirm('<?= site_url('home/wait_riwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
-                       class="btn btn-sm btn-dark jedatombol"
-                       title="Set Wait Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
-                       <i class="fa-solid fa-circle-pause"></i></a>
-                     <?php endif; ?>
-                   </td>
-                   <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
-                   <td class="text-center"><?= $value['tahun'] ?></td>
-                   <td class="text-center">
-                     <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?>
-                   </td>
-                   <td class="text-center" width="15%">
-                     <?php if ($value['status_pjk'] == 'Wait') : ?>
-                     Perlu dicek <br><i style="color:red" class="fa-solid fa-triangle-exclamation"></i>
-                     <?php elseif ($value['status_pjk'] == 'No') : ?>
-                     Ditolak <i class=" fa-solid fa-circle-info" title="<?= $value['reject_reason'] ?>">
-                     </i><br><i style="color:red;font-size:12px">
-                       Pengguna dapat menginput data kembali. <br>Reject on
-                       <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                     <?php else : ?>
-                     <?php if ($value['role'] == 'Superadmin' || $value['role'] == 'Admin') : ?>
-                     Disetujui Oleh <?= $value['name'] ?>
-                     <br><i style="color:green;font-size:12px">Approved on
-                       <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                     <?php else : ?>
-                     Disetujui
-                     <br><i style="color:green;font-size:12px">Approved on
-                       <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                     <?php endif ?>
-                     <?php endif ?>
-                   </td>
-                   <td class="text-center">
-                     <?= $value['name'] ?><br>
-                     <i
-                       style="color:black;font-size:12px"><b><?= date('d-m-Y H:i:s', strtotime($value['last_time_update'])) ?></b></i>
-                   </td>
-                 </tr>
-                 <?php $no++;
-                                        }
-                                    } ?>
-               </tbody>
-             </table>
-           </div>
+             <div class="card-body">
+              <div class="table-responsive">
+               <table class="table table-bordered table-striped example" width="100%;">
+                 <thead>
+                   <tr>
+                     <th class="text-center">No</th>
+                     <th class="text-center" width="10%">Aksi</th>
+                     <th class="text-center">Tanggal Pencatatan</th>
+                     <th class="text-center">Tahun</th>
+                     <th class="text-center">Total Pajak</th>
+                     <th class="text-center">Status</th>
+                     <th class="text-center">Last Update By</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <?php $no = 1;
+                                      if ($rp != '') {
+                                          foreach ($rp as $value) { ?>
+                   <tr>
+                     <td class="text-center"><?= $no; ?></td>
+                     <td class="text-center">
+                       <a onclick="deleteConfirm('<?= site_url('home/hapusriwayatpajak?id=' . ($value['id_pjk']) . '') ?>')"
+                         href="#" class="btn btn-danger btn-sm jedatombol"
+                         title="Hapus Riwayat Pajak <?= $kend['no_polisi'] ?>"><i class="fas fa-trash"></i></a>
+                       <a onclick="editConfirm('<?= site_url('home/editriwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                         href="#" class="btn btn-warning btn-sm jedatombol"
+                         title="Edit Riwayat Pajak <?= $kend['no_polisi'] ?>"><i class="fas fa-pen"></i></a>
+                       <?php if ($value['status_pjk'] == 'No' || $value['status_pjk'] == 'Wait') : ?>
+                       <a href="#"
+                         onclick="approveConfirm('<?= site_url('home/approve_riwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                         class="btn btn-sm btn-success jedatombol"
+                         title="Setujui Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                         <i class="fa-solid fa-badge-check"></i></a>
+                       <a href="#"
+                         onclick="waitConfirm('<?= site_url('home/wait_riwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                         class="btn btn-sm btn-dark jedatombol <?php if ($value['status_pjk'] == 'Wait') : ?> disabled <?php endif; ?>"
+                         title="Set Wait Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                         <i class="fa-solid fa-circle-pause"></i></a>
+                       <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
+                         class="btn btn-sm btn-danger jedatombol <?php if ($value['status_pjk'] == 'No') : ?> disabled <?php endif; ?>"
+                         title="Tolak Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                           class="fa-solid fa-circle-xmark"></i></a>
+                       <?php else : ?>
+                       <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
+                         class="btn btn-sm btn-danger jedatombol"
+                         title="Tolak Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                           class="fa-solid fa-circle-xmark"></i></a>
+                       <a href="#"
+                         onclick="waitConfirm('<?= site_url('home/wait_riwayatpajak?id=' . $value['id_pjk'] . '') ?>')"
+                         class="btn btn-sm btn-dark jedatombol"
+                         title="Set Wait Riwayat Pajak <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>">
+                         <i class="fa-solid fa-circle-pause"></i></a>
+                       <?php endif; ?>
+                     </td>
+                     <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
+                     <td class="text-center"><?= $value['tahun'] ?></td>
+                     <td class="text-center">
+                       <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?>
+                     </td>
+                     <td class="text-center" width="15%">
+                       <?php if ($value['status_pjk'] == 'Wait') : ?>
+                       Perlu dicek <br><i style="color:red" class="fa-solid fa-triangle-exclamation"></i>
+                       <?php elseif ($value['status_pjk'] == 'No') : ?>
+                       Ditolak <i class=" fa-solid fa-circle-info" title="<?= $value['reject_reason'] ?>">
+                       </i><br><i style="color:red;font-size:12px">
+                         Pengguna dapat menginput data kembali. <br>Reject on
+                         <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                       <?php else : ?>
+                       <?php if ($value['role'] == 'Superadmin' || $value['role'] == 'Admin') : ?>
+                       Disetujui Oleh <?= $value['name'] ?>
+                       <br><i style="color:green;font-size:12px">Approved on
+                         <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                       <?php else : ?>
+                       Disetujui
+                       <br><i style="color:green;font-size:12px">Approved on
+                         <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                       <?php endif ?>
+                       <?php endif ?>
+                     </td>
+                     <td class="text-center">
+                       <?= $value['name'] ?><br>
+                       <i
+                         style="color:black;font-size:12px"><b><?= date('d-m-Y H:i:s', strtotime($value['last_time_update'])) ?></b></i>
+                     </td>
+                   </tr>
+                   <?php $no++;
+                                          }
+                                      } ?>
+                 </tbody>
+               </table>
+              </div>
+             </div>
+           <!-- </div> -->
          </div>
        </div>
      </div>

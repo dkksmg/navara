@@ -60,7 +60,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Service</label>
-                                            <input class="form-control" name="service" value="<?= $servis['keluhan'] ?>"
+                                            <input class="form-control" name="service" value="<?= $servis['service'] ?>"
                                                 id="service" placeholder="Biaya Servis" type="number" onkeyup="sum()"
                                                 required />
                                         </div>
@@ -69,14 +69,14 @@
                                         <div class="form-group">
                                             <label>Sparepart</label>
                                             <input class="form-control" name="sparepart"
-                                                value="<?= $servis['perbaikan'] ?>" id="sparepart"
+                                                value="<?= $servis['sparepart'] ?>" id="sparepart"
                                                 placeholder="Biaya Sparepart" onkeyup="sum()" type="number" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Oli</label>
-                                            <input class="form-control" name="oli" value="<?= $servis['lain_lain'] ?>"
+                                            <input class="form-control" name="oli" value="<?= $servis['oli'] ?>"
                                                 id="oli" placeholder="Biaya Oli" onkeyup="sum()" type="number"
                                                 required />
                                         </div>

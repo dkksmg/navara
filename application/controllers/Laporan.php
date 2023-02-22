@@ -40,11 +40,17 @@ class Laporan extends CI_Controller
 		if ($this->input->get()) {
 			$tahun = ($this->input->get('tahun'));
 			$bulan = ($this->input->get('bulan'));
+
 			if ($bulan == "all") {
 				$data['tahun'] = $tahun;
 				$data['bulan'] = $bulan;
 				$data['rekap'] = $this->home_m->data_servis($tahun);
+				// print_r($data['rekap']);
+				// die();
 				$data['januari'] = $this->home_m->servis_bbm_jan($tahun);
+				// print_r($data['januari']);
+				// // print_r($this->db->last_query());
+				// die();
 				$data['februari'] = $this->home_m->servis_bbm_feb($tahun);
 				$data['maret'] = $this->home_m->servis_bbm_mar($tahun);
 				$data['april'] = $this->home_m->servis_bbm_apr($tahun);
@@ -57,6 +63,7 @@ class Laporan extends CI_Controller
 				$data['november'] = $this->home_m->servis_bbm_nov($tahun);
 				$data['desember'] = $this->home_m->servis_bbm_des($tahun);
 				$data['title'] = 'Rekap Servis Kendaraan Dinas Dari Tahun ' . $tahun . '';
+
 			} else {
 				$data['tahun'] = $tahun;
 				$data['bulan'] = $bulan;
@@ -86,8 +93,14 @@ class Laporan extends CI_Controller
 					$data['bln_v'] = 'Desember';
 				}
 				$data['rekap'] = $this->home_m->data_servis($tahun);
+				// $data['rekap'] = $this->home_m->data_servis_bulan($tahun, $bulan);
 				$data['bulanan'] = $this->home_m->servis_bbm_bulanan($tahun, $bulan);
+				// print_r($data['rekap']);
+				// print_r($data['bulanan']);
+				// die();
 				$data['title'] = 'Rekap Servis Kendaraan Dinas Dari Tahun ' . $tahun . ' Bulan ' . $data['bln_v'];
+				// print_r($data['bulanan']);
+				// die();
 			}
 		}
 		$this->load->view('admin/template/header');
@@ -179,10 +192,15 @@ class Laporan extends CI_Controller
 		$excel->getActiveSheet()->mergeCells('BF3:BJ3');
 		$excel->setActiveSheetIndex(0)->setCellValue('BK3', "DESEMBER");
 		$excel->getActiveSheet()->mergeCells('BK3:BO3');
-		$excel->setActiveSheetIndex(0)->setCellValue('BP3', "TOTAL");
-		$excel->getActiveSheet()->mergeCells('BP3:BP4');
-		$excel->setActiveSheetIndex(0)->setCellValue('BQ3', "SISA");
+		// $excel->setActiveSheetIndex(0)->setCellValue('BP3', "TOTAL");
+		// $excel->getActiveSheet()->mergeCells('BP3:BP4');
+		// $excel->setActiveSheetIndex(0)->setCellValue('BQ3', "SISA");
+		// $excel->getActiveSheet()->mergeCells('BQ3:BQ4');
+		
+		$excel->setActiveSheetIndex(0)->setCellValue('BQ3', "TOTAL");
 		$excel->getActiveSheet()->mergeCells('BQ3:BQ4');
+		$excel->setActiveSheetIndex(0)->setCellValue('BP3', "SISA");
+		$excel->getActiveSheet()->mergeCells('BP3:BP4');
 
 
 		$excel->getActiveSheet()->setCellValue('H4', "SPAREPART");
@@ -962,17 +980,30 @@ class Laporan extends CI_Controller
 			} else {
 				$excel->setActiveSheetIndex(0)->setCellValue('BO' . $numrow, ($result[$key]['total_pj_des']));
 			}
-			//TOTAL
-			if ($totalpengeluaran == '') {
+			// //TOTAL
+			// if ($totalpengeluaran == '') {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('BP' . $numrow, '0');
+			// } else {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('BP' . $numrow, $totalpengeluaran);
+			// }
+			// //sisa
+			// if ($pagusisa == '') {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('BQ' . $numrow, '0');
+			// } else {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('BQ' . $numrow, $pagusisa);
+			// }
+
+			//SISA
+			if ($pagusisa== '') {
 				$excel->setActiveSheetIndex(0)->setCellValue('BP' . $numrow, '0');
 			} else {
-				$excel->setActiveSheetIndex(0)->setCellValue('BP' . $numrow, $totalpengeluaran);
+				$excel->setActiveSheetIndex(0)->setCellValue('BP' . $numrow, $pagusisa);
 			}
-			//sisa
-			if ($pagusisa == '') {
+			//TOTAL
+			if ($totalpengeluaran  == '') {
 				$excel->setActiveSheetIndex(0)->setCellValue('BQ' . $numrow, '0');
 			} else {
-				$excel->setActiveSheetIndex(0)->setCellValue('BQ' . $numrow, $pagusisa);
+				$excel->setActiveSheetIndex(0)->setCellValue('BQ' . $numrow, $totalpengeluaran );
 			}
 
 
@@ -1126,6 +1157,2203 @@ class Laporan extends CI_Controller
 		// Proses file excel
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment; filename="Rincian Service Bengkel Tahun ' . $tahun . '.xlsx"'); // Set nama file excel nya
+		header('Cache-Control: max-age=0');
+		$write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+		$write->save('php://output');
+		exit();
+	}
+
+	public function export_excel_bulan()
+	{
+		include APPPATH . 'third_party/PHPExcel/PHPExcel.php';
+		// if ($this->input->get()) {
+		// 	$tahun = ($this->input->get('tahun'));
+		// 	$bulan = ($this->input->get('bulan'));
+		// }
+		$tahun = $this->input->get('tahun');
+		$bulan = $this->input->get('bulan');
+		// $bulan = $this->input->get('bulan');
+		if ($bulan == 1) {
+			$bulanteks = 'Januari';
+		} else if ($bulan == 2) {
+			$bulanteks = 'Februari';
+		} else if ($bulan == 3) {
+			$bulanteks = 'Maret';
+		} else if ($bulan == 4) {
+			$bulanteks = 'April';
+		} else if ($bulan == 5) {
+			$bulanteks = 'Mei';
+		} else if ($bulan == 6) {
+			$bulanteks = 'Juni';
+		} else if ($bulan == 7) {
+			$bulanteks = 'Juli';
+		} else if ($bulan == 8) {
+			$bulanteks = 'Agustus';
+		} else if ($bulan == 9) {
+			$bulanteks = 'September';
+		} else if ($bulan == 10) {
+			$bulanteks = 'Oktober';
+		} else if ($bulan == 11) {
+			$bulanteks = 'November';
+		} else if ($bulan == 12) {
+			$bulanteks = 'Desember';
+		}
+		
+		$excel = new PHPExcel();
+		$excel->getProperties()->setCreator('Ardian FM')
+			->setLastModifiedBy('Ardian FM')
+			->setTitle("Rincian Service Bengkel NAVARA")
+			->setSubject("NAVARA")
+			->setDescription("Laporan Semua Data Kendaraan di Navara");
+		$style_col = array(
+			'font' => array('bold' => true),
+			'alignment' => array(
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+			),
+			'borders' => array(
+				'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+				'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+				'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+				'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+		$style_row = array(
+			'alignment' => array(
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+			),
+			'borders' => array(
+				'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+				'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+				'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+				'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "KENDARAAN");
+		$excel->setActiveSheetIndex(0)->setCellValue('H1', "RINCIAN SERVICE BENGKEL TAHUN " . $tahun);
+		$excel->getActiveSheet()->mergeCells('A1:G1');
+		$excel->getActiveSheet()->mergeCells('H1:N1');
+		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$excel->getActiveSheet()->getStyle('H1')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('H1')->getFont()->setSize(15);
+		$excel->getActiveSheet()->getStyle('H1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$excel->getActiveSheet()->freezePane('H5');
+
+		$excel->setActiveSheetIndex(0)->setCellValue('A3', "NO");
+		$excel->getActiveSheet()->mergeCells('A3:A4');
+		$excel->setActiveSheetIndex(0)->setCellValue('B3', "JENIS KENDARAAN");
+		$excel->getActiveSheet()->mergeCells('B3:B4');
+		$excel->setActiveSheetIndex(0)->setCellValue('C3', "MERK");
+		$excel->getActiveSheet()->mergeCells('C3:C4');
+		$excel->setActiveSheetIndex(0)->setCellValue('D3', "TIPE");
+		$excel->getActiveSheet()->mergeCells('D3:D4');
+		$excel->setActiveSheetIndex(0)->setCellValue('E3', "NO POLISI");
+		$excel->getActiveSheet()->mergeCells('E3:E4');
+		$excel->setActiveSheetIndex(0)->setCellValue('F3', "PEMAKAI");
+		$excel->getActiveSheet()->mergeCells('F3:F4');
+		$excel->setActiveSheetIndex(0)->setCellValue('G3', "PAGU");
+		$excel->getActiveSheet()->mergeCells('G3:G4');
+		$excel->setActiveSheetIndex(0)->setCellValue('H3', $bulanteks);
+		$excel->getActiveSheet()->mergeCells('H3:L3');
+		// $excel->setActiveSheetIndex(0)->setCellValue('M3', "TOTAL");
+		// $excel->getActiveSheet()->mergeCells('M3:M4');
+		// $excel->getActiveSheet()->getColumnDimension('M')->setWidth(6);
+
+
+		// $excel->setActiveSheetIndex(0)->setCellValue('N3', "SISA");
+		// $excel->getActiveSheet()->mergeCells('N3:N4');
+		$excel->setActiveSheetIndex(0)->setCellValue('M3', "SISA");
+		$excel->getActiveSheet()->mergeCells('M3:M4');
+
+		$excel->setActiveSheetIndex(0)->setCellValue('N3', "TOTAL");
+		$excel->getActiveSheet()->mergeCells('N3:N4');
+		$excel->getActiveSheet()->getColumnDimension('N')->setWidth(6);
+
+
+		$excel->getActiveSheet()->setCellValue('H4', "SPAREPART");
+		$excel->getActiveSheet()->setCellValue('I4', "OLI");
+		$excel->getActiveSheet()->setCellValue('J4', "SERVICE");
+		$excel->getActiveSheet()->setCellValue('K4', "BBM");
+		$excel->getActiveSheet()->setCellValue('L4', "PAJAK");
+
+
+		$excel->getActiveSheet()->getStyle('A3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('B3:B4')->getAlignment()->setWrapText(true);
+		$excel->getActiveSheet()->getStyle('B3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('C3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('D3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('E3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('F3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('G3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('H3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('I3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('J3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('K3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('L3')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('M3:M4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('N3:N4')->applyFromArray($style_col);
+		
+		$excel->getActiveSheet()->getStyle('A4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('B4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('C4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('D4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('E4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('F4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('G4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('H4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('I4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('J4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('K4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('L4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('M4')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('N4')->applyFromArray($style_col);
+		
+		$excel->getActiveSheet()->getStyle('A3:A1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('B3:B1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('C3:C1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('D3:D1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('E3:E1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('F3:F4')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('F5:F1000')->getAlignment()->setHorizontal('left');
+		$excel->getActiveSheet()->getStyle('G3:G1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('H3:H1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('I3:I1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('J3:J1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('K3:K1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('L3:L1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('M3:M1000')->getAlignment()->setHorizontal('center');
+		$excel->getActiveSheet()->getStyle('N3:N1000')->getAlignment()->setHorizontal('center');
+
+		$excel->getActiveSheet()->getStyle('G3:G1000')
+			->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+		$excel->getActiveSheet()->getStyle('H3:H1000')->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+		$excel->getActiveSheet()->getStyle('I5:I1000')->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+		$excel->getActiveSheet()->getStyle('J3:J1000')->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+		$excel->getActiveSheet()->getStyle('K3:K1000')->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+		$excel->getActiveSheet()->getStyle('L5:L1000')->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+		$excel->getActiveSheet()->getStyle('M5:M1000')->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+		// $excel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+		$excel->getActiveSheet()->getStyle('N5:N1000')->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+
+		$data_rincian = $this->home_m->data_servis($tahun);
+
+		
+		$laporan = $this->home_m->laporan_kendaraan_bulan($tahun, $bulan);
+		// print_r($data_rincian);
+		// print_r($laporan);
+		// die();
+		$no = 1; // Untuk penomoran tabel, di awal set dengan 1
+		$numrow = 5; // Set baris pertama untuk isi tabel adalah baris ke 4
+		$result = array();
+		foreach ($data_rincian as $key => $val) {
+			$val2 = $laporan[$key];
+			
+			$result[$key] = $val + $val2;
+			// print_r($result[$key]);
+			// die();
+			$totalsparepart = $result[$key]['total_sp'];
+			$totaloli = $result[$key]['total_ol'];
+			$totalservis = $result[$key]['total_sv'];
+			$totalbbm = $result[$key]['total_bm'];
+			$totalpajak = $result[$key]['total_pj'];
+
+
+			$totalpengeluaran = $totalsparepart + $totaloli + $totalservis + $totalbbm + $totalpajak;
+			$pagusisa = $result[$key]['pagu_awal'] - $totalpengeluaran;
+
+			$excel->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $no);
+			$excel->setActiveSheetIndex(0)->setCellValue('B' . $numrow, strtoupper($result[$key]['jenis']));
+			$excel->setActiveSheetIndex(0)->setCellValue('C' . $numrow, strtoupper($result[$key]['merk']));
+			$excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, strtoupper($result[$key]['tipe']));
+			$excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, strtoupper($result[$key]['no_polisi']));
+			$excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, ($result[$key]['name']));
+			if ($result[$key]['pagu_awal'] == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('G' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('G' . $numrow, ($result[$key]['pagu_awal']));
+			}
+			//bulan
+			if ($result[$key]['total_sp'] == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('H' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('H' . $numrow, ($result[$key]['total_sp']));
+			}
+			if ($result[$key]['total_ol'] == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('I' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('I' . $numrow, ($result[$key]['total_ol']));
+			}
+			if ($result[$key]['total_sv'] == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('J' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('J' . $numrow, ($result[$key]['total_sv']));
+			}
+			if ($result[$key]['total_bm'] == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('K' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('K' . $numrow, ($result[$key]['total_bm']));
+			}
+			if ($result[$key]['total_pj'] == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('L' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('L' . $numrow, ($result[$key]['total_pj']));
+			}
+			
+			// //TOTAL
+			// if ($totalpengeluaran == '') {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('M' . $numrow, '0');
+			// } else {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('M' . $numrow, $totalpengeluaran);
+			// }
+			// //sisa
+			// if ($pagusisa == '') {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('N' . $numrow, '0');
+			// } else {
+			// 	$excel->setActiveSheetIndex(0)->setCellValue('N' . $numrow, $pagusisa);
+			// }
+
+			//SISA
+			if ($pagusisa == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('M' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('M' . $numrow, $pagusisa);
+			}
+			//TOTAL
+			if ($totalpengeluaran == '') {
+				$excel->setActiveSheetIndex(0)->setCellValue('N' . $numrow, '0');
+			} else {
+				$excel->setActiveSheetIndex(0)->setCellValue('N' . $numrow, $totalpengeluaran);
+			}
+
+
+			$excel->getActiveSheet()->getStyle('A' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('B' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('I' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('J' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('K' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('L' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('M' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('N' . $numrow)->applyFromArray($style_row);
+			
+			$no++;
+			$numrow++;
+		}
+
+		$excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+		$excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+		$excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true); // Set width kolom C
+		$excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true); // Set width kolom D
+		$excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true); // Set width kolom E
+		// $excel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+		// // print_r($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('M'));
+		// // die();
+		// if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('M')->getWidth()<=6){
+		// 	$excel->getActiveSheet()->getColumnDimension('M')->setAutoSize(false);
+		// 	$excel->getActiveSheet()->getColumnDimension('M')->setWidth(6);
+		// }
+
+		// $excel->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
+
+
+		$excel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+
+		$excel->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
+		if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('N')->getWidth()<=6){
+			$excel->getActiveSheet()->getColumnDimension('N')->setAutoSize(false);
+			$excel->getActiveSheet()->getColumnDimension('N')->setWidth(6);
+		}
+		
+		$excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
+		$excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+		$excel->getActiveSheet(0)->setTitle("TA " . $tahun);
+		$excel->setActiveSheetIndex(0);
+		// Proses file excel
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="Rincian Service Bengkel Tahun ' . $tahun . '.xlsx"'); // Set nama file excel nya
+		header('Cache-Control: max-age=0');
+		$write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+		$write->save('php://output');
+		exit();
+	}
+
+	public function rekap_peralatan()
+	{
+		$data = [];
+		$data['title'] = "Rekap Servis Peralatan Dinas";
+		if ($this->input->get()) {
+
+			$tahun = ($this->input->get('tahun'));
+			$bulan = ($this->input->get('bulan'));
+
+			// print_r($tahun);
+			// die();
+
+			if ($bulan == "all") {
+				$data['tahun'] = $tahun;
+				$data['bulan'] = $bulan;
+				$data['rekap'] = $this->home_m->data_servis_peralatan($tahun);
+				// $data['rekap'] = $this->home_m->data_servis_peralatan_filter($tahun);
+				// print_r($data['rekap']);
+				// die();
+				$data['januari'] = $this->home_m->servis_peralatan_all_bulan($tahun, '1');
+				
+				$data['februari'] = $this->home_m->servis_peralatan_all_bulan($tahun, '2');
+				// print_r($data['februari']);
+				// die();
+				$data['maret'] = $this->home_m->servis_peralatan_all_bulan($tahun, '3');
+				$data['april'] = $this->home_m->servis_peralatan_all_bulan($tahun, '4');
+				$data['mei'] = $this->home_m->servis_peralatan_all_bulan($tahun, '5');
+				$data['juni'] = $this->home_m->servis_peralatan_all_bulan($tahun, '6');
+				$data['juli'] = $this->home_m->servis_peralatan_all_bulan($tahun, '7');
+				$data['agustus'] = $this->home_m->servis_peralatan_all_bulan($tahun, '8');
+				$data['september'] = $this->home_m->servis_peralatan_all_bulan($tahun, '9');
+				$data['oktober'] = $this->home_m->servis_peralatan_all_bulan($tahun, '10');
+				$data['november'] = $this->home_m->servis_peralatan_all_bulan($tahun, '11');
+				$data['desember'] = $this->home_m->servis_peralatan_all_bulan($tahun, '12');
+				$data['title'] = 'Rekap Servis Peralatan Dinas Dari Tahun ' . $tahun . '';
+				// print_r($data);
+				// die();
+				
+			} else {
+				$data['tahun'] = $tahun;
+				$data['bulan'] = $bulan;
+				if ($bulan == 1) {
+					$data['bln_v'] = 'Januari';
+				} else if ($bulan == 2) {
+					$data['bln_v'] = 'Februari';
+				} else if ($bulan == 3) {
+					$data['bln_v'] = 'Maret';
+				} else if ($bulan == 4) {
+					$data['bln_v'] = 'April';
+				} else if ($bulan == 5) {
+					$data['bln_v'] = 'Mei';
+				} else if ($bulan == 6) {
+					$data['bln_v'] = 'Juni';
+				} else if ($bulan == 7) {
+					$data['bln_v'] = 'Juli';
+				} else if ($bulan == 8) {
+					$data['bln_v'] = 'Agustus';
+				} else if ($bulan == 9) {
+					$data['bln_v'] = 'September';
+				} else if ($bulan == 10) {
+					$data['bln_v'] = 'Oktober';
+				} else if ($bulan == 11) {
+					$data['bln_v'] = 'November';
+				} else if ($bulan == 12) {
+					$data['bln_v'] = 'Desember';
+				}
+				// print_r($bulan);
+				$data['rekap'] = $this->home_m->data_servis_peralatan_bulan($tahun, $bulan);
+				// print_r($data['rekap']);
+				// die();
+				$data['bulanan'] = $this->home_m->servis_peralatan_bulan($tahun, $bulan);
+				// print_r($data['rekap']);
+				// print_r($data['bulanan']);
+				// die();
+
+				$data['title'] = 'Rekap Servis Peralatan Dinas Dari Tahun ' . $tahun . ' Bulan ' . $data['bln_v'];
+				// print_r($data);
+				// die();
+			}
+			// print_r($data);
+			// 	die();
+		}
+		$this->load->view('admin/template/header');
+		$this->load->view('admin/laporan/dataperalatan', $data);
+		$this->load->view('admin/template/footer');
+	}
+
+	public function export_excel_peralatan()
+	{
+		include APPPATH . 'third_party/PHPExcel/PHPExcel.php';
+		$tahun = $this->input->get('tahun');
+		$excel = new PHPExcel();
+		$excel->getProperties()->setCreator('Ardian FM')
+			->setLastModifiedBy('Ardian FM')
+			->setTitle("Rincian Service Peralatan NAVARA")
+			->setSubject("NAVARA")
+			->setDescription("Laporan Semua Data Peralatan di Navara");
+		$style_col = array(
+			'font' => array('bold' => true),
+			'alignment' => array(
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+			),
+			'borders' => array(
+				'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+				'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+				'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+				'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+		$style_row = array(
+			'alignment' => array(
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+			),
+			'borders' => array(
+				'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+				'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+				'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+				'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+
+		$data_rincian = $this->home_m->data_servis_peralatan_iduser($tahun);
+		// print_r($data_rincian);
+		// die();
+		$result=array();
+		// $result[]=$data_rincian;
+		$no=0;
+		// $data_rincian[0]['servis']=$data_rincian;
+		foreach($data_rincian as $key=>$dr){
+			// $result = $this->home_m->data_servis_peralatan($tahun);
+			$id_user = $data_rincian[$key]['id'];
+			$data_rincian[$key]['januari'] = $this->home_m->lap_alat($tahun, '1', $id_user);
+			$data_rincian[$key]['februari'] = $this->home_m->lap_alat($tahun, '2', $id_user);
+			$data_rincian[$key]['maret'] = $this->home_m->lap_alat($tahun, '3', $id_user);
+			$data_rincian[$key]['april'] = $this->home_m->lap_alat($tahun, '4', $id_user);
+			$data_rincian[$key]['mei'] = $this->home_m->lap_alat($tahun, '5', $id_user);
+			$data_rincian[$key]['juni'] = $this->home_m->lap_alat($tahun, '6', $id_user);
+			$data_rincian[$key]['juli'] = $this->home_m->lap_alat($tahun, '7', $id_user);
+			$data_rincian[$key]['agustus'] = $this->home_m->lap_alat($tahun, '8', $id_user);
+			$data_rincian[$key]['september'] = $this->home_m->lap_alat($tahun, '9', $id_user);
+			$data_rincian[$key]['oktober'] = $this->home_m->lap_alat($tahun, '10', $id_user);
+			$data_rincian[$key]['november'] = $this->home_m->lap_alat($tahun, '11', $id_user);
+			$data_rincian[$key]['desember'] = $this->home_m->lap_alat($tahun, '12', $id_user);
+
+			// $result = $this->home_m->data_riwayatservisperalatan($key, '2023');
+			// $dr['id'];
+			// $no++;
+			// $result[$key]="aaaa";
+			// $result[$key][$key]="aaa";
+		}
+		// print_r($data_rincian);
+		// die();
+		// print_r($result);
+		// die();
+		// print_r($lap_jan);
+		// print_r($no);
+		// die();
+		$no = 1; // Untuk penomoran tabel, di awal set dengan 1
+		$numrow = 1; // Set baris pertama untuk isi tabel adalah baris ke 4
+		$numrow2 = 2;
+		$numrow4 = 4;
+		$numrow5 = 5;
+		$numrow7 = 7;
+		$numrow8 = 8;
+		$numrow9 = 9;
+		$result = array();
+		// $colid_b = 'B';
+		// $colid_i = 'I';
+		foreach ($data_rincian as $key => $val) {
+			// $val2 = $januari[$key];
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow,"KARTU PEMELIHARAAN BARANG INVENTARIS");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow.':'.'I'.$numrow);
+
+			// $excel->getActiveSheet()->mergeCells('B'.$numrow':I'.$numrow);
+			$excel->getActiveSheet()->getStyle('B'.$numrow)->getFont()->setBold(TRUE);
+			$excel->getActiveSheet()->getStyle('B'.$numrow)->getFont()->setSize(12);
+			$excel->getActiveSheet()->getStyle('B'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow2, "DINAS KESEHATAN KOTA SEMARANG TAHUN ANGGARAN ".$tahun);
+			$excel->getActiveSheet()->mergeCells('B'.$numrow2.':I'.$numrow2);
+			$excel->getActiveSheet()->getStyle('B'.$numrow2)->getFont()->setBold(TRUE);
+			$excel->getActiveSheet()->getStyle('B'.$numrow2)->getFont()->setSize(12);
+			$excel->getActiveSheet()->getStyle('B'.$numrow2)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow4, "NAMA UNIT");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow4.':C'.$numrow4);
+			$excel->getActiveSheet()->getStyle('B'.$numrow4)->getFont()->setSize(12);
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow4, ": DKK");
+			$excel->getActiveSheet()->getStyle('D'.$numrow4)->getFont()->setSize(12);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow5, "PEMEGANG/LOKASI");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow5.':C'.$numrow5);
+			$excel->getActiveSheet()->getStyle('B'.$numrow5)->getFont()->setSize(12);
+
+			$result[$key] = $val;
+
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow5, ": ".$result[$key]['name'].'/'.$result[$key]['bidang']);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow7, "NO");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow7.':B'.$numrow8);
+			$excel->getActiveSheet()->getStyle('B'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('B'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			
+			$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow7, "NAMA BARANG/MERK");
+			$excel->getActiveSheet()->mergeCells('C'.$numrow7.':C'.$numrow8);
+			$excel->getActiveSheet()->getStyle('C'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('C'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$excel->getActiveSheet()->getColumnDimension('C')->setWidth(21);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow7, "TANGGAL PERBAIKAN");
+			$excel->getActiveSheet()->mergeCells('D'.$numrow7.':F'.$numrow7);
+			$excel->getActiveSheet()->getStyle('D'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow8, "Tanggal");
+			$excel->getActiveSheet()->getStyle('D'.$numrow8)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow8, "Bulan");
+			$excel->getActiveSheet()->getStyle('E'.$numrow8)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow8, "Tahun");
+			$excel->getActiveSheet()->getStyle('F'.$numrow8)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow7, "Nama Rekanan");
+			$excel->getActiveSheet()->mergeCells('G'.$numrow7.':G'.$numrow8);
+			$excel->getActiveSheet()->getStyle('G'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('G'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$excel->getActiveSheet()->getColumnDimension('G')->setWidth(14);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow7, "JUMLAH (Rp)");
+			$excel->getActiveSheet()->mergeCells('H'.$numrow7.':H'.$numrow8);
+			$excel->getActiveSheet()->getStyle('H'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('H'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow7, "KETERANGAN\n(Jenis Service)");
+			$excel->getActiveSheet()->mergeCells('I'.$numrow7.':I'.$numrow8);
+			$excel->getActiveSheet()->getStyle('I'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('I'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$excel->getActiveSheet()->getStyle('I'.$numrow7)->getAlignment()->setWrapText(true);
+			$excel->getActiveSheet()->getColumnDimension('I')->setWidth(16);
+			
+			$nod=0;
+			if($result[$key]['januari']!=null){
+				if($key==0){
+					$numrow91=9;	
+				}
+				else{
+					$numrow91=$numrow9;
+				}
+				foreach ($result[$key]['januari'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow91, $ky+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow91, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow91, 
+						substr($result[$key]['januari'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow91, 
+						substr($result[$key]['januari'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow91, 
+						substr($result[$key]['januari'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow91, 
+						$result[$key]['januari'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow91, 
+						$result[$key]['januari'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow91, 
+						$result[$key]['januari'][$ky]['ket_servis']);
+
+					$ky++;
+					$numrow91++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['februari']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['februari'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['februari'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['februari'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['februari'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['februari'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['februari'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['februari'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['maret']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['maret'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['maret'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['maret'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['maret'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['maret'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['maret'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['maret'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['april']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['april'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['april'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['april'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['april'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['april'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['april'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['april'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['mei']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['mei'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['mei'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['mei'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['mei'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['mei'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['mei'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['mei'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['juni']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['juni'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['juni'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['juni'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['juni'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['juni'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['juni'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['juni'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['juli']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['juli'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['juli'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['juli'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['juli'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['juli'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['juli'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['juli'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['agustus']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['agustus'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['agustus'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['agustus'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['agustus'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['agustus'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['agustus'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['agustus'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['september']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['september'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['september'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['september'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['september'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['september'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['september'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['september'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['oktober']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['oktober'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['oktober'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['oktober'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['oktober'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['oktober'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['oktober'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['oktober'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['november']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['november'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['november'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['november'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['november'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['november'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['november'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['november'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['desember']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null
+						||$result[$key]['november']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null
+						||$result[$key]['november']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['desember'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['desember'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['desember'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['desember'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['desember'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['desember'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['desember'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+
+			}
+
+			$num9n=$numrow9+$nod;
+			
+			//no center
+			$excel->getActiveSheet()->getStyle('B'.$numrow9.':B'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('B'.$numrow9.':B'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			//nama center
+			// $excel->getActiveSheet()->getStyle('C'.$numrow9.':C'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			// $excel->getActiveSheet()->getStyle('C'.$numrow9.':C'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			//tanngal
+			$excel->getActiveSheet()->getStyle('D'.$numrow9.':D'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('D'.$numrow9.':D'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			//bulan
+			$excel->getActiveSheet()->getStyle('E'.$numrow9.':E'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('E'.$numrow9.':E'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			//tahun
+			$excel->getActiveSheet()->getStyle('F'.$numrow9.':F'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('F'.$numrow9.':F'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			// $excel->getActiveSheet()->getStyle('G'.$numrow9.':G'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			// $excel->getActiveSheet()->getStyle('G'.$numrow9.':G'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			// $excel->getActiveSheet()->getStyle('I'.$numrow9.':I'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			// $excel->getActiveSheet()->getStyle('I'.$numrow9.':I'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+
+			
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H'.$num9n)->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+
+			// $excel->getActiveSheet()->getStyle('A' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('B' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('I' . $numrow7)->applyFromArray($style_row);
+
+			$excel->getActiveSheet()->getStyle('B' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('I' . $numrow8)->applyFromArray($style_row);
+
+			$num9n1=$num9n-1;
+			$excel->getActiveSheet()->getStyle('B'.$numrow9.':B'.$num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C'.$numrow9.':C' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D'.$numrow9.':D' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E'.$numrow9.':E' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F'.$numrow9.':F' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G'.$numrow9.':G' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('I'.$numrow9.':I' . $num9n1)->applyFromArray($style_row);
+
+			$no++;
+			$nob++;
+			$numrow=$numrow+11+$nod;
+			$numrow2=$numrow2+11+$nod;
+			$numrow4=$numrow4+11+$nod;
+			$numrow5=$numrow5+11+$nod;
+			$numrow7=$numrow7+11+$nod;
+			$numrow8=$numrow8+11+$nod;
+			$numrow9=$numrow9+11+$nod;
+			$numrow91=$numrow91+11+$nod;
+			$numrow92=$numrow92+11+$nod;
+			// $numrow93=$numrow93+15;
+		}
+
+		// $excel->getActiveSheet()->getStyle('B' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('C' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('D' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('E' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('F' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('G' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('H' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('I' . $numrow)->applyFromArray($style_row);
+		// $sheet = $excel->getActiveSheet();
+		// foreach ($sheet->getColumnIterator() as $cols) {
+		// 	$sheet->getColumnDimension($cols->getColumnIndex())->setAutoSize(true);
+		// }
+		// foreach (range('B', 'I') as $colidbi) {
+		// 	$excel->getActiveSheet()->getColumnDimension($colidbi)->setAutoSize(true);
+		// }
+
+		// foreach (range('B', 'I') as $colidbi) {
+		// 	$excel->getActiveSheet()->getColumnDimension($colidbi)->setAutoSize(false);
+		// }		
+
+		$excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+		$excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
+		if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('C')->getWidth()<21){
+			$excel->getActiveSheet()->getColumnDimension('C')->setWidth(21);
+		}
+		 // Set width kolom C
+		$excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(false); // Set width kolom D
+		$excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true); // Set width kolom E
+		// if($excel->getActiveSheet()->getColumnDimension('G')-)
+		
+		// $excel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+		// print_r($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('C'));
+		// die();
+		if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('G')->getWidth()<=14){
+			$excel->getActiveSheet()->getColumnDimension('G')->setWidth(14);
+		}
+		// print_r($excel->getActiveSheet()->getColumnDimension('G')->getwid;
+		// die();
+		 // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+		// print_r($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('I'));
+		// die();
+		if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('I')->getWidth()<16){
+			$excel->getActiveSheet()->getColumnDimension('I')->setWidth(16);
+		}
+
+
+		$excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
+		$excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+		$excel->getActiveSheet(0)->setTitle("TA " . $tahun);
+		$excel->setActiveSheetIndex(0);
+		// Proses file excel
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="Rincian Service Peralatan Tahun ' . $tahun . '.xlsx"'); // Set nama file excel nya
+		header('Cache-Control: max-age=0');
+		$write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+		$write->save('php://output');
+		exit();
+	}
+
+	public function export_excel_peralatan_bulan()
+	{
+		include APPPATH . 'third_party/PHPExcel/PHPExcel.php';
+		$tahun = $this->input->get('tahun');
+		$bulan = $this->input->get('bulan');
+
+		$excel = new PHPExcel();
+		$excel->getProperties()->setCreator('Ardian FM')
+			->setLastModifiedBy('Ardian FM')
+			->setTitle("Rincian Service Peralatan NAVARA")
+			->setSubject("NAVARA")
+			->setDescription("Laporan Semua Data Peralatan di Navara");
+		$style_col = array(
+			'font' => array('bold' => true),
+			'alignment' => array(
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+			),
+			'borders' => array(
+				'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+				'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+				'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+				'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+		$style_row = array(
+			'alignment' => array(
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+			),
+			'borders' => array(
+				'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+				'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+				'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+				'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+
+		$data_rincian = $this->home_m->data_servis_peralatan_iduser_bulan($tahun, $bulan);
+		// $data_rincian = $this->home_m->data_servis_peralatan_iduser($tahun);
+
+		// print_r($data_rincian);
+		// die();
+		
+		if ($bulan == 1) {
+			$bulanteks = 'januari';
+		} else if ($bulan == 2) {
+			$bulanteks = 'februari';
+		} else if ($bulan == 3) {
+			$bulanteks = 'maret';
+		} else if ($bulan == 4) {
+			$bulanteks = 'april';
+		} else if ($bulan == 5) {
+			$bulanteks = 'mei';
+		} else if ($bulan == 6) {
+			$bulanteks = 'juni';
+		} else if ($bulan == 7) {
+			$bulanteks = 'juli';
+		} else if ($bulan == 8) {
+			$bulanteks = 'agustus';
+		} else if ($bulan == 9) {
+			$bulanteks = 'september';
+		} else if ($bulan == 10) {
+			$bulanteks = 'oktober';
+		} else if ($bulan == 11) {
+			$bulanteks = 'november';
+		} else if ($bulan == 12) {
+			$bulanteks = 'desember';
+		}
+		// print_r($bulanteks);
+		// die();
+
+		$result=array();
+		$no=0;
+		foreach($data_rincian as $key=>$dr){
+			$id_user = $data_rincian[$key]['id'];
+			$data_rincian[$key][$bulanteks] = $this->home_m->lap_alat($tahun, $bulan, $id_user);
+			
+			// print_r($data_rincian);
+			// die();
+		}
+		// print_r($data_rincian);
+		// die();
+		
+		$no = 1; // Untuk penomoran tabel, di awal set dengan 1
+		$numrow = 1; // Set baris pertama untuk isi tabel adalah baris ke 4
+		$numrow2 = 2;
+		$numrow4 = 4;
+		$numrow5 = 5;
+		$numrow7 = 7;
+		$numrow8 = 8;
+		$numrow9 = 9;
+		$result = array();
+		// $colid_b = 'B';
+		// $colid_i = 'I';
+		foreach ($data_rincian as $key => $val) {
+			// $val2 = $januari[$key];
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow,"KARTU PEMELIHARAAN BARANG INVENTARIS");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow.':'.'I'.$numrow);
+
+			// $excel->getActiveSheet()->mergeCells('B'.$numrow':I'.$numrow);
+			$excel->getActiveSheet()->getStyle('B'.$numrow)->getFont()->setBold(TRUE);
+			$excel->getActiveSheet()->getStyle('B'.$numrow)->getFont()->setSize(12);
+			$excel->getActiveSheet()->getStyle('B'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow2, "DINAS KESEHATAN KOTA SEMARANG TAHUN ANGGARAN ".$tahun." BULAN ".strtoupper($bulanteks));
+			$excel->getActiveSheet()->mergeCells('B'.$numrow2.':I'.$numrow2);
+			$excel->getActiveSheet()->getStyle('B'.$numrow2)->getFont()->setBold(TRUE);
+			$excel->getActiveSheet()->getStyle('B'.$numrow2)->getFont()->setSize(12);
+			$excel->getActiveSheet()->getStyle('B'.$numrow2)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow4, "NAMA UNIT");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow4.':C'.$numrow4);
+			$excel->getActiveSheet()->getStyle('B'.$numrow4)->getFont()->setSize(12);
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow4, ": DKK");
+			$excel->getActiveSheet()->getStyle('D'.$numrow4)->getFont()->setSize(12);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow5, "PEMEGANG/LOKASI");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow5.':C'.$numrow5);
+			$excel->getActiveSheet()->getStyle('B'.$numrow5)->getFont()->setSize(12);
+
+			$result[$key] = $val;
+
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow5, ": ".$result[$key]['name'].'/'.$result[$key]['bidang']);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow7, "NO");
+			$excel->getActiveSheet()->mergeCells('B'.$numrow7.':B'.$numrow8);
+			$excel->getActiveSheet()->getStyle('B'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('B'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			
+			$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow7, "NAMA BARANG/MERK");
+			$excel->getActiveSheet()->mergeCells('C'.$numrow7.':C'.$numrow8);
+			$excel->getActiveSheet()->getStyle('C'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('C'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$excel->getActiveSheet()->getColumnDimension('C')->setWidth(21);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow7, "TANGGAL PERBAIKAN");
+			$excel->getActiveSheet()->mergeCells('D'.$numrow7.':F'.$numrow7);
+			$excel->getActiveSheet()->getStyle('D'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow8, "Tanggal");
+			$excel->getActiveSheet()->getStyle('D'.$numrow8)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow8, "Bulan");
+			$excel->getActiveSheet()->getStyle('E'.$numrow8)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow8, "Tahun");
+			$excel->getActiveSheet()->getStyle('F'.$numrow8)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow7, "Nama Rekanan");
+			$excel->getActiveSheet()->mergeCells('G'.$numrow7.':G'.$numrow8);
+			$excel->getActiveSheet()->getStyle('G'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('G'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$excel->getActiveSheet()->getColumnDimension('G')->setWidth(14);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow7, "JUMLAH (Rp)");
+			$excel->getActiveSheet()->mergeCells('H'.$numrow7.':H'.$numrow8);
+			$excel->getActiveSheet()->getStyle('H'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('H'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow7, "KETERANGAN\n(Jenis Service)");
+			$excel->getActiveSheet()->mergeCells('I'.$numrow7.':I'.$numrow8);
+			$excel->getActiveSheet()->getStyle('I'.$numrow7)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('I'.$numrow7)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$excel->getActiveSheet()->getStyle('I'.$numrow7)->getAlignment()->setWrapText(true);
+			$excel->getActiveSheet()->getColumnDimension('I')->setWidth(16);
+			
+			$nod=0;
+			if($result[$key]['januari']!=null){
+				if($key==0){
+					$numrow91=9;	
+				}
+				else{
+					$numrow91=$numrow9;
+				}
+				foreach ($result[$key]['januari'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow91, $ky+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow91, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow91, 
+						substr($result[$key]['januari'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow91, 
+						substr($result[$key]['januari'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow91, 
+						substr($result[$key]['januari'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow91, 
+						$result[$key]['januari'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow91, 
+						$result[$key]['januari'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow91, 
+						$result[$key]['januari'][$ky]['ket_servis']);
+
+					$ky++;
+					$numrow91++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['februari']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['februari'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['februari'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['februari'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['februari'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['februari'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['februari'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['februari'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['maret']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['maret'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['maret'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['maret'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['maret'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['maret'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['maret'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['maret'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['april']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['april'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['april'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['april'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['april'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['april'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['april'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['april'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['mei']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['mei'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['mei'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['mei'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['mei'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['mei'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['mei'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['mei'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['juni']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['juni'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['juni'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['juni'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['juni'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['juni'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['juni'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['juni'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['juli']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['juli'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['juli'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['juli'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['juli'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['juli'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['juli'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['juli'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['agustus']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['agustus'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['agustus'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['agustus'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['agustus'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['agustus'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['agustus'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['agustus'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['september']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['september'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['september'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['september'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['september'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['september'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['september'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['september'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['oktober']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['oktober'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['oktober'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['oktober'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['oktober'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['oktober'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['oktober'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['oktober'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['november']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['november'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['november'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['november'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['november'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['november'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['november'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['november'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+			}
+
+			if($result[$key]['desember']!=null){
+				if($key==0){
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null
+						||$result[$key]['november']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				else{
+					if($result[$key]['januari']!=null
+						||$result[$key]['februari']!=null
+						||$result[$key]['maret']!=null
+						||$result[$key]['april']!=null
+						||$result[$key]['mei']!=null
+						||$result[$key]['juni']!=null
+						||$result[$key]['juli']!=null
+						||$result[$key]['agustus']!=null
+						||$result[$key]['september']!=null
+						||$result[$key]['oktober']!=null
+						||$result[$key]['november']!=null){
+						// $ky;
+						$numrow92=$numrow9+$nod;
+					}
+					else{
+						$numrow92=$numrow9;
+					}
+				}
+				foreach ($result[$key]['desember'] as $ky => $value) {
+					$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow92, $nod+1);
+					$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow92, $result[$key]['merk']);
+					$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow92, 
+						substr($result[$key]['desember'][$ky]['tgl_servis'], 8, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow92, 
+						substr($result[$key]['desember'][$ky]['tgl_servis'], 5, 2));
+					$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow92, 
+						substr($result[$key]['desember'][$ky]['tgl_servis'], 0, 4));
+					$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow92, 
+						$result[$key]['desember'][$ky]['tempat_servis']);
+					$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow92, 
+						$result[$key]['desember'][$ky]['biaya']);
+					$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow92, 
+						$result[$key]['desember'][$ky]['ket_servis']);
+
+					// $ky++;
+					$numrow92++;
+					$nod++;
+				}
+
+			}
+
+			$num9n=$numrow9+$nod;
+			
+			//no center
+			$excel->getActiveSheet()->getStyle('B'.$numrow9.':B'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('B'.$numrow9.':B'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			//nama center
+			// $excel->getActiveSheet()->getStyle('C'.$numrow9.':C'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			// $excel->getActiveSheet()->getStyle('C'.$numrow9.':C'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			//tanngal
+			$excel->getActiveSheet()->getStyle('D'.$numrow9.':D'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('D'.$numrow9.':D'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			//bulan
+			$excel->getActiveSheet()->getStyle('E'.$numrow9.':E'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('E'.$numrow9.':E'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			//tahun
+			$excel->getActiveSheet()->getStyle('F'.$numrow9.':F'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('F'.$numrow9.':F'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			// $excel->getActiveSheet()->getStyle('G'.$numrow9.':G'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			// $excel->getActiveSheet()->getStyle('G'.$numrow9.':G'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+			// $excel->getActiveSheet()->getStyle('I'.$numrow9.':I'.$num9n)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			// $excel->getActiveSheet()->getStyle('I'.$numrow9.':I'.$num9n)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+
+			
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H'.$num9n)->getNumberFormat()
+			->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_ACCOUNTING_IDR);
+
+			// $excel->getActiveSheet()->getStyle('A' . $numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('B' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H' . $numrow7)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('I' . $numrow7)->applyFromArray($style_row);
+
+			$excel->getActiveSheet()->getStyle('B' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H' . $numrow8)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('I' . $numrow8)->applyFromArray($style_row);
+
+			$num9n1=$num9n-1;
+			$excel->getActiveSheet()->getStyle('B'.$numrow9.':B'.$num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C'.$numrow9.':C' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D'.$numrow9.':D' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E'.$numrow9.':E' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F'.$numrow9.':F' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G'.$numrow9.':G' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H'.$numrow9.':H' . $num9n1)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('I'.$numrow9.':I' . $num9n1)->applyFromArray($style_row);
+
+			$no++;
+			$nob++;
+			$numrow=$numrow+11+$nod;
+			$numrow2=$numrow2+11+$nod;
+			$numrow4=$numrow4+11+$nod;
+			$numrow5=$numrow5+11+$nod;
+			$numrow7=$numrow7+11+$nod;
+			$numrow8=$numrow8+11+$nod;
+			$numrow9=$numrow9+11+$nod;
+			$numrow91=$numrow91+11+$nod;
+			$numrow92=$numrow92+11+$nod;
+			// $numrow93=$numrow93+15;
+		}
+
+		// $excel->getActiveSheet()->getStyle('B' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('C' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('D' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('E' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('F' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('G' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('H' . $numrow)->applyFromArray($style_row);
+		// $excel->getActiveSheet()->getStyle('I' . $numrow)->applyFromArray($style_row);
+		// $sheet = $excel->getActiveSheet();
+		// foreach ($sheet->getColumnIterator() as $cols) {
+		// 	$sheet->getColumnDimension($cols->getColumnIndex())->setAutoSize(true);
+		// }
+		// foreach (range('B', 'I') as $colidbi) {
+		// 	$excel->getActiveSheet()->getColumnDimension($colidbi)->setAutoSize(true);
+		// }
+
+		// foreach (range('B', 'I') as $colidbi) {
+		// 	$excel->getActiveSheet()->getColumnDimension($colidbi)->setAutoSize(false);
+		// }		
+
+		$excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+		$excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(false);
+		if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('C')->getWidth()<21){
+			$excel->getActiveSheet()->getColumnDimension('C')->setWidth(21);
+		}
+		 // Set width kolom C
+		$excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(false); // Set width kolom D
+		$excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true); // Set width kolom E
+		// if($excel->getActiveSheet()->getColumnDimension('G')-)
+		
+		// $excel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+		// print_r($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('C'));
+		// die();
+		if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('G')->getWidth()<=14){
+			$excel->getActiveSheet()->getColumnDimension('G')->setWidth(14);
+		}
+		// print_r($excel->getActiveSheet()->getColumnDimension('G')->getwid;
+		// die();
+		 // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true); // Set width kolom E
+		$excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+		// print_r($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('I'));
+		// die();
+		if($excel->getActiveSheet()->calculateColumnWidths()->getColumnDimension('I')->getWidth()<16){
+			$excel->getActiveSheet()->getColumnDimension('I')->setWidth(16);
+		}
+
+
+		$excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
+		$excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+		$excel->getActiveSheet(0)->setTitle("TA " . $tahun);
+		$excel->setActiveSheetIndex(0);
+		// Proses file excel
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="Rincian Service Peralatan Tahun ' . $tahun . '.xlsx"'); // Set nama file excel nya
 		header('Cache-Control: max-age=0');
 		$write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
 		$write->save('php://output');

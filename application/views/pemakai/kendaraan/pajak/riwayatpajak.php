@@ -16,7 +16,6 @@
 
  <!-- Main content -->
  <div class="content">
-<<<<<<< HEAD
    <div class="container">
      <div class="row">
        <div class="col-lg-12">
@@ -29,7 +28,7 @@
                <tr>
                  <th width="30%">ID Aset</th>
                  <th>:</th>
-                 <th><?= $kend['id_assets'] ?></th>
+                 <th colspan="4"><?= $kend['id_assets'] ?></th>
                </tr>
                <tr>
                  <th>No. Polisi</th>
@@ -39,7 +38,7 @@
                <tr>
                  <th>Jenis</th>
                  <th>:</th>
-                 <th><?= strtoupper($kend['jenis']) ?></th>
+                 <th colspan="4"><?= strtoupper($kend['jenis']) ?></th>
                </tr>
                <tr>
                  <th>Merk</th>
@@ -49,7 +48,7 @@
                <tr>
                  <th>Tipe</th>
                  <th>:</th>
-                 <th><?= strtoupper($kend['tipe']) ?></th>
+                 <th colspan="4"><?= strtoupper($kend['tipe']) ?></th>
                </tr>
                <tr>
                  <th>CC</th>
@@ -60,78 +59,40 @@
                <tr>
                  <th>Bahan Bakar</th>
                  <th>:</th>
-                 <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                 <th colspan="4"><?= strtoupper($kend['jenis_bb']) ?></th>
                </tr>
                <tr>
                  <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
                  <th>:</th>
-                 <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+                 <th>Rp. <?= number_format($kend2['pagu_awal'], 2, ',', '.') ?></th>
+
+                 <th>Pagu Kendaraan Tahun <?= date('Y')-1 ?></th>
+                 <th>:</th>
+                 <th>Rp. <?= number_format($kend3['pagu_awal'], 2, ',', '.') ?></th>
                </tr>
                <?php
-=======
-     <div class="container">
-         <div class="row">
-             <div class="col-lg-12">
-                 <div class="card">
-                     <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;">Data Kendaraan Dinas</h3>
-                     </div>
-                     <div class="card-body">
-                         <table class="table table-striped">
-                             <tr>
-                                 <th width="30%">ID Aset</th>
-                                 <th>:</th>
-                                 <th><?= $kend['id_assets'] ?></th>
-                             </tr>
-                             <tr>
-                                 <th>No. Polisi</th>
-                                 <th>:</th>
-                                 <th><?= strtoupper($kend['no_polisi']) ?></th>
-                             </tr>
-                             <tr>
-                                 <th>Jenis</th>
-                                 <th>:</th>
-                                 <th><?= strtoupper($kend['jenis']) ?></th>
-                             </tr>
-                             <tr>
-                                 <th>Merk</th>
-                                 <th>:</th>
-                                 <th><?= strtoupper($kend['merk']) ?></th>
-                             </tr>
-                             <tr>
-                                 <th>Tipe</th>
-                                 <th>:</th>
-                                 <th><?= strtoupper($kend['tipe']) ?></th>
-                             </tr>
-                             <tr>
-                                 <th>CC</th>
-                                 <th>:</th>
-                                 <th><?php if ($kend['besar_cc'] == '') :  ?> -
-                                     <?php else : ?><?= strtoupper($kend['besar_cc']) ?> CC <?php endif ?></th>
-                             </tr>
-                             <tr>
-                                 <th>Bahan Bakar</th>
-                                 <th>:</th>
-                                 <th><?= strtoupper($kend['jenis_bb']) ?></th>
-                             </tr>
-                             <tr>
-                                 <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
-                                 <th>:</th>
-                                 <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
-                             </tr>
-                             <?php
->>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
-                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
-                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                                $terpakai = $kend2['total_biaya_pajak'] + $kend2['total_biaya_servis'] + $kend2['total_biaya_bbm'];
+                                $sisa = $kend2['pagu_awal'] - $terpakai;
+
+                                $terpakai2 = $kend3['total_biaya_pajak'] + $kend3['total_biaya_servis'] + $kend3['total_biaya_bbm'];
+                                $sisa2 = $kend3['pagu_awal'] - $terpakai3; ?>
                <tr>
                  <th>Pagu Terpakai</th>
                  <th>:</th>
                  <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+
+                 <th>Pagu Terpakai</th>
+                 <th>:</th>
+                 <th>Rp. <?= number_format($terpakai2, 2, ',', '.') ?></th>
                </tr>
                <tr>
                  <th>Sisa Pagu</th>
                  <th>:</th>
                  <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
+
+                 <th>Sisa Pagu</th>
+                 <th>:</th>
+                 <th>Rp. <?= number_format($sisa2, 2, ',', '.') ?></th>
                </tr>
              </table>
            </div>
@@ -184,7 +145,9 @@
                      <?php endif ?>
                    </td>
                    <td class="text-center"><?= $value['tgl_pencatatan'] ?></td>
+                   <!-- <td class="text-center"><?//= date('Y',strtotime($value['tgl_pencatatan'])) ?></td> -->
                    <td class="text-center"><?= $value['tahun'] ?></td>
+
                    <td class="text-center">
                      <?= "Rp. " . number_format($value['total_pajak'], 2, ',', '.'); ?>
                    </td>

@@ -1,71 +1,78 @@
  <!-- Content Header (Page header) -->
  <div class="content-header">
-     <div class="container">
-         <div class="row mb-2">
-             <div class="col-sm-6">
-                 <!-- <h1 class="m-0"> Data  User Navara <small>NAVARA</small></h1> -->
-             </div><!-- /.col -->
-             <div class="col-sm-6">
-                 <ol class="breadcrumb float-sm-right">
-                 </ol>
-             </div><!-- /.col -->
-         </div><!-- /.row -->
-     </div><!-- /.container-fluid -->
+   <div class="container">
+     <div class="row mb-2">
+       <div class="col-sm-6">
+         <!-- <h1 class="m-0"> Data  User Navara <small>NAVARA</small></h1> -->
+       </div><!-- /.col -->
+       <div class="col-sm-6">
+         <ol class="breadcrumb float-sm-right">
+         </ol>
+       </div><!-- /.col -->
+     </div><!-- /.row -->
+   </div><!-- /.container-fluid -->
  </div>
  <!-- /.content-header -->
 
  <!-- Main content -->
  <div class="content">
-     <div class="container">
-         <div class="row">
-             <div class=" col-lg-12">
-                 <div class="card">
-                     <div class="card-header" style="background-color:#4a2f3a;">
-                         <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
-                     </div>
-                     <div class="card-header">
-                     </div>
+   <div class="container">
+     <div class="row">
+       <div class=" col-lg-12">
+         <div class="card">
+           <div class="card-header" style="background-color:#4a2f3a;">
+             <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
+           </div>
+           <div class="card-header">
+           </div>
 
-                     <div class="card-body">
-                         <div class="card-body box-profile">
-                             <div class="text-center">
-                                 <img class="profile-user-img img-fluid img-circle"
-                                     src="<?php echo base_url(); ?>assets/logo/user.png" alt="User profile picture">
-                             </div>
+           <div class="card-body">
+             <div class="card-body box-profile">
+               <div class="text-center">
+                 <img class="profile-user-img img-fluid img-circle" src="<?php echo base_url(); ?>assets/logo/user.png"
+                   alt="User profile picture">
+               </div>
 
-                             <h3 class="profile-username text-center"><?= $user['name'] ?></h3>
-                             <h5 class="text-dark text-center"><?= $user['nip_user'] ?></h5>
+               <h3 class="profile-username text-center"><?= $user['name'] ?></h3>
+               <h5 class="text-dark text-center"><?= $user['nip_user'] ?></h5>
 
-                             <p class="text-muted text-center"><?= $user['wilayah'] ?></p>
+               <p class="text-muted text-center"><?= $user['wilayah'] ?></p>
 
-                             <ul class="list-group list-group-unbordered mb-3">
-                                 <?php if ($this->session->userdata('role') == 'Pemakai') : ?>
-                                 <li class="list-group-item">
-                                     <b>NIP</b> <a class="float-right"><?= $user['nip_user'] ?></a>
-                                 </li>
-                                 <?php else : ?>
-                                 <li class="list-group-item">
-                                     <b>Username</b> <a class="float-right"><?= $user['username'] ?></a>
-                                 </li>
-                                 <?php endif ?>
-                                 <li class="list-group-item">
-                                     <b>Role</b> <a class="float-right"><?php if ($user['role'] == 'Pemakai') : ?>
-                                         Pemakai Kendaraan <?php else : ?><?= $user['role'] ?> <?php endif ?></a>
-                                 </li>
-                             </ul>
-                             <div class="d-flex justify-content-center">
-                                 <div class="card-footer col-md-4">
-                                     <?php echo anchor('profile/ubahdata/?id=' . $user['id'], '<b>Ubah Data</b>', [
+               <ul class="list-group list-group-unbordered mb-3">
+                 <?php if ($this->session->userdata('role') == 'Pemakai') : ?>
+                 <li class="list-group-item">
+                   <b>NIP</b> <a class="float-right"><?= $user['nip_user'] ?></a>
+                 </li>
+                 <?php else : ?>
+                 <li class="list-group-item">
+                   <b>Username</b> <a class="float-right"><?= $user['username'] ?></a>
+                 </li>
+                 <?php endif ?>
+                 <li class="list-group-item">
+                   <b>Role</b> <a class="float-right"><?php if ($user['role'] == 'Pemakai') : ?>
+                     Pemakai Kendaraan <?php else : ?><?= $user['role'] ?> <?php endif ?></a>
+                 </li>
+               </ul>
+               <div class="d-flex justify-content-center">
+                 <div class="card-footer col-md-3 me-2">
+                   <?php echo anchor('profile/ubahdata/?id=' . $user['id'], '<b>Ubah Data</b>', [
                                             'class' => 'btn btn-primary btn-block ',
                                         ]); ?>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
                  </div>
+                 <div class="card-footer col-md-3 me-2">
+                   <?php echo anchor('profile/reset/?id=' . $user['id'], '<b>Reset Password</b>', [
+                                            'class' => 'btn btn-danger btn-block confirm',
+
+                                        ]); ?>
+
+                 </div>
+               </div>
              </div>
+           </div>
          </div>
-         <!-- /.row -->
-     </div><!-- /.container-fluid -->
+       </div>
+     </div>
+     <!-- /.row -->
+   </div><!-- /.container-fluid -->
  </div>
  <!-- /.content -->

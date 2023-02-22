@@ -35,6 +35,14 @@
                             <!-- <h4 class="modal-title">Form Edit Riwayat Servis</h4> -->
                         </div>
                         <div class="modal-body">
+                            <!-- <div class="row">
+                             <div class="col-md-12">
+                               <div class="form-group">
+                                 <label>Tanggal Pengajuan</label>
+                                 <input type="text" class="form-control pilihtanggal" name="dari" placeholder="Tanggal Servis" required>
+                               </div>
+                             </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">

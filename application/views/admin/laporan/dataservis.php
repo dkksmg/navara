@@ -76,14 +76,19 @@
                <div class="col-md-3">
                  <?php
                   $tahun = $this->input->get('tahun');
-                  if (isset($rekap) && $rekap != '') : ?>
-                 <?php if ($bulan == 'all') : ?>
+                  if (isset($rekap) && $rekap != '') { ?>
+                 <?php if ($bulan == 'all') { ?>
                  <a href="<?= site_url('laporan/export_excel?tahun=' . $tahun) ?>" class="btn btn-sm btn-warning"><i
                      class="fa-solid fa-file-excel"></i>
                    Export
                    Excel</a>
-                 <?php endif ?>
-                 <?php endif; ?>
+                 <?php } else{ $bulan = $this->input->get('bulan'); ?>
+                  <a href="<?= site_url('laporan/export_excel_bulan?tahun=' . $tahun.'&bulan='.$bulan.'') ?>" class="btn btn-sm btn-warning"><i
+                     class="fa-solid fa-file-excel"></i>
+                   Export
+                   Excel</a>
+                 <?php };};  ?>
+                 <?//php endif; ?>
                </div>
              </div>
            </div>
@@ -113,8 +118,8 @@
                      <th class="text-center" colspan="5">Oktober</th>
                      <th class="text-center" colspan="5">November</th>
                      <th class="text-center" colspan="5">Desember</th>
-                     <th class="text-center" rowspan="2">Total Pengeluaran</th>
                      <th class="text-center" rowspan="2">Sisa</th>
+                     <th class="text-center" rowspan="2">Total Pengeluaran</th>
                    </tr>
                    <tr>
                      <th class="text-center">Sparepart</th>
@@ -293,8 +298,9 @@
                      <th class="text-center" colspan="5">
                        <?= $bln_v; ?>
                      </th>
+                     
+                     <th class="text-center" rowspan="2">Sisa</th>
                      <th class="text-center" rowspan="2">Total Pengeluaran</th>
-                     <!-- <th class="text-center" rowspan="2">Sisa</th> -->
                    </tr>
                    <tr>
                      <th class="text-center">Sparepart</th>
@@ -330,9 +336,11 @@
                      <td class="text-center"> <?= "Rp. " . number_format((float)$bln, 2, ',', '.'); ?>
                      </td>
                      <?php endforeach ?>
+                     <!-- <td class="text-center">
+                       <?//= "Rp. " . number_format((float)$rekap[$i]['pagu_awal'] - $totalpagu, 2, ',', '.'); ?></td> -->
+                     <td class="text-center"><?= "Rp. " . number_format((float)$totalpagu, 2, ',', '.'); ?></td>
                      <td class="text-center">
                        <?= "Rp. " . number_format((float)$rekap[$i]['pagu_awal'] - $totalpagu, 2, ',', '.'); ?></td>
-                     <!-- <td class="text-center"><?= "Rp. " . number_format((float)$totalpagu, 2, ',', '.'); ?></td> -->
                    </tr>
                    <?php endfor ?>
                    <?php endif ?>

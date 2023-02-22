@@ -22,7 +22,7 @@
                                 <tr>
                                     <th width="30%">ID Aset</th>
                                     <th>:</th>
-                                    <th><?= $kend['id_assets'] ?></th>
+                                    <th colspan="4"><?= $kend['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
@@ -32,7 +32,7 @@
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis']) ?></th>
+                                    <th colspan="4"><?= strtoupper($kend['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
@@ -42,7 +42,7 @@
                                 <tr>
                                     <th>Tipe</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['tipe']) ?></th>
+                                    <th colspan="4"><?= strtoupper($kend['tipe']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>CC</th>
@@ -53,25 +53,41 @@
                                 <tr>
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                                    <th colspan="4"><?= strtoupper($kend['jenis_bb']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
                                     <th>:</th>
                                     <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+
+                                    <th>Pagu Kendaraan Tahun <?= date('Y')-1 ?></th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
                                 </tr>
                                 <?php
                                 $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
-                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                                $sisa = $kend['pagu_awal'] - $terpakai;
+
+                                $terpakai2 = $kend2['total_biaya_pajak'] + $kend2['total_biaya_servis'] + $kend2['total_biaya_bbm'];
+                                $sisa2 = $kend2['pagu_awal'] - $terpakai2;
+                                 ?>
                                 <tr>
                                     <th>Pagu Terpakai</th>
                                     <th>:</th>
                                     <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+
+                                    <th>Pagu Terpakai</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($terpakai2, 2, ',', '.') ?></th>
                                 </tr>
                                 <tr>
                                     <th>Sisa Pagu</th>
                                     <th>:</th>
                                     <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
+
+                                    <th>Sisa Pagu</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($sisa2, 2, ',', '.') ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -122,7 +138,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Service</label>
-                                            <input class="form-control" name="service" value="<?= $servis['keluhan'] ?>"
+                                            <input class="form-control" name="service" value="<?= $servis['service'] ?>"
                                                 id="service" placeholder="Biaya Servis" type="number" onkeyup="sum()"
                                                 required />
                                         </div>
@@ -131,14 +147,14 @@
                                         <div class="form-group">
                                             <label>Sparepart</label>
                                             <input class="form-control" name="sparepart"
-                                                value="<?= $servis['perbaikan'] ?>" id="sparepart"
+                                                value="<?= $servis['sparepart'] ?>" id="sparepart"
                                                 placeholder="Biaya Sparepart" onkeyup="sum()" type="number" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Oli</label>
-                                            <input class="form-control" name="oli" value="<?= $servis['lain_lain'] ?>"
+                                            <input class="form-control" name="oli" value="<?= $servis['oli'] ?>"
                                                 id="oli" placeholder="Biaya Oli" onkeyup="sum()" type="number"
                                                 required />
                                         </div>

@@ -22,7 +22,7 @@
                                 <tr>
                                     <th width="30%">ID Aset</th>
                                     <th>:</th>
-                                    <th><?= $value['id_assets'] ?></th>
+                                    <th colspan="4"><?= $value['id_assets'] ?></th>
                                 </tr>
                                 <tr>
                                     <th>No. Polisi</th>
@@ -32,7 +32,7 @@
                                 <tr>
                                     <th>Jenis</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis']) ?></th>
+                                    <th colspan="4"><?= strtoupper($kend['jenis']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Merk</th>
@@ -42,7 +42,7 @@
                                 <tr>
                                     <th>Tipe</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['tipe']) ?></th>
+                                    <th colspan="4"><?= strtoupper($kend['tipe']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>CC</th>
@@ -53,25 +53,41 @@
                                 <tr>
                                     <th>Bahan Bakar</th>
                                     <th>:</th>
-                                    <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                                    <th colspan="4"><?= strtoupper($kend['jenis_bb']) ?></th>
                                 </tr>
                                 <tr>
                                     <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
                                     <th>:</th>
                                     <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+
+                                    <th>Pagu Kendaraan Tahun <?= date('Y')-1 ?></th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($kend2['pagu_awal'], 2, ',', '.') ?></th>
                                 </tr>
                                 <?php
                                 $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
-                                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                                $sisa = $kend['pagu_awal'] - $terpakai;
+
+                                $terpakai2 = $kend2['total_biaya_pajak'] + $kend2['total_biaya_servis'] + $kend2['total_biaya_bbm'];
+                                $sisa2 = $kend2['pagu_awal'] - $terpakai2;
+                                 ?>
                                 <tr>
                                     <th>Pagu Terpakai</th>
                                     <th>:</th>
                                     <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+
+                                    <th>Pagu Terpakai</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($terpakai2, 2, ',', '.') ?></th>
                                 </tr>
                                 <tr>
                                     <th>Sisa Pagu</th>
                                     <th>:</th>
                                     <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
+
+                                    <th>Sisa Pagu</th>
+                                    <th>:</th>
+                                    <th>Rp. <?= number_format($sisa2, 2, ',', '.') ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -98,22 +114,9 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Tahun</label>
-                                            <?php
-                                            $year_start  = 2000;
-                                            $year_end = date('Y') + 20;
-                                            $user_selected_year = date('Y');
-
-                                            echo '<select id="year" required class="form-control" name="tahun_pajak" disabled readonly>' . "\n";
-                                            for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
-                                                if ($value['tahun'] == null) :
-                                                    $selected = ($user_selected_year == $i_year ? ' selected' : '');
-                                                else :
-                                                    $selected = ($value['tahun'] == $i_year ? ' selected' : '');
-                                                endif;
-                                                echo '<option value="' . $i_year . '"' . $selected . '>' . $i_year . '</option>' . "\n";
-                                            }
-                                            echo '</select>' . "\n";
-                                            ?>
+                                            <select class="form-control" name="tahun_pajak" readonly required>
+                                                <option value="<?=$value['tahun']?>"><?=$value['tahun']?></option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

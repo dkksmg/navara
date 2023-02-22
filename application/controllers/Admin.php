@@ -41,6 +41,11 @@ class Admin extends CI_Controller
             $data = [];
             $data['paguall'] = $this->admin_m->pagu_kendaraan($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id, $tahun);
+            // print_r($data['pagu']);
+            // die();
+            // print_r($this->db->last_query());
+            // die();
+            $data['pagu2'] = $this->home_m->pagukendaraanById($id, $tahun-1);
             $data['kend'] = $this->home_m->kendaraanByid($id);
             $data['pmk'] = $this->home_m->pemakaiKendById($id);
             $data['title'] = 'Pagu Anggaran Tahunan Kendaraan Dinas';
@@ -114,6 +119,7 @@ class Admin extends CI_Controller
             $data = [];
             $data['pagukend'] = $this->admin_m->datapagu_kendaraanbyid($id);
             $data['pagu'] = $this->home_m->pagukendaraanById($id_kend, $tahun);
+            $data['pagu2'] = $this->home_m->pagukendaraanById($id_kend, $tahun-1);
             $data['pmk'] = $this->home_m->pemakaiKendById($id_kend);
             $data['kend'] = $this->home_m->kendaraanByid($id_kend);
             $data['title'] = 'Edit Pagu Anggaran Kendaraan Dinas';
@@ -283,4 +289,151 @@ class Admin extends CI_Controller
             redirect('pemakai/riwayatbbm');
         }
     }
+
+    public function pagu_peralatan()
+    {
+        $id = $this->input->get('id');
+        // $cek_id = $this->home_m->cek_id_riwayat_pagu($id);
+        $tahun = date('Y');
+        // if ($cek_id != '') {
+            $data = [];
+            // $data['paguall'] = $this->admin_m->pagu_kendaraan($id);
+            $data['paguall'] = $this->admin_m->pagu_peralatan($id);
+            $data['pagu'] = $this->home_m->paguperalatanById($id, $tahun);
+            $data['pagu2'] = $this->home_m->paguperalatanById($id, $tahun-1);
+            $data['alat'] = $this->home_m->peralatanByid($id);
+            $data['terpakai'] = $this->home_m->cek_datapagu_peralatan($id, $tahun);
+            $data['terpakai2'] = $this->home_m->cek_datapagu_peralatan($id, $tahun-1);
+            $data['tot_terpakai1'] = $data['terpakai'][0]['total_biaya'];
+            $paguawal1=$data['terpakai'][0]['pagu_awal'];
+            $tot1=$data['terpakai'][0]['total_biaya'];
+            $data['sisa1'] = $paguawal1-$tot1;
+            $data['tot_terpakai2'] = $data['terpakai2'][0]['total_biaya'];
+            $paguawal2=$data['terpakai2'][0]['pagu_awal'];
+            $tot2=$data['terpakai2'][0]['total_biaya'];
+            $data['sisa2'] = $paguawal2-$tot2;
+            // print_r($data['pagu']);
+            // die();
+            
+            $data['pmk'] = $this->home_m->pemakaiAlatById($id);
+            $data['title'] = 'Pagu Anggaran Tahunan Peralatan Dinas';
+            $data['title_cek'] = 'Cek Sisa Pagu Peralatan Dinas';
+
+            // $data['rekap'] = $this->home_m->cek_datapagu_peralatan($id, "2023");
+            // print_r($data['rekap']);
+            // die();
+            if ($this->input->get('tahun')) {
+                $tahun = $this->input->get('tahun');
+                
+                $data['tahun'] = $tahun;
+                $data['rekap'] = $this->home_m->cek_datapagu_peralatan($id, $tahun);
+                // print_r($data['rekap']);
+                // die();
+                // print_r($this->db->last_query());
+                // die();
+                // print_r($data['rekap']);
+                // die();
+            //     $data['title_cek'] = 'Cek Sisa Pagu Kendaraan Dinas Tahun ' . $tahun . '';
+            }
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pagu/peralatan/paguperalatan', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        // } else {
+        //     show_404();
+        // }
+    }
+
+    public function editpaguperalatan()
+    {
+        $id_ps = $this->input->get('id_ps');
+        $id_alat = $this->input->get('id_alat');
+        $tahun = date('Y');
+        // $cek_id = $this->home_m->cek_id_edit_riwayat_pagu($id);
+        // if ($cek_id != '') {
+            $data = [];
+            $data['pagu_alat'] = $this->admin_m->datapagu_peralatanbyid($id_ps);
+            $data['pagu'] = $this->home_m->paguPeralatanById($id_alat, $tahun);
+            $data['pagu2'] = $this->home_m->paguPeralatanById($id_alat, $tahun-1);
+            $data['pmk'] = $this->home_m->pemakaiAlatById($id_alat);
+            $data['alat'] = $this->home_m->peralatanByid($id_alat);
+            $data['terpakai'] = $this->home_m->cek_datapagu_peralatan($id_alat, $tahun);
+            $data['terpakai2'] = $this->home_m->cek_datapagu_peralatan($id_alat, $tahun-1);
+            $data['tot_terpakai1'] = $data['terpakai'][0]['total_biaya'];
+            $paguawal1=$data['terpakai'][0]['pagu_awal'];
+            $tot1=$data['terpakai'][0]['total_biaya'];
+            $data['sisa1'] = $paguawal1-$tot1;
+            $data['tot_terpakai2'] = $data['terpakai2'][0]['total_biaya'];
+            $paguawal2=$data['terpakai2'][0]['pagu_awal'];
+            $tot2=$data['terpakai2'][0]['total_biaya'];
+            $data['sisa2'] = $paguawal2-$tot2;
+
+            // print_r($data['pagu_alat']);
+            // die();
+            $data['title'] = 'Edit Pagu Anggaran Peralatan Dinas';
+            $this->load->view('admin/template/header');
+            $this->load->view('admin/pagu/peralatan/editPaguPeralatan', $data);
+            $this->load->view('admin/template/modal');
+            $this->load->view('admin/template/footer');
+        // } else {
+        //     show_404();
+        // }
+    }
+
+    public function prosestambahpaguperalatan()
+    {
+
+        $id = $this->input->get('id');
+        // $jenispagu = $this->input->post('jenis');
+        $cektahun = $this->admin_m->cek_tahun_pagu_peralatan($id, $this->input->post('tahun'));
+        if ($cektahun != '') {
+            $this->session->set_flashdata('danger', 'Anda sudah menginputkan pagu untuk tahun ' . $this->input->post('tahun'));
+            redirect('admin/pagu_peralatan?id=' . $id);
+        } else {
+            $simpan = $this->admin_m->tambahpaguperalatan($id);
+            if ($simpan) {
+                $this->session->set_flashdata('success', 'Tambah Pagu Anggaran Pemeliharaan Berhasil');
+                redirect('admin/pagu_peralatan?id=' . $id);
+            } else {
+                $this->session->set_flashdata('danger', 'Tambah Pagu Anggaran Pemeliharaan Gagal');
+                redirect('admin/pagu_peralatan?id=' . $id);
+            }
+        }
+    }
+
+    public function proseseditpaguperalatan()
+    {
+        $id_ps = $this->input->get('id_ps');
+        $id_alat = $this->input->get('id_alat');
+        // print_r($id);
+        // die();
+        if ($this->input->post()) {
+
+            if ($this->admin_m->updatepaguperalatan($id_ps)) {
+                // print_r($this->db->last_query());
+                // die();
+                $this->session->set_flashdata('success', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Berhasil');
+                redirect('admin/pagu_peralatan?id=' . $id_alat);
+            } else {
+
+                $this->session->set_flashdata('danger', 'Edit Pagu Anggaran ' . $this->input->post('jenis') . ' Gagal');
+                redirect('admin/pagu_peralatan?id=' . $id_alat);
+            }
+        }
+    }
+
+    public function hapuspaguperalatan()
+    {
+        $id_ps = $this->input->get('id_ps');
+        $id_alat = $this->input->get('id_alat');
+        if ($this->admin_m->hapuspaguperalatan($id_ps)) {
+            $this->session->set_flashdata('success', 'Hapus Data Pagu Berhasil');
+            redirect('admin/pagu_peralatan?id=' . $id_alat);
+        } else {
+            $this->session->set_flashdata('danger', 'Hapus Data Pagu gagal');
+            redirect('admin/pagu_peralatan?id=' . $id_alat);
+        }
+    }
+
+
 }

@@ -70,6 +70,12 @@ class Profile_model extends CI_Model
       }
     }
   }
+  public function reset_pw($id_user = null)
+  {
+    $data['password']      = password_hash('dkksmg2022', PASSWORD_BCRYPT);
+    $q = $this->db->where('id', $id_user)->update('users', $data);
+    return $q;
+  }
 
   // ------------------------------------------------------------------------
 

@@ -63,6 +63,7 @@ function id_aset()
     $kodetampil = "KDN-" . $batas;
     return $kodetampil;
 }
+
 function greetings()
 {
     //ubah timezone menjadi jakarta
@@ -153,4 +154,24 @@ function nama_bulan($nama_bulan)
         default:
             return 'bulan tidak valid';
     }
+}
+function id_aset_alat()
+{
+    $ci = &get_instance();
+    $ci->db->select('RIGHT(peralatan.id_asset,4) as id_aset', FALSE);
+    $ci->db->order_by('id_aset', 'DESC');
+    $ci->db->limit(1);
+    $query = $ci->db->get('peralatan');
+    
+    if ($query->num_rows() <> 0) {
+        $data = $query->row();
+        $kode = intval($data->id_aset) + 1;
+    } else {
+        $kode = 1;
+    }
+    $batas = str_pad($kode, 4, "0", STR_PAD_LEFT);
+    $kodetampil = "AST-" . $batas;
+    // print_r($kodetampil);
+    // die();
+    return $kodetampil;
 }

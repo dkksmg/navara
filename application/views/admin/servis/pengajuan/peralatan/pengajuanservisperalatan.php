@@ -1,0 +1,427 @@
+ <!-- Content Header (Page header) -->
+ <div class="content-header">
+   <div class="container">
+     <div class="row mb-2">
+       <div class="col-sm-6">
+         <!-- <h1 class="m-0"> Data  Kendaraan Dinas <small>NAVARA</small></h1> -->
+       </div><!-- /.col -->
+       <div class="col-sm-6">
+         <ol class="breadcrumb float-sm-right">
+         </ol>
+       </div><!-- /.col -->
+     </div><!-- /.row -->
+   </div><!-- /.container-fluid -->
+ </div>
+ <!-- /.content-header -->
+
+ <!-- Main content -->
+ <div class="content">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-12">
+         <?= $this->load->view('admin/template/data_peralatan_layout', '', TRUE); ?>
+         <?= $this->load->view('admin/template/menu_layout_peralatan', '', TRUE); ?>
+       </div>
+       <div class="col-lg-12">
+         <div class="card">
+           <div class="card-header" style="background-color:#4a2f3a;">
+             <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
+           </div>
+           <div id="accordion">
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <div class="card-header" id="heading1">
+                    <h5 class="mb-0" style="text-align: center">
+                      <button class="btn btn-link" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                        <?= date('Y') ?>
+                      </button>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                  <div class="card-header" id="heading2">
+                    <h5 class="mb-0" style="text-align: center;">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                        <?= date('Y')-1 ?>
+                      </button>
+                    </h5>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion">
+              <div class="card-header">
+               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                 Tambah Pengajuan Servis
+               </button>
+             </div>
+             <div class="card-body">
+              <div class="table-responsive">
+               <table class="table table-bordered table-striped example" width="100%;">
+                 <thead>
+                   <tr>
+                     <th class="text-center">No</th>
+                     <th class="text-center">Aksi</th>
+                     <th class="text-center">Tanggal Pengajuan</th>
+                     <th class="text-center">Tempat Servis</th>
+                     <th class="text-center">Keluhan</th>
+                     <th class="text-center">Servis</th>
+                     <th class="text-center">Lain-Lain</th>
+                     <th class="text-center">Status Pengajuan</th>
+                     <th class="text-center">Update By</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <?php $no = 1;
+                                      if ($rp != '') {
+                                          foreach ($rp as $value) { ?>
+                   <tr>
+                     <td class="text-center"><?= $no; ?></td>
+                     <td class="text-center">
+                       <a onclick="deleteConfirm('<?= site_url('home/deletepengajuanservisperalatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         href="#" class="btn btn-sm btn-danger jedatombol"
+                         title="Delete Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                           class="fas fa-trash"></i></a>
+                       <a onclick="editConfirm('<?= site_url('home/editpengajuanservisperalatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         href="#" class="btn btn-sm btn-warning jedatombol"
+                         title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                           class="fas fa-pencil"></i></a>
+                       <a onclick="cetakConfirm('<?= site_url('home/cetakpengajuanservisperalatan?id=' . $value['id_pengajuan'] . '&id_alat=' . $value['id_alat']) ?>')"
+                         href="#"
+                         class="btn btn-sm btn-primary jedatombol <?php if ($value['status_pengajuan'] == 'Wait' || $value['status_pengajuan'] == 'No') : ?> disabled <?php endif; ?>"
+                         title="Cetak Pengajuan Servis"><i
+                           class="fa-solid fa-print"></i></a>
+                       <?php if ($value['status_pengajuan'] == 'No' || $value['status_pengajuan'] == 'Wait') : ?>
+                       <a href="#"
+                         onclick="approveConfirm('<?= site_url('home/approve_pengajuan_peralatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         class="btn btn-sm btn-success jedatombol"
+                         title="Setujui Pengajuan Servis">
+                         <i class="fa-solid fa-badge-check"></i></a>
+                       <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
+                         class="btn btn-sm btn-danger jedatombol"
+                         title="Tolak Pengajuan Servis"><i
+                           class="fa-solid fa-circle-xmark"></i></a>
+                       <a href="#"
+                         onclick="waitConfirm('<?= site_url('home/wait_pengajuan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         class="btn btn-sm btn-dark jedatombol <?php if ($value['status_pengajuan'] == 'Wait') : ?> disabled <?php endif; ?>"
+                         title="Set Wait Pengajuan Servis">
+                         <i class="fa-solid fa-circle-pause"></i></a>
+                       <?php else : ?>
+                       <a href="#" data-toggle="modal" data-target="#modal_reject<?php echo $no ?>"
+                         class="btn btn-sm btn-danger jedatombol"
+                         title="Tolak Pengajuan Servis"><i
+                           class="fa-solid fa-circle-xmark"></i></a>
+                       <a href="#"
+                         onclick="waitConfirm('<?= site_url('home/wait_pengajuan_peralatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         class="btn btn-sm btn-dark jedatombol"
+                         title="Set Wait Pengajuan Servis">
+                         <i class="fa-solid fa-circle-pause"></i></a>
+                       <?php endif; ?>
+                     </td>
+                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
+                     </td>
+                     <td class="text-center"><?= $value['tempat_servis'] ?></td>
+                     <td class="text-center"><?php if ($value['keluhan'] == '') : ?> -
+                       <?php else : ?><?= $value['keluhan'] ?><?php endif ?></td>
+                     <td class="text-center"><?php if ($value['servis'] == '') : ?> -
+                       <?php else : ?><?= $value['servis'] ?><?php endif ?></td>
+                     <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
+                       <?php else : ?><?= $value['lain_lain'] ?><?php endif ?>
+                     </td>
+                     <td class="text-center" width="15%">
+                       <?php if ($value['status_pengajuan'] == 'Wait') : ?>
+                              Perlu dicek <br><i style="color:red" class="fa-solid fa-triangle-exclamation"></i>
+                       <?php elseif ($value['status_pengajuan'] == 'No') : ?>
+                              Ditolak <i class=" fa-solid fa-circle-info" title="<?= $value['reject_reason'] ?>"></i><br><i style="color:red;font-size:12px">
+                         Pengguna dapat menginput data kembali. <br>Reject on
+                         <?= date('d-m-Y H:i:s', strtotime($value['update_pengajuan'])) ?></i>
+                       <?php else : ?>
+                       <?php if ($value['role'] == 'Superadmin' || $value['role'] == 'Admin') : ?>
+                       Disetujui Oleh <?= $value['name'] ?>
+                       <br><i style="color:green;font-size:12px">Approved on
+                         <?= date('d-m-Y H:i:s', strtotime($value['tgl_terima'])) ?></i>
+                       <?php else : ?>
+                       Disetujui
+                       <br><i style="color:green;font-size:12px">Approved on
+                         <?= date('d-m-Y H:i:s', strtotime($value['tgl_terima'])) ?></i>
+                       <?php endif ?>
+                       <?php endif ?>
+                     </td>
+                     <td class="text-center">
+                       <?= $value['name'] ?><br>
+                       <i
+                         style="color:black;font-size:12px"><b><?= date('d-m-Y H:i:s', strtotime($value['update_pengajuan'])) ?></b></i>
+                     </td>
+                   </tr>
+                   <?php $no++;
+                                          }
+                                      } ?>
+                 </tbody>
+               </table>
+              </div>
+             </div>
+            </div>
+            <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
+              <div class="card-header">
+               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                 Tambah Pengajuan Servis
+               </button>
+             </div>
+             <div class="card-body">
+              <div class="table-responsive">
+               <table class="table table-bordered table-striped example" width="100%;">
+                 <thead>
+                   <tr>
+                     <th class="text-center">No</th>
+                     <th class="text-center">Aksi</th>
+                     <th class="text-center">Tanggal Pengajuan</th>
+                     <th class="text-center">Tempat Servis</th>
+                     <th class="text-center">Keluhan</th>
+                     <th class="text-center">Servis</th>
+                     <th class="text-center">Lain-Lain</th>
+                     <th class="text-center">Status Pengajuan</th>
+                     <th class="text-center">Update By</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <?php $no = 1;
+                                      if ($rp2 != '') {
+                                          foreach ($rp2 as $value) { ?>
+                   <tr>
+                     <td class="text-center"><?= $no; ?></td>
+                     <td class="text-center">
+                       <a onclick="deleteConfirm('<?= site_url('home/deletepengajuanservisperalatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         href="#" class="btn btn-sm btn-danger jedatombol"
+                         title="Delete Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                           class="fas fa-trash"></i></a>
+                       <a onclick="editConfirm('<?= site_url('home/editpengajuanservisperalatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         href="#" class="btn btn-sm btn-warning jedatombol"
+                         title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                           class="fas fa-pencil"></i></a>
+                       <a onclick="cetakConfirm('<?= site_url('home/cetakpengajuanservisperalatan?id=' . $value['id_pengajuan'] . '&id_alat=' . $value['id_alat']) ?>')"
+                         href="#"
+                         class="btn btn-sm btn-primary jedatombol <?php if ($value['status_pengajuan'] == 'Wait' || $value['status_pengajuan'] == 'No') : ?> disabled <?php endif; ?>"
+                         title="Cetak Pengajuan Servis"><i
+                           class="fa-solid fa-print"></i></a>
+                       <?php if ($value['status_pengajuan'] == 'No' || $value['status_pengajuan'] == 'Wait') : ?>
+                       <a href="#"
+                         onclick="approveConfirm('<?= site_url('home/approve_pengajuan_peralatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         class="btn btn-sm btn-success jedatombol"
+                         title="Setujui Pengajuan Servis">
+                         <i class="fa-solid fa-badge-check"></i></a>
+                       <a href="#" data-toggle="modal" data-target="#modal_reject2<?php echo $no ?>"
+                         class="btn btn-sm btn-danger jedatombol"
+                         title="Tolak Pengajuan Servis"><i
+                           class="fa-solid fa-circle-xmark"></i></a>
+                       <a href="#"
+                         onclick="waitConfirm('<?= site_url('home/wait_pengajuan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         class="btn btn-sm btn-dark jedatombol <?php if ($value['status_pengajuan'] == 'Wait') : ?> disabled <?php endif; ?>"
+                         title="Set Wait Pengajuan Servis">
+                         <i class="fa-solid fa-circle-pause"></i></a>
+                       <?php else : ?>
+                       <a href="#" data-toggle="modal" data-target="#modal_reject2<?php echo $no ?>"
+                         class="btn btn-sm btn-danger jedatombol"
+                         title="Tolak Pengajuan Servis"><i
+                           class="fa-solid fa-circle-xmark"></i></a>
+                       <a href="#"
+                         onclick="waitConfirm('<?= site_url('home/wait_pengajuan_peralatan?id=' . $value['id_pengajuan'] . '') ?>')"
+                         class="btn btn-sm btn-dark jedatombol"
+                         title="Set Wait Pengajuan Servis">
+                         <i class="fa-solid fa-circle-pause"></i></a>
+                       <?php endif; ?>
+                     </td>
+                     <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
+                     </td>
+                     <td class="text-center"><?= $value['tempat_servis'] ?></td>
+                     <td class="text-center"><?php if ($value['keluhan'] == '') : ?> -
+                       <?php else : ?><?= $value['keluhan'] ?><?php endif ?></td>
+                     <td class="text-center"><?php if ($value['servis'] == '') : ?> -
+                       <?php else : ?><?= $value['servis'] ?><?php endif ?></td>
+                     <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
+                       <?php else : ?><?= $value['lain_lain'] ?><?php endif ?>
+                     </td>
+                     <td class="text-center" width="15%">
+                       <?php if ($value['status_pengajuan'] == 'Wait') : ?>
+                              Perlu dicek <br><i style="color:red" class="fa-solid fa-triangle-exclamation"></i>
+                       <?php elseif ($value['status_pengajuan'] == 'No') : ?>
+                              Ditolak <i class=" fa-solid fa-circle-info" title="<?= $value['reject_reason'] ?>"></i><br><i style="color:red;font-size:12px">
+                         Pengguna dapat menginput data kembali. <br>Reject on
+                         <?= date('d-m-Y H:i:s', strtotime($value['update_pengajuan'])) ?></i>
+                       <?php else : ?>
+                       <?php if ($value['role'] == 'Superadmin' || $value['role'] == 'Admin') : ?>
+                       Disetujui Oleh <?= $value['name'] ?>
+                       <br><i style="color:green;font-size:12px">Approved on
+                         <?= date('d-m-Y H:i:s', strtotime($value['tgl_terima'])) ?></i>
+                       <?php else : ?>
+                       Disetujui
+                       <br><i style="color:green;font-size:12px">Approved on
+                         <?= date('d-m-Y H:i:s', strtotime($value['tgl_terima'])) ?></i>
+                       <?php endif ?>
+                       <?php endif ?>
+                     </td>
+                     <td class="text-center">
+                       <?= $value['name'] ?><br>
+                       <i
+                         style="color:black;font-size:12px"><b><?= date('d-m-Y H:i:s', strtotime($value['update_pengajuan'])) ?></b></i>
+                     </td>
+                   </tr>
+                   <?php $no++;
+                                          }
+                                      } ?>
+                 </tbody>
+               </table>
+              </div>
+             </div>
+            </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     <!-- /.row -->
+   </div><!-- /.container-fluid -->
+ </div>
+ <!-- /.content -->
+ <?php
+    $no = 1;
+    if ($rp != '') :
+        foreach ($rp as $value) : ?>
+ <justify>
+   <div class="modal fade" id="modal_reject<?= $no ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+     <div class="modal-dialog" role="document">
+       <?= form_open('home/reject_pengajuan_peralatan?id=' . $value['id_pengajuan']) ?>
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Yakin ingin menolak Data ini ?</h5>
+           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body">
+           <div class="row">
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Alasan Penolakan</label>
+                 <input type="text" class="form-control" name="reason_reject" placeholder="Masukkan Alasan Penolakan"
+                   value="<?= isset($value) ? $value['reject_reason'] : ""; ?>" required>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="modal-footer justify-content-between">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="sumbit" class="btn btn-primary">Simpan</button>
+
+         </div>
+       </div>
+       <?= form_close() ?>
+     </div>
+   </div>
+ </justify>
+ <?php $no++;
+        endforeach;
+    endif ?>
+
+  <?php
+    $no = 1;
+    if ($rp2 != '') :
+        foreach ($rp2 as $value) : ?>
+ <justify>
+   <div class="modal fade" id="modal_reject2<?= $no ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+     <div class="modal-dialog" role="document">
+       <?= form_open('home/reject_pengajuan_peralatan?id=' . $value['id_pengajuan']) ?>
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Yakin ingin menolak Data ini ?</h5>
+           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body">
+           <div class="row">
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Alasan Penolakan</label>
+                 <input type="text" class="form-control" name="reason_reject" placeholder="Masukkan Alasan Penolakan"
+                   value="<?= isset($value) ? $value['reject_reason'] : ""; ?>" required>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="modal-footer justify-content-between">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="sumbit" class="btn btn-primary">Simpan</button>
+
+         </div>
+       </div>
+       <?= form_close() ?>
+     </div>
+   </div>
+ </justify>
+ <?php $no++;
+        endforeach;
+    endif ?>
+
+ <div class="modal fade" id="modal-xl">
+   <div class="modal-dialog modal-xl">
+     <form method="post" action="<?= site_url('home/prosestambahpengajuanservisperalatan?id=' . $alat['id'] . '') ?>"
+       enctype="multipart/form-data">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h4 class="modal-title">Form Pengajuan Servis</h4>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body">
+          <div class="row">
+             <div class="col-md-12">
+               <div class="form-group">
+                 <label>Tanggal Pengajuan</label>
+                 <input type="text" class="form-control pilihtanggal" name="dari" placeholder="Tanggal Servis" required>
+               </div>
+             </div>
+           </div>
+           <div class="row">
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Tempat Servis</label>
+                 <input type="text" placeholder="Masukkan Tempat Servis" class="form-control" name="tempat_servis">
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Keluhan</label>
+                 <textarea type="text" placeholder="Masukkan Keluhan Peralatan Yang Anda Gunakan" class="form-control"
+                   name="keluhan_peralatan"></textarea>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Servis</label>
+                 <textarea type="text" placeholder="Masukkan Servis Peralatan yang diinginkan" class="form-control"
+                   name="servis_peralatan"></textarea>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Lain - Lain</label>
+                 <textarea type="text" placeholder="" class="form-control" name="lain_lain_peralatan"></textarea>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="modal-footer justify-content-between">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="submit" class="btn btn-primary">Simpan</button>
+
+         </div>
+     </form>
+   </div>
+   <!-- /.modal-content -->
+ </div>
+ <!-- /.modal-dialog -->
+ </div>

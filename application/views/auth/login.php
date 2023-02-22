@@ -27,7 +27,8 @@
         <div class="card card-outline card-success">
             <div class="card-header text-center">
                 <a href="#" class="h1"><b>NAVARA</b><br></a>
-                <p>Layanan servis kendaraan operasional dinas kesehatan</p>
+                <!-- <p>Layanan servis kendaraan operasional dinas kesehatan</p> -->
+                <p>Layanan servis barang operasional dinas kesehatan</p>
             </div>
             <div class="card-body">
                 <!-- <p class="login-box-msg">Login Pemakai</p> -->

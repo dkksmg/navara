@@ -28,7 +28,7 @@
                <tr>
                  <th width="30%">ID Aset</th>
                  <th>:</th>
-                 <th><?= $kend['id_assets'] ?></th>
+                 <th colspan="4"><?= $kend['id_assets'] ?></th>
                </tr>
                <tr>
                  <th>No. Polisi</th>
@@ -38,7 +38,7 @@
                <tr>
                  <th>Jenis</th>
                  <th>:</th>
-                 <th><?= strtoupper($kend['jenis']) ?></th>
+                 <th colspan="4"><?= strtoupper($kend['jenis']) ?></th>
                </tr>
                <tr>
                  <th>Merk</th>
@@ -48,7 +48,7 @@
                <tr>
                  <th>Tipe</th>
                  <th>:</th>
-                 <th><?= strtoupper($kend['tipe']) ?></th>
+                 <th colspan="4"><?= strtoupper($kend['tipe']) ?></th>
                </tr>
                <tr>
                  <th>CC</th>
@@ -59,25 +59,40 @@
                <tr>
                  <th>Bahan Bakar</th>
                  <th>:</th>
-                 <th><?= strtoupper($kend['jenis_bb']) ?></th>
+                 <th colspan="4"><?= strtoupper($kend['jenis_bb']) ?></th>
                </tr>
                <tr>
                  <th>Pagu Kendaraan Tahun <?= date('Y') ?></th>
                  <th>:</th>
                  <th>Rp. <?= number_format($kend['pagu_awal'], 2, ',', '.') ?></th>
+
+                 <th>Pagu Kendaraan Tahun <?= date('Y')-1 ?></th>
+                 <th>:</th>
+                 <th>Rp. <?= number_format($kend2['pagu_awal'], 2, ',', '.') ?></th>
                </tr>
                <?php
-                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
-                $sisa = $kend['pagu_awal'] - $terpakai; ?>
+                                $terpakai = $kend['total_biaya_pajak'] + $kend['total_biaya_servis'] + $kend['total_biaya_bbm'];
+                                $sisa = $kend['pagu_awal'] - $terpakai;
+
+                                $terpakai2 = $kend2['total_biaya_pajak'] + $kend2['total_biaya_servis'] + $kend2['total_biaya_bbm'];
+                                $sisa2 = $kend2['pagu_awal'] - $terpakai2; ?>
                <tr>
                  <th>Pagu Terpakai</th>
                  <th>:</th>
                  <th>Rp. <?= number_format($terpakai, 2, ',', '.') ?></th>
+
+                 <th>Pagu Terpakai</th>
+                 <th>:</th>
+                 <th>Rp. <?= number_format($terpakai2, 2, ',', '.') ?></th>
                </tr>
                <tr>
                  <th>Sisa Pagu</th>
                  <th>:</th>
                  <th>Rp. <?= number_format($sisa, 2, ',', '.') ?></th>
+
+                 <th>Sisa Pagu</th>
+                 <th>:</th>
+                 <th>Rp. <?= number_format($sisa2, 2, ',', '.') ?></th>
                </tr>
              </table>
            </div>
@@ -90,96 +105,218 @@
            <div class="card-header" style="background-color:#4a2f3a;">
              <h3 style="font-weight:bold;color:white;"><?= $title ?></h3>
            </div>
-           <div class="card-header">
-             <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
-               Tambah Pengajuan Servis
-             </button>
-           </div>
-           <div class="card-body">
-             <table class="table table-bordered table-striped example" width="100%;">
-               <thead>
-                 <tr>
-                   <th class="text-center">No</th>
-                   <th class="text-center">Aksi</th>
-                   <th class="text-center">Tanggal Pengajuan</th>
-                   <th class="text-center">Bengkel Tujuan</th>
-                   <th class="text-center">Kilometer Kendaraan</th>
-                   <th class="text-center">Keluhan</th>
-                   <th class="text-center">Servis</th>
-                   <th class="text-center">Lain-Lain</th>
-                   <th class="text-center">Status Pengajuan</th>
-                 </tr>
-               </thead>
-               <tbody>
-                 <?php $no = 1;
-                  if ($rp != '') {
-                    foreach ($rp as $value) { ?>
-                 <tr>
-                   <td class="text-center"><?= $no++; ?></td>
-                   <td class="text-center">
-                     <?php if ($value['status_pengajuan'] == 'No') : ?>
-                     <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
-                       href="#" class="btn btn-sm btn-warning jedatombol"
-                       title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
-                         class="fas fa-pencil"></i></a>
-                     <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
-                     <a onclick="cetakConfirm('<?= site_url('pemakai/cetakpengajuanservis?id=' . $value['id_pengajuan'] . '&id_kend=' . $value['id_kendaraan'] . '') ?>')"
-                       href="#" class="btn btn-sm btn-primary jedatombol"
-                       title="Cetak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
-                         class="fa-solid fa-print"></i></a>
-                     <?php else : ?>
-                     <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
-                       href="#" class="btn btn-sm btn-warning jedatombol disabled"
-                       title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
-                         class="fas fa-pencil"></i></a>
-                     <?php endif; ?>
-                   </td>
-                   <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
-                   </td>
-                   <td class="text-center"><?= $value['bengkel_tujuan'] ?></td>
-                   <td class="text-center">
-                     <?php if ($value['km_service'] == '') : ?> -
-                     <?php else : ?><?= $value['km_service'] ?>
-                     <?php endif ?>
-                   </td>
-                   <td class="text-center">
-                     <?php if ($value['keluhan'] == '') : ?> -
-                     <?php else : ?><?= $value['keluhan'] ?>
-                     <?php endif ?>
-                   </td>
-                   <td class="text-center"><?php if ($value['service'] == '') : ?> -
-                     <?php else : ?><?= $value['service'] ?><?php endif ?></td>
-                   <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
-                     <?php else : ?><?= $value['lain_lain'] ?><?php endif ?>
-                   </td>
-                   <td class="text-center">
-                     <?php if ($value['status_pengajuan'] == 'No') : ?>
-                     Ditolak<br><i style="color:red;font-size:12px">
-                       <?= $value['reject_reason'] ?>. Jika
-                       ingin melanjutkan
-                       pengajuan. Silakan
-                       melakukan pengajuan ulang.<br>Reject on
-                       <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                     <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
-                     Disetujui
-                     <br><i style="color:green;font-size:12px">Silakan mengisi form Riwayat
-                       Servis
-                       jika servis telah selesai. <a
-                         href="<?php echo base_url('pemakai/riwayatservis?id=' . $kend['idk']); ?>">
-                         Klik
-                         disini</a>.<br>Approved on
-                       <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
-                     <?php else : ?>
-                     Sedang diverifikasi
-                     <?php endif; ?>
+           <div id="accordion">
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <div class="card-header" id="heading1">
+                    <h5 class="mb-0" style="text-align: center">
+                      <button class="btn btn-link" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                        <?= date('Y') ?>
+                      </button>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                  <div class="card-header" id="heading2">
+                    <h5 class="mb-0" style="text-align: center;">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                        <?= date('Y')-1 ?>
+                      </button>
+                    </h5>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion">
+              <div class="card-header">
+               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl">
+                 Tambah Pengajuan Servis
+               </button>
+              </div>
+              <div class="card-body">
+                 <table class="table table-bordered table-striped example" width="100%;">
+                   <thead>
+                     <tr>
+                       <th class="text-center">No</th>
+                       <th class="text-center">Aksi</th>
+                       <th class="text-center">Tanggal Pengajuan</th>
+                       <th class="text-center">Bengkel Tujuan</th>
+                       <th class="text-center">Kilometer Kendaraan</th>
+                       <th class="text-center">Keluhan</th>
+                       <th class="text-center">Servis</th>
+                       <th class="text-center">Lain-Lain</th>
+                       <th class="text-center">Status Pengajuan</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <?php $no = 1;
+                                        if ($rp != '') {
+                                            foreach ($rp as $value) { ?>
+                     <tr>
+                       <td class="text-center"><?= $no++; ?></td>
+                       <td class="text-center">
+                         <?php if ($value['status_pengajuan'] == 'No') : ?>
+                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
+                           href="#" class="btn btn-sm btn-warning jedatombol"
+                           title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                             class="fas fa-pencil"></i></a>
+                         <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
+                         <a onclick="cetakConfirm('<?= site_url('pemakai/cetakpengajuanservis?id=' . $value['id_pengajuan'] . '&id_kend=' . $value['id_kendaraan'] . '') ?>')"
+                           href="#" class="btn btn-sm btn-primary jedatombol"
+                           title="Cetak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                             class="fa-solid fa-print"></i></a>
+                         <?php else : ?>
+                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
+                           href="#" class="btn btn-sm btn-warning jedatombol disabled"
+                           title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                             class="fas fa-pencil"></i></a>
+                         <?php endif; ?>
+                       </td>
+                       <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
+                       </td>
+                       <td class="text-center"><?= $value['bengkel_tujuan'] ?></td>
+                       <td class="text-center">
+                         <?php if ($value['km_service'] == '') : ?> -
+                         <?php else : ?><?= $value['km_service'] ?>
+                         <?php endif ?>
+                       </td>
+                       <td class="text-center">
+                         <?php if ($value['keluhan'] == '') : ?> -
+                         <?php else : ?><?= $value['keluhan'] ?>
+                         <?php endif ?>
+                       </td>
+                       <td class="text-center"><?php if ($value['service'] == '') : ?> -
+                         <?php else : ?><?= $value['service'] ?><?php endif ?></td>
+                       <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
+                         <?php else : ?><?= $value['lain_lain'] ?><?php endif ?>
+                       </td>
+                       <td class="text-center">
+                         <?php if ($value['status_pengajuan'] == 'No') : ?>
+                         Ditolak<br><i style="color:red;font-size:12px">
+                           <?= $value['reject_reason'] ?>. Jika
+                           ingin melanjutkan
+                           pengajuan. Silakan
+                           melakukan pengajuan ulang.<br>Reject on
+                           <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                         <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
+                         Disetujui
+                         <br><i style="color:green;font-size:12px">Silakan mengisi form Riwayat
+                           Servis
+                           jika servis telah selesai. <a
+                             href="<?php echo base_url('pemakai/riwayatservis?id=' . $kend['idk']); ?>">
+                             Klik
+                             disini</a>.<br>Approved on
+                           <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                         <?php else : ?>
+                         Sedang diverifikasi
+                         <?php endif; ?>
 
-                   </td>
-                 </tr>
-                 <?php }
-                  } ?>
-               </tbody>
-             </table>
+                       </td>
+                     </tr>
+                     <?php }
+                                        } ?>
+                   </tbody>
+                 </table>
+              </div>
+            </div>
+            <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
+              <div class="card-header">
+               <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-xl2">
+                 Tambah Pengajuan Servis
+               </button>
+              </div>
+              <div class="card-body">
+                 <table class="table table-bordered table-striped example" width="100%;">
+                   <thead>
+                     <tr>
+                       <th class="text-center">No</th>
+                       <th class="text-center">Aksi</th>
+                       <th class="text-center">Tanggal Pengajuan</th>
+                       <th class="text-center">Bengkel Tujuan</th>
+                       <th class="text-center">Kilometer Kendaraan</th>
+                       <th class="text-center">Keluhan</th>
+                       <th class="text-center">Servis</th>
+                       <th class="text-center">Lain-Lain</th>
+                       <th class="text-center">Status Pengajuan</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <?php $no = 1;
+                                        if ($rp2 != '') {
+                                            foreach ($rp2 as $value) { ?>
+                     <tr>
+                       <td class="text-center"><?= $no++; ?></td>
+                       <td class="text-center">
+                         <?php if ($value['status_pengajuan'] == 'No') : ?>
+                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
+                           href="#" class="btn btn-sm btn-warning jedatombol"
+                           title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                             class="fas fa-pencil"></i></a>
+                         <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
+                         <a onclick="cetakConfirm('<?= site_url('pemakai/cetakpengajuanservis?id=' . $value['id_pengajuan'] . '&id_kend=' . $value['id_kendaraan'] . '') ?>')"
+                           href="#" class="btn btn-sm btn-primary jedatombol"
+                           title="Cetak Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                             class="fa-solid fa-print"></i></a>
+                         <?php else : ?>
+                         <a onclick="editConfirm('<?= site_url('pemakai/editpengajuanservis?id=' . $value['id_pengajuan'] . '&idkend=' . $value['id_kendaraan']) ?>')"
+                           href="#" class="btn btn-sm btn-warning jedatombol disabled"
+                           title="Edit Pengajuan Servis <?= $kend['merk'] . ' ' . $kend['tipe'] . ' ' . $kend['no_polisi'] ?>"><i
+                             class="fas fa-pencil"></i></a>
+                         <?php endif; ?>
+                       </td>
+                       <td class="text-center"><?= date('d-m-Y', strtotime($value['tgl_pengajuan'])) ?>
+                       </td>
+                       <td class="text-center"><?= $value['bengkel_tujuan'] ?></td>
+                       <td class="text-center">
+                         <?php if ($value['km_service'] == '') : ?> -
+                         <?php else : ?><?= $value['km_service'] ?>
+                         <?php endif ?>
+                       </td>
+                       <td class="text-center">
+                         <?php if ($value['keluhan'] == '') : ?> -
+                         <?php else : ?><?= $value['keluhan'] ?>
+                         <?php endif ?>
+                       </td>
+                       <td class="text-center"><?php if ($value['service'] == '') : ?> -
+                         <?php else : ?><?= $value['service'] ?><?php endif ?></td>
+                       <td class="text-center"><?php if ($value['lain_lain'] == '') : ?> -
+                         <?php else : ?><?= $value['lain_lain'] ?><?php endif ?>
+                       </td>
+                       <td class="text-center">
+                         <?php if ($value['status_pengajuan'] == 'No') : ?>
+                         Ditolak<br><i style="color:red;font-size:12px">
+                           <?= $value['reject_reason'] ?>. Jika
+                           ingin melanjutkan
+                           pengajuan. Silakan
+                           melakukan pengajuan ulang.<br>Reject on
+                           <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                         <?php elseif ($value['status_pengajuan'] == 'Yes') : ?>
+                         Disetujui
+                         <br><i style="color:green;font-size:12px">Silakan mengisi form Riwayat
+                           Servis
+                           jika servis telah selesai. <a
+                             href="<?php echo base_url('pemakai/riwayatservis?id=' . $kend['idk']); ?>">
+                             Klik
+                             disini</a>.<br>Approved on
+                           <?= date('d-m-Y H:i:s', strtotime($value['datetime_approve'])) ?></i>
+                         <?php else : ?>
+                         Sedang diverifikasi
+                         <?php endif; ?>
+
+                       </td>
+                     </tr>
+                     <?php }
+                                        } ?>
+                   </tbody>
+                 </table>
+              </div>
+            </div>
            </div>
+           
          </div>
        </div>
      </div>
@@ -239,11 +376,78 @@
          <div class="modal-footer justify-content-between">
            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
            <button type="sumbit" class="btn btn-primary">Simpan</button>
-
          </div>
+       </div>
      </form>
    </div>
    <!-- /.modal-content -->
  </div>
  <!-- /.modal-dialog -->
+ <!-- </div> -->
+  <div class=" modal fade" id="modal-xl2">
+   <div class="modal-dialog modal-xl">
+     <form method="post" action="<?= site_url('pemakai/prosestambahpengajuanservis?id=' . $kend['idk'] . '') ?>"
+       enctype="multipart/form-data">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h4 class="modal-title">Form Pengajuan Servis</h4>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body">
+           <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                 <label>Tanggal Pencatatan</label>
+                 <input type="text" class="form-control pilihtanggal" name="dari" required>
+               </div>
+            </div>
+           </div>
+           <div class="row">
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Nama Bengkel</label>
+                 <input type="text" placeholder="Masukkan Bengkel Tujuan" class="form-control" name="nama_bengkel"
+                   required>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Kilometer Kendaraan</label>
+                 <input type="number" placeholder="Masukkan Kilometer Kendaraan" class="form-control" name="km_service">
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Keluhan</label>
+                 <textarea type="text" placeholder="Masukkan Keluhan Kendaraan Yang Anda Gunakan" class="form-control"
+                   name="keluhan_kendaraan" required></textarea>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Servis</label>
+                 <textarea type="text" placeholder="Masukkan Servis Kendaraan yang diinginkan" class="form-control"
+                   name="servis_kendaraan" required></textarea>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-group">
+                 <label>Lain - Lain</label>
+                 <textarea type="text" placeholder="" class="form-control" name="lain_lain_kendaraan"></textarea>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="modal-footer justify-content-between">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="sumbit" class="btn btn-primary">Simpan</button>
+         </div>
+       </div>
+     </form>
+   </div>
+   <!-- /.modal-content -->
  </div>
+
+

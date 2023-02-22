@@ -83,6 +83,22 @@ class Profile extends CI_Controller
       }
     }
   }
+  public function reset()
+  {
+    $id_user = $this->input->get('id');
+    if ($this->profile_model->reset_pw($id_user)) {
+      if ($this->session->userdata('role') != 'Pemakai') {
+        $this->session->set_flashdata('success', 'Password berhasil di reset');
+        redirect('home');
+      } else {
+        $this->session->set_flashdata('success', 'Password berhasil di reset');
+        redirect('pemakai');
+      }
+    } else {
+      $this->session->set_flashdata('danger', 'Password gagal di reset');
+      redirect('profile');
+    }
+  }
 }
 
 

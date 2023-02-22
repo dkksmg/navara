@@ -28,7 +28,8 @@
                              Kendaraan</a> -->
                      </div>
                      <div class="card-body">
-                         <table class="table table-bordered table-striped example width=" 100%" height="auto">
+                        <div class="table-responsive">
+                         <table class="table table-bordered table-striped example" width="100%" height="auto">
                              <thead>
                                  <tr>
                                      <th>No</th>
@@ -73,6 +74,7 @@
                                     } ?>
                              </tbody>
                          </table>
+                        </div>
                      </div>
                  </div>
              </div>

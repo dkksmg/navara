@@ -1,6 +1,5 @@
 <!-- Main Footer -->
 <footer style="margin-top: 100px;">
-<<<<<<< HEAD
   <div class="fixed-bottom main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
@@ -15,19 +14,6 @@
       <strong>Sistem Layanan Servis Kendaraan Dinas Kesehatan </strong>
     </div>
   </div>
-=======
-    <div class="fixed-bottom main-footer">
-        <!-- To the right -->
-        <div class="float-right d-none d-sm-inline">
-            CATDKK <strong>Ver. 1.1.0</strong>
-        </div>
-        <!-- Default to the left -->
-        <strong>Copyright &copy; 2021 - <script>
-            document.write(new Date().getFullYear())
-            </script> <a href="https://dinkes.semarangkota.go.id/" target="_blank">DINAS KESEHATAN KOTA
-                SEMARANG</a>.</strong> All rights reserved.
-    </div>
->>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
 </footer>
 </div>
 <!-- ./wrapper -->
@@ -99,36 +85,31 @@ $(document).ready(function() {
 </script>
 <script>
 $(function() {
-<<<<<<< HEAD
   $('.example').DataTable({
     stateSave: true,
-    "scrollX": true,
+    // "scrollX": true,
+    "scrollX": false,
     "paging": true,
     "pageLength": 10,
     "lengthMenu": [5, 10, 25, 50, 100, 150, 200, 300],
-=======
-    $('.example').DataTable({
-        stateSave: true,
-        "scrollX": true,
-        "paging": true,
-        "pageLength": 10,
-        "lengthMenu": [5, 10, 25, 50, 100, 150, 200, 300],
->>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
 
   });
   $('.example2').DataTable({});
 });
 </script>
-<<<<<<< HEAD
 <?php
 if ($this->uri->segment(2) == 'kendaraan_pemakai') :
   $this->load->view('admin/template/datatable_pemakai');
+// elseif ($this->uri->segment(2) == 'peralatan_pemakai') :
+//   $this->load->view('admin/template/datatable_pemakai');
 elseif ($this->uri->segment(2) == 'all_kendaraan') :
   $this->load->view('admin/template/datatable_pemakai_all');
+elseif ($this->uri->segment(2) == 'peralatan_pemakai') :
+  $this->load->view('admin/template/datatable_peralatan');
+elseif ($this->uri->segment(2) == 'all_peralatan') :
+  $this->load->view('admin/template/datatable_peralatan_all');
 endif;
 ?>
-=======
->>>>>>> 316cdd9c350e7cdeffa7b00461fea08d732b474c
 <script>
 $(document).ready(function() {
   $('.pilihtanggal').datepicker({

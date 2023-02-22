@@ -62,8 +62,19 @@
                 <div class="collapse navbar-collapse order-3" id="navbarCollapse">
                     <!-- Left navbar links -->
                     <ul class="navbar-nav">
-                        <li class="nav-item <?= $this->uri->segment(1) == 'pemakai' ? 'active' : '' ?>">
-                            <a href="<?= site_url('pemakai') ?>" class="nav-link">Home</a>
+                        <!-- <li class="nav-item <?//= $this->uri->segment(1) == 'pemakai' ? 'active' : '' ?>">
+                            <a href="<?//= site_url('pemakai') ?>" class="nav-link">Home</a>
+                        </li> -->
+                        <li class="nav-item <?= $this->uri->segment(2) == '' ? 'active' : $this->uri->segment(2) == 'riwayatkondisi' ? 'active' : $this->uri->segment(2) == 'riwayatbbm' ? 'active' : $this->uri->segment(2) == 'riwayatpajak' ? 'active' : $this->uri->segment(2) == 'riwayatservis' ? 'active' : $this->uri->segment(2) == 'pengajuanservis' ? 'active' : '' ?>">
+                            <a href="<?= site_url('pemakai') ?>" class="nav-link">Kendaraan</a>
+                        </li>
+                        <li class="nav-item <?= 
+                            $this->uri->segment(2) == 'peralatan' ? 'active' : 
+                            $this->uri->segment(2) == 'riwayatservisperalatan' ? 'active' : 
+                            $this->uri->segment(2) == 'pengajuan_servis_peralatan' ? 'active' : 
+                            $this->uri->segment(2) == 'editpengajuanservisperalatan' ? 'active' : 
+                            $this->uri->segment(2) == 'editriwayatservisperalatan' ? 'active' : '' ?>">
+                            <a href="<?= site_url('pemakai/peralatan') ?>" class="nav-link">Peralatan</a>
                         </li>
                     </ul>
                 </div>

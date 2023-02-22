@@ -246,4 +246,67 @@ class Admin_m extends CI_Model
             return $hasil;
         }
     }
+
+    public function pagu_peralatan($id = null)
+    {
+        $this->db->where('id_alat', $id);
+        $query = $this->db->get('pagu_service_peralatan');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil[] = $row;
+            }
+            return $hasil;
+        }
+    }
+
+    public function cek_tahun_pagu_peralatan($id = null, $tahun = null)
+    {
+        $this->db->where('id_alat', $id);
+        $this->db->where('tahun', $tahun);
+        $query = $this->db->get('pagu_service_peralatan');
+        // $query = $this->db->get('pagu_');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $hasil = $row;
+            }
+            return $hasil;
+        }
+    }
+
+    public function tambahpaguperalatan($id = null)
+    {
+        $data['id_alat']    = $id;
+        $data['tahun']      = $this->input->post('tahun');
+        $data['pagu_awal']  = $this->input->post('pagu_awal');
+        $q = $this->db->insert('pagu_service_peralatan', $data);
+        return $q;
+    }
+
+    public function datapagu_peralatanbyid($id)
+    {
+        $query = $this->db
+            ->join('peralatan', 'pagu_service_peralatan.id_alat = peralatan.id')
+            ->get_where('pagu_service_peralatan', ['id_ps' => $id])
+            ->row_array();
+        // print_r($query);
+        // die();
+        return $query;
+    }
+
+    public function updatepaguperalatan($id = null)
+    {
+        $data['pagu_awal']  = $this->input->post('pagu');
+        // $data['jenis_pagu']  = $this->input->post('jenis');
+        $q = $this->db->where('id_ps', $id)->update('pagu_service_peralatan', $data);
+        return $q;
+    }
+
+    public function hapuspaguperalatan($id = null)
+    {
+        $this->db->where('id_ps', $id);
+        $q = $this->db->delete('pagu_service_peralatan');
+        return $q;
+    }
+
+
 }
